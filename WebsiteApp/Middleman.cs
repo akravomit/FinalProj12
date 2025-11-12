@@ -9,6 +9,10 @@ namespace WebsiteApp
         {
             return await UDB.Login_Async(user, password, email);
         }
+        public static async Task<object> Register(User user, string password)
+        {
+            return await UDB.Register_Async(user, password);
+        }
         public static async Task<List<User>> GetAllUsers()
         {
             return await UDB.GetAllAsync();

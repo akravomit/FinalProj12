@@ -9,10 +9,32 @@
 @if (LoggedUsername is not null) { <h1 class="header">Hello, @LoggedUsername!</h1> }
 else { <h1 class="header">Hello, user!</h1> }
 
-<button @onclick="() => Navigate('L')" class="generic-btn">
-    <div class="name">Login</div>
-    <div class="tooltip">Log into your account</div>
-</button>
+<table style="width: 100%; margin: 0 auto; border-collapse: collapse;">
+    <tr colspan="100%">
+        <div class="button-container">
+            <button @onclick="() => Navigate('L')" class="generic-btn">
+                <div class="name">Login</div>
+                <div class="tooltip">Log into your account</div>
+            </button>
+            @if (LoggedUsername is null)
+            {
+                <button @onclick="() => Navigate('R')" class="generic-btn">
+                    <div class="name">Register</div>
+                    <div class="tooltip">Create a new account</div>
+                </button>
+            }
+            else
+            {
+                <button @onclick="Log_Out_Async" class="generic-btn">
+                    <div class="name">Log out</div>
+                    <div class="tooltip">Log out of your current user</div>
+                </button>
+            }
+        </div>
+    </tr>
+</table>
+
+
 
 @code {
     protected User LoggedUser;
@@ -23,17 +45,28 @@ else { <h1 class="header">Hello, user!</h1> }
         switch (c)
         {
             case 'L':
-                dest += "login";
+                dest += "Login";
+                break;
+            case 'R':
+                dest += "Register";
                 break;
         }
         NavMan.NavigateTo(dest);
+    }
+    async Task Log_Out_Async()
+    {
+        await Session.DeleteAsync("Logged user");
+        LoggedUser = null;
+        LoggedUsername = null;
+
+        await InvokeAsync(StateHasChanged);
     }
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
             var tmp = await Session.GetAsync<User>("Logged user");
-            if (tmp.Success) { LoggedUser = tmp.Value; LoggedUsername = LoggedUser.username; return; }
+            if (tmp.Success) { LoggedUser = tmp.Value; LoggedUsername = LoggedUser.username; }
 
             await InvokeAsync(StateHasChanged);
         }

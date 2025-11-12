@@ -35,6 +35,14 @@ namespace Models
             this.isadmin = isadmin;
             this.ishidden = ishidden;
         }
+        public User(string username, string password, string email)
+        {
+            this.username = username;
+            this.password = password;
+            this.email = email;
+            this.isadmin = false;
+            this.ishidden = false;
+        }
         public User(User user)
         {
             this.id = user.id;

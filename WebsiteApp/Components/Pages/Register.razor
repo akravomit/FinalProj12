@@ -1,19 +1,18 @@
-﻿@page "/Login"
+﻿@page "/Register"
 @using DBL
 @using Models
 @inject NavigationManager NavMan
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @inject ProtectedSessionStorage Session
-@*@inherits Microsoft.AspNetCore.Components.ComponentBase*@
 
-<h1 class="header">Login</h1>
+<h1 class="header">Register</h1>
 <table style="width: 100%; margin: 0 auto; border-collapse: collapse;">
     <tr colspan="100%">
         <div class="button-container">
             <input class="generic-btn" placeholder="Enter username here" @bind-value="username" style="font-size:20px;" />
             <input class="generic-btn" placeholder="Enter your password here" @bind-value="password" style="font-size:20px;" />
             <input class="generic-btn" placeholder="Enter your email here" @bind-value="email" style="font-size:20px;" />
-            <button class="generic-btn" @onclick="Login_Async">
+            <button class="generic-btn" @onclick="Register_Async">
                 <div class="perma_name">Log In!</div>
             </button>
             <button class="generic-btn" @onclick="Back">
@@ -28,35 +27,29 @@
             {
                 User tmp = new User(response as User);
                 <div class="generic-btn">
-                    <div class="perma_name">
-                        @tmp.username is now logged in! You can go back to the main page
-                    </div>
+                    @tmp.username is now registered! Enjoy!
                 </div>
             }
             if (response is string)
             {
                 <div class="generic-btn">
-                    <div class="perma_name">
-                        @response
-                    </div>
+                    @response
                 </div>
             }
-            
+
         }
     </tr>
 </table>
-
-
 
 @code {
     string username;
     string password;
     string email;
     object response;
-    bool RenderUser = false;
-    private async Task Login_Async()
+    bool RenderUser;
+    private async Task Register_Async()
     {
-        response = await Middleman.Login(username, password, email);
+        response = await Middleman.Register(new User(username,password,email),"");
         RenderUser = true;
         if (response is User) { await Session.SetAsync("Logged user", response as User); }
         await InvokeAsync(StateHasChanged);
