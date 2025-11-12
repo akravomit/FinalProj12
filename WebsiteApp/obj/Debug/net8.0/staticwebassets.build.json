@@ -1,0 +1,77 @@
+{
+  "Version": 1,
+  "Hash": "F+ec6pSUmildwo+T8zLbpuTAhlfTuWx3Misg0MdSL4U=",
+  "Source": "WebsiteApp",
+  "BasePath": "_content/WebsiteApp",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "WebsiteApp\\wwwroot",
+      "Source": "WebsiteApp",
+      "ContentRoot": "F:\\repos\\FinalProj12\\WebsiteApp\\wwwroot\\",
+      "BasePath": "_content/WebsiteApp",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "F:\\repos\\FinalProj12\\WebsiteApp\\obj\\Debug\\net8.0\\scopedcss\\bundle\\WebsiteApp.styles.css",
+      "SourceId": "WebsiteApp",
+      "SourceType": "Computed",
+      "ContentRoot": "F:\\repos\\FinalProj12\\WebsiteApp\\obj\\Debug\\net8.0\\scopedcss\\bundle\\",
+      "BasePath": "_content/WebsiteApp",
+      "RelativePath": "WebsiteApp.styles.css",
+      "AssetKind": "All",
+      "AssetMode": "CurrentProject",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "ScopedCss",
+      "AssetTraitValue": "ApplicationBundle",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "F:\\repos\\FinalProj12\\WebsiteApp\\obj\\Debug\\net8.0\\scopedcss\\bundle\\WebsiteApp.styles.css"
+    },
+    {
+      "Identity": "F:\\repos\\FinalProj12\\WebsiteApp\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\WebsiteApp.bundle.scp.css",
+      "SourceId": "WebsiteApp",
+      "SourceType": "Computed",
+      "ContentRoot": "F:\\repos\\FinalProj12\\WebsiteApp\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\",
+      "BasePath": "_content/WebsiteApp",
+      "RelativePath": "WebsiteApp.bundle.scp.css",
+      "AssetKind": "All",
+      "AssetMode": "Reference",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "ScopedCss",
+      "AssetTraitValue": "ProjectBundle",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "F:\\repos\\FinalProj12\\WebsiteApp\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\WebsiteApp.bundle.scp.css"
+    },
+    {
+      "Identity": "F:\\repos\\FinalProj12\\WebsiteApp\\wwwroot\\app.css",
+      "SourceId": "WebsiteApp",
+      "SourceType": "Discovered",
+      "ContentRoot": "F:\\repos\\FinalProj12\\WebsiteApp\\wwwroot\\",
+      "BasePath": "_content/WebsiteApp",
+      "RelativePath": "app.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\app.css"
+    }
+  ]
+}

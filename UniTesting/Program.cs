@@ -13,22 +13,17 @@ namespace UniTesting
         public static async Task UserTesting()
         {
             UserDB UDB = new UserDB();
-            //User user = new User(0, "Tinman", "ISentLiorToHell", "TruthNukeTinman@gmail.com", true, false);
-            //User user = new User(0, "_Project__X", "ClankerDeporter9000", "imstupidlalalala@gmail.com", false, false);
-            //User New = new User(user);
-            //New.password = "Ceritified_Clanker_Deporter_9000_tm";
-            //int result = await UDB.Update_Async(user, New);
-            //Console.WriteLine(result);
+            User Jungelist = new User("Jungelist", "The stars bleed", "aaaaaaaaaa@gmail.com", true, true);
 
-            //List<User> Users = await UDB.GetAllAsync();
-            //foreach (User u in Users)
-            //{
-            //    Console.WriteLine(await u.ToString_Async());
-            //}
+            string username = string.Empty; string email = string.Empty; string password = string.Empty;
+            //Console.Write("Enter username:  "); username = Console.ReadLine();
+            //Console.Write("Enter email:  "); email = Console.ReadLine();
+            //Console.Write("Enter password:  "); password = Console.ReadLine();
 
-            //Console.Write("Enter username:  ");
-            //string input = Console.ReadLine();
-            //Console.WriteLine(await UDB.GetByKey_Async("username", input));
+            object response = await UDB.Login_Async(Jungelist);
+            if (response is User) { Console.WriteLine(await (response as User).ToString_Async()); }
+            else if (response is string) { Console.WriteLine(response); }
+            else { Console.WriteLine("User not found"); }
         }
         public static async Task MonsterTesting()
         {

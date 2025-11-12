@@ -1,0 +1,41 @@
+﻿@page "/"
+@using DBL
+@using Models
+@inject NavigationManager NavMan
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedSessionStorage Session
+
+@* <h1 class="header">Hello, world!</h1> *@
+@if (LoggedUsername is not null) { <h1 class="header">Hello, @LoggedUsername!</h1> }
+else { <h1 class="header">Hello, user!</h1> }
+
+<button @onclick="() => Navigate('L')" class="generic-btn">
+    <div class="name">Login</div>
+    <div class="tooltip">Log into your account</div>
+</button>
+
+@code {
+    protected User LoggedUser;
+    protected string LoggedUsername;
+    async Task Navigate(char c)
+    {
+        string dest = "/";
+        switch (c)
+        {
+            case 'L':
+                dest += "login";
+                break;
+        }
+        NavMan.NavigateTo(dest);
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var tmp = await Session.GetAsync<User>("Logged user");
+            if (tmp.Success) { LoggedUser = tmp.Value; LoggedUsername = LoggedUser.username; return; }
+
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+}

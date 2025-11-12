@@ -1,0 +1,56 @@
+﻿@page "/login"
+@using DBL
+@using Models
+@inject NavigationManager NavMan
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedSessionStorage Session
+@*@inherits Microsoft.AspNetCore.Components.ComponentBase*@
+
+<h1>Login</h1>
+<table style="width: 100%; margin: 0 auto; border-collapse: collapse;">
+    <tr colspan="100">
+        <div class="button-container">
+            <input class="generic-btn" placeholder="Enter username here" @bind-value="username" style="font-size:20px;" />
+            <input class="generic-btn" placeholder="Enter your password here" @bind-value="password" style="font-size:20px;" />
+            <input class="generic-btn" placeholder="Enter your email here" @bind-value="email" style="font-size:20px;" />
+            <button class="generic-btn" @onclick="Login_Async">
+                <div class="perma_name">Log In!</div>
+            </button>
+        </div>
+    </tr>
+    <tr> 
+        @if (RenderUser)
+        {
+            if (response is User)
+            {
+                User tmp = new User(response as User);
+                <div class="generic-btn">
+                    @tmp.username - Is a dev? @tmp.isadmin
+                </div>
+            }
+            if (response is string)
+            {
+                <div class="generic-btn">
+                    @response
+                </div>
+            }
+        }
+    </tr>
+</table>
+
+
+
+@code {
+    string username;
+    string password;
+    string email;
+    object response;
+    bool RenderUser = false;
+    private async Task Login_Async()
+    {
+        response = await Middleman.Login(username, password, email);
+        RenderUser = true;
+        if (response is User) { await Session.SetAsync("Logged user", response as User); }
+        await InvokeAsync(StateHasChanged);
+    }
+}

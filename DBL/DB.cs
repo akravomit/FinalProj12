@@ -27,10 +27,13 @@ namespace DBL
                     conntmp = new MySqlConnection($"server=localhost; user id=root; password={pass};persistsecurityinfo=True;database=meag");
                     try
                     {
-                        conntmp = new MySqlConnection("SELECT * FROM meag.users;");
-                        conntmp.OpenAsync();
+                        cmd2 = new MySqlCommand();
+                        cmd2.Connection = conntmp;
+                        cmd2.CommandText = "SELECT * FROM meag.users;";
+                        cmd2.ExecuteScalarAsync();
                         cmd = new MySqlCommand();
                         cmd.Connection = conntmp;
+                        break;
                     }
                     catch (Exception ex)
                     {

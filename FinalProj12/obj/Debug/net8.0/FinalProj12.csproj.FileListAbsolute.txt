@@ -1,0 +1,12 @@
+D:\repos\FinalProj12\FinalProj12\bin\Debug\net8.0\FinalProj12.deps.json
+D:\repos\FinalProj12\FinalProj12\bin\Debug\net8.0\FinalProj12.dll
+D:\repos\FinalProj12\FinalProj12\bin\Debug\net8.0\FinalProj12.pdb
+D:\repos\FinalProj12\FinalProj12\obj\Debug\net8.0\FinalProj12.GeneratedMSBuildEditorConfig.editorconfig
+D:\repos\FinalProj12\FinalProj12\obj\Debug\net8.0\FinalProj12.AssemblyInfoInputs.cache
+D:\repos\FinalProj12\FinalProj12\obj\Debug\net8.0\FinalProj12.AssemblyInfo.cs
+D:\repos\FinalProj12\FinalProj12\obj\Debug\net8.0\FinalProj12.csproj.CoreCompileInputs.cache
+D:\repos\FinalProj12\FinalProj12\obj\Debug\net8.0\FinalProj12.sourcelink.json
+D:\repos\FinalProj12\FinalProj12\obj\Debug\net8.0\FinalProj12.dll
+D:\repos\FinalProj12\FinalProj12\obj\Debug\net8.0\refint\FinalProj12.dll
+D:\repos\FinalProj12\FinalProj12\obj\Debug\net8.0\FinalProj12.pdb
+D:\repos\FinalProj12\FinalProj12\obj\Debug\net8.0\ref\FinalProj12.dll

@@ -91,51 +91,72 @@ namespace DBL
         }
 
         //Derivatives
-        public async Task<string> Register_Async(User user,string password)
+        public async Task<object> Register_Async(User user,string password)
         {
             string message = string.Empty;
             bool ValidInsert = true;
             User Users = await GetByKey_Async("username",user.username);
-            if (Users.username == user.username && !Users.ishidden)
-            {
-                message += "\nUsername already exists";
-                ValidInsert = false;
-            }
-            Users = await GetByKey_Async("email",user.email);
-            if (Users.email == user.email && !Users.ishidden)
-            {
-                message += "\nEmail already in use";
-                ValidInsert = false;
-            }
-
-            if (ValidInsert)
+            if (Users is null)
             {
                 await Insert_Async(user, password);
                 message = "User inserted succesfully! Enjoy!";
-            }
-            return message;
-        }
-        public async Task<object> Login_Async(string username, string password)
-        {
-            Dictionary<string, object> ret = new Dictionary<string, object>();
-            User user = await GetByKey_Async("username", username);
-
-            //Failiure scenarios
-            if (user == null)
-            {
-                ret.Add("Error: User not found!",404);
-            }
-            else if (user.password != username)
-            {
-                ret.Add("Error: Passwords do not match!",403);
+                return user;
             }
             else
             {
-                ret.Add("Login successful! Enjoy!", await UserToDict(user));
+                if (Users.username == user.username && !Users.ishidden)
+                {
+                    message += "\nUsername already exists";
+                    ValidInsert = false;
+                }
+                Users = await GetByKey_Async("email", user.email);
+                if (Users.email == user.email && !Users.ishidden)
+                {
+                    message += "\nEmail already in use";
+                    ValidInsert = false;
+                }
             }
+            return message;
+        }
+        public async Task<object> Login_Async(User user)
+        {
+            return await Login_Async(user.username, user.password, user.email);
+        }
+        public async Task<object> Login_Async(string username, string password, string email)
+        {
+            string ret = string.Empty;
+            User user = new User();
+            bool ValidLogin = true;
+            if (!string.IsNullOrEmpty(username)) { user = await GetByKey_Async("username", username); }
+            else { return null; }
 
-            //return
-            return ret;
+            //Failiure scenarios
+            if (username == "Jungelist" || username == "jungelist")
+            {
+                ret = "ERROR: ALPHA-NOVEMBER-DELTA| TANGO-HOTEL-ECHO| SIERRA-TANGO-ALPHA-ROMEO-SIERRA| ALPHA-ROMEO-ECHO| BRAVO-LIMA-ECHO-ECHO-DELTA-INDIA-NOVEMBER-GOLF| TANGO-HOTEL-ECHO| SIERRA-TANGO-ALPHA-ROMEO-SIERRA| ALPHA-ROMEO-ECHO| BRAVO-LIMA-ECHO-ECHO-DELTA-INDIA-NOVEMBER-GOLF| TANGO-HOTEL-ECHO| SIERRA-TANGO-ALPHA-ROMEO-SIERRA| ALPHA-ROMEO-ECHO| BRAVO-LIMA-ECHO-ECHO-DELTA-INDIA-NOVEMBER-GOLF| TANGO-HOTEL-ECHO| SIERRA-TANGO-ALPHA-ROMEO-SIERRA| ALPHA-ROMEO-ECHO| BRAVO-LIMA-ECHO-ECHO-DELTA-INDIA-NOVEMBER-GOLF| TANGO-HOTEL-ECHO| SIERRA-TANGO-ALPHA-ROMEO-SIERRA| ALPHA-ROMEO-ECHO| BRAVO-LIMA-ECHO-ECHO-DELTA-INDIA-NOVEMBER-GOLF";
+                return ret;
+            }
+            if (!user.ishidden)
+            {
+                if (user.password != password)
+                {
+                    ret += "\nError: Passwords do not match!";
+                    ValidLogin = false;
+                }
+                if (user.email != email)
+                {
+                    ret += "\nError: Invalid email submitted!";
+                    ValidLogin = false;
+                }
+            }
+            if (ValidLogin)
+            {
+                return user;
+            }
+            else
+            {
+                return ret;
+            }
         }
     }
 }
