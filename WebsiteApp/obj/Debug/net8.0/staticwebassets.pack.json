@@ -9,6 +9,18 @@
       "PackagePath": "staticwebassets\\app.css"
     },
     {
+      "Id": "F:\\repos\\FinalProj12\\WebsiteApp\\wwwroot\\img\\do u guys see this noticing.jpg",
+      "PackagePath": "staticwebassets\\img\\do u guys see this noticing.jpg"
+    },
+    {
+      "Id": "F:\\repos\\FinalProj12\\WebsiteApp\\wwwroot\\img\\do u guys see this noticing.png",
+      "PackagePath": "staticwebassets\\img\\do u guys see this noticing.png"
+    },
+    {
+      "Id": "F:\\repos\\FinalProj12\\WebsiteApp\\wwwroot\\img\\noticing.png",
+      "PackagePath": "staticwebassets\\img\\noticing.png"
+    },
+    {
       "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.WebsiteApp.Microsoft.AspNetCore.StaticWebAssets.props",
       "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
     },

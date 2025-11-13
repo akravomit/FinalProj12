@@ -27,6 +27,13 @@ h1:focus {
 .darker-border-checkbox.form-check-input {
     border-color: #929292;
 }
+
+body {
+    background-image: url('/img/noticing.png');
+    /*background-image: url('img/do u guys see this noticing.png');*/
+    background-size: cover;
+}
+
 .name {
     display: block;
     font-size: 35px;
@@ -90,3 +97,7 @@ h1:focus {
     font-size: 50px;
     text-align: center;
 }
+
+
+
+

@@ -12,7 +12,7 @@
         <div class="button-container">
             <input class="generic-btn" placeholder="Enter username here" @bind-value="username" style="font-size:20px;" />
             <input class="generic-btn" placeholder="Enter your password here" @bind-value="password" style="font-size:20px;" />
-            <input class="generic-btn" placeholder="Enter your email here" @bind-value="email" style="font-size:20px;" />
+            @* <input class="generic-btn" placeholder="Enter your email here" @bind-value="email" style="font-size:20px;" /> *@
             <button class="generic-btn" @onclick="Login_Async">
                 <div class="perma_name">Log In!</div>
             </button>
@@ -56,7 +56,7 @@
     bool RenderUser = false;
     private async Task Login_Async()
     {
-        response = await Middleman.Login(username, password, email);
+        response = await Middleman.Login(username, password);
         RenderUser = true;
         if (response is User) { await Session.SetAsync("Logged user", response as User); }
         await InvokeAsync(StateHasChanged);

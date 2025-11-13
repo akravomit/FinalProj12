@@ -1,16 +1,38 @@
-﻿@page "/"
+﻿@page "/login"
 @using DBL
 @using Models
 @inject NavigationManager NavMan
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @inject ProtectedSessionStorage Session
+@*@inherits Microsoft.AspNetCore.Components.ComponentBase*@
 
 <h1>Login</h1>
+<input placeholder="Enter username here" @bind-value="username" /><br />
+<input placeholder="Enter password here" @bind-value="password" /><br />
+<input placeholder="Enter email here" @bind-value="email" /><br />
+<button @onclick="Login_Async">Log in</button>
+
+@if (RenderUser)
+{
+    if(response is User)
+    {
+        User tmp = new User(response as User);
+        <div>
+            @tmp.username - Is a dev? @tmp.isadmin
+        </div>
+    }
+}
 
 @code {
-    private User ToAdd;
-    async Task Login_Async()
+    string username;
+    string password;
+    string email;
+    object response;
+    bool RenderUser = false;
+    private async Task Login_Async()
     {
-        
+        response = await Middleman.Login(username, password, email);
+        RenderUser = true;
+        await InvokeAsync(StateHasChanged);
     }
 }

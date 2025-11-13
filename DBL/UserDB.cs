@@ -120,9 +120,9 @@ namespace DBL
         }
         public async Task<object> Login_Async(User user)
         {
-            return await Login_Async(user.username, user.password, user.email);
-        }
-        public async Task<object> Login_Async(string username, string password, string email)
+            return await Login_Async(user.username, user.password);
+        } //Extra argument just in case the function takes a user
+        public async Task<object> Login_Async(string username, string password)
         {
             string ret = string.Empty;
             User user = new User();
@@ -141,11 +141,6 @@ namespace DBL
                 if (user.password != password)
                 {
                     ret += "\nError: Passwords do not match!";
-                    ValidLogin = false;
-                }
-                if (user.email != email)
-                {
-                    ret += "\nError: Invalid email submitted!";
                     ValidLogin = false;
                 }
             }

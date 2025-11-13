@@ -25,6 +25,10 @@ else { <h1 class="header">Hello, user!</h1> }
             }
             else
             {
+                <button @onclick="() => Navigate('M')" class="generic-btn">
+                    <div class="name">Manage your user</div>
+                    <div class="tooltip">Change password, username, and more</div>
+                </button>
                 <button @onclick="Log_Out_Async" class="generic-btn">
                     <div class="name">Log out</div>
                     <div class="tooltip">Log out of your current user</div>
@@ -43,12 +47,15 @@ else { <h1 class="header">Hello, user!</h1> }
     {
         string dest = "/";
         switch (c)
-        {
+        {   
             case 'L':
                 dest += "Login";
                 break;
             case 'R':
                 dest += "Register";
+                break;
+            case 'M':
+                dest += "Manage";
                 break;
         }
         NavMan.NavigateTo(dest);
