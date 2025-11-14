@@ -23,7 +23,7 @@ namespace WebsiteApp
         }
         public static async Task<int> Update(User target, User replacement)
         {
-            return await UDB.Update_Async(replacement, target);
+            return await UDB.Update_Async(target, replacement);
         }
         public static async Task<bool> DoesUserExist_ByKey_Async(string key, object value)
         {

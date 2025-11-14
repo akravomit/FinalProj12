@@ -67,14 +67,14 @@
     {
         await Session.DeleteAsync("Logged user");
         LoggedUser = null;
-
+        UserDoesExist = false;
         await InvokeAsync(StateHasChanged);
     }
     private async Task Update()
     {
         User Post = new User(LoggedUser);
-        if (username is null) { Post.username = username; }
-        if (password is null) { Post.password = password; }
+        if (username is not null) { Post.username = username; }
+        if (password is not null) { Post.password = password; }
         await Middleman.Update(LoggedUser, Post);
         await Session.SetAsync("Logged user", Post);
         await InvokeAsync(StateHasChanged);

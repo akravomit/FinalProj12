@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "F9EQJrwu/BRA1qlHTGgc3Szcvsqrs9eTzOMhGH9p+/Q=",
+  "Hash": "oGLhseUK5pETJPjTFiE1UJ22Y92LTQ/6l9zXIOnii90=",
   "Source": "WebsiteApp",
   "BasePath": "_content/WebsiteApp",
   "Mode": "Default",
@@ -74,12 +74,12 @@
       "OriginalItemSpec": "wwwroot\\app.css"
     },
     {
-      "Identity": "F:\\repos\\FinalProj12\\WebsiteApp\\wwwroot\\img\\do u guys see this noticing.jpg",
+      "Identity": "F:\\repos\\FinalProj12\\WebsiteApp\\wwwroot\\img\\IMG_20250221_204356.png",
       "SourceId": "WebsiteApp",
       "SourceType": "Discovered",
       "ContentRoot": "F:\\repos\\FinalProj12\\WebsiteApp\\wwwroot\\",
       "BasePath": "_content/WebsiteApp",
-      "RelativePath": "img/do u guys see this noticing.jpg",
+      "RelativePath": "img/IMG_20250221_204356.png",
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Primary",
@@ -90,26 +90,7 @@
       "AssetTraitValue": "",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\img\\do u guys see this noticing.jpg"
-    },
-    {
-      "Identity": "F:\\repos\\FinalProj12\\WebsiteApp\\wwwroot\\img\\do u guys see this noticing.png",
-      "SourceId": "WebsiteApp",
-      "SourceType": "Discovered",
-      "ContentRoot": "F:\\repos\\FinalProj12\\WebsiteApp\\wwwroot\\",
-      "BasePath": "_content/WebsiteApp",
-      "RelativePath": "img/do u guys see this noticing.png",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "AssetMergeBehavior": "PreferTarget",
-      "AssetMergeSource": "",
-      "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\img\\do u guys see this noticing.png"
+      "OriginalItemSpec": "wwwroot\\img\\IMG_20250221_204356.png"
     },
     {
       "Identity": "F:\\repos\\FinalProj12\\WebsiteApp\\wwwroot\\img\\noticing.png",
@@ -129,6 +110,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\img\\noticing.png"
+    },
+    {
+      "Identity": "F:\\repos\\FinalProj12\\WebsiteApp\\wwwroot\\img\\Shugi_and_Kimi.png",
+      "SourceId": "WebsiteApp",
+      "SourceType": "Discovered",
+      "ContentRoot": "F:\\repos\\FinalProj12\\WebsiteApp\\wwwroot\\",
+      "BasePath": "_content/WebsiteApp",
+      "RelativePath": "img/Shugi_and_Kimi.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\img\\Shugi_and_Kimi.png"
     }
   ]
 }
