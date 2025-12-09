@@ -8,7 +8,8 @@ namespace UniTesting
     {
         static async Task Main(string[] args)
         {
-            await UserTesting();
+            //await UserTesting();
+            //await MonsterTesting();
         }
         public static async Task UserTesting()
         {
@@ -30,7 +31,8 @@ namespace UniTesting
         }
         public static async Task MonsterTesting()
         {
-
+            MonsterDB MDB = new MonsterDB();
+            //Monster Zombie = new Monster(100,"Testmonster");
         }
     }
 }

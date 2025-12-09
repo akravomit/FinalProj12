@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace DBL
 {
-    public abstract class ITinmanAdditions<T>
+    public abstract class ITinmanAdditions<T> : BaseDB<T>
     {
-        //internal virtual T DictToModel(Dictionary<string, object> dict);
+        
     }
 }
