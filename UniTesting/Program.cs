@@ -31,8 +31,7 @@ namespace UniTesting
         }
         public static async Task MonsterTesting()
         {
-            MonsterDB MDB = new MonsterDB();
-            //Monster Zombie = new Monster(100,"Testmonster");
+            
         }
     }
 }
