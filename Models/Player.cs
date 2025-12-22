@@ -10,15 +10,14 @@ namespace Models
     {
         public int id { get; set; }
         public string name { get; set; } //Max 20 chars
-        public int hp { get; set; }
-        public int mana { get; set; }
-        public int coins { get; set; }
-        public bool is_hidden { get; set; }
+        public int hp { get; set; } //Default 100
+        public int mana { get; set; } //Default 20
+        public int coins { get; set; } //Default 0
+        public bool is_hidden { get; set; } //Default false
         public int owner_id { get; set; } //FK to user ID
         public Player() { }
-        public Player(int id, string name, int hp, int mana, int coins, bool is_hidden, int owner_id)
+        public Player(string name, int hp, int mana, int coins, bool is_hidden, int owner_id)
         {
-            this.id = id;
             this.name = name;
             this.hp = hp;
             this.mana = mana;
@@ -26,5 +25,7 @@ namespace Models
             this.is_hidden = is_hidden;
             this.owner_id = owner_id;
         }
+        public Player (int id, string name, int hp, int mana, int coins, bool is_hidden, int owner_id) : this (name, hp, mana, coins, is_hidden, owner_id) { this.id = id; }
+        public Player (Player other) : this (other.id, other.name, other.hp, other.mana, other.coins, other.is_hidden, other.owner_id) { }
     }
 }

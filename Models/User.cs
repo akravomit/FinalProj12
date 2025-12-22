@@ -14,19 +14,7 @@ namespace Models
         public string email { get; set; }
         public bool isadmin { get; set; }
         public bool ishidden { get; set; }
-        public User()
-        {
-
-        }
-        public User(int id, string username, string password, string email, bool isadmin, bool ishidden)
-        {
-            this.id = id;
-            this.username = username;
-            this.password = password;
-            this.email = email;
-            this.isadmin = isadmin;
-            this.ishidden = ishidden;
-        }
+        public User() {}
         public User(string username, string password, string email, bool isadmin, bool ishidden)
         {
             this.username = username;
@@ -35,24 +23,12 @@ namespace Models
             this.isadmin = isadmin;
             this.ishidden = ishidden;
         }
-        public User(string username, string password, string email)
-        {
-            this.username = username;
-            this.password = password;
-            this.email = email;
-            this.isadmin = false;
-            this.ishidden = false;
-        }
-        public User(User user)
-        {
-            this.id = user.id;
-            this.username = user.username;
-            this.password = user.password;
-            this.email = user.email;
-            this.isadmin = user.isadmin;
-            this.ishidden = user.ishidden;
-        }
-
+        public User(int id, string username, string password, string email, bool isadmin, bool ishidden) : this (username, password, email, isadmin, ishidden) { this.id = id; }
+        public User(string username, string password, string email) : this (username, password, email, false, false) { } //Deafault constructor
+        public User(User user) : this (user.id, user.username, user.password, user.email, user.ishidden, user.ishidden) { }
+        
+        
+        //For console unitesting
         public async Task<string> ToString_Async()
         {
             string ret = string.Empty;

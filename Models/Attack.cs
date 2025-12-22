@@ -29,9 +29,7 @@ namespace Models
             ElementID = elementID;
             IsHidden = isHidden;
         }
-        public Attack (int id, string filepath, string name, int damage, int decay, double decay_factor, int duration, int elementID, bool isHidden) : this (filepath, name, damage, decay, decay_factor, duration, elementID, isHidden) 
-        {
-            this.id = id;
-        }
+        public Attack (int id, string filepath, string name, int damage, int decay, double decay_factor, int duration, int elementID, bool isHidden) : this (filepath, name, damage, decay, decay_factor, duration, elementID, isHidden) { this.id = id; }
+        public Attack (Attack other) : this (other.id, other.filepath, other.name, other.damage, other.decay, other.decay_factor, other.duration, other.ElementID, other.IsHidden) { }
     }
 }
