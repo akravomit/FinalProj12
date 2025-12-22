@@ -11,6 +11,7 @@ namespace DBL
     public class UserDB: BaseDB<User>
     {
         //Dictionary shenanigans
+        //Dictionary key names must match the DB names perfectly
         private async Task<User> DictToUser (Dictionary<string,object> dict)
         {
             User ret = new User();
@@ -60,21 +61,24 @@ namespace DBL
         {
             return await SelectAllAsync();
         }
-        public async Task<List<User>> GetByPK_Async(int id)
+        public async Task<User> GetByUniqueK(string keyname, object val)
         {
-            Dictionary<string, object> Where = new Dictionary<string, object>();
-            Where.Add("id",id);
-            List<User> result = await SelectAllAsync(Where);
-            return result;
+            List<User> result = await GetByKey(keyname, val);
+            if (result == null) return null;
+            return result[0];
         }
-        public async Task<User> GetByKey_Async(string keyname, object obj)
+        //Returns the first user with the matching given value in the matching given column. Only for use with ID or Names, nothing more.
+        //Derivative of GetByKey, so returns null of nothing was found.
+        public async Task<List<User>> GetByKey(string keyname, object obj)
         {
             Dictionary<string, object> Where = new Dictionary<string, object>();
             Where.Add($"{keyname}", obj);
             List<User> result = await SelectAllAsync(Where);
             if (result.Count == 0) return null;
-            return result[0]; //Because each user is unique, therefore the first object will always be the only one
-        }
+            return result;
+        } 
+        //Returns all Users with the matching given value in the matching given column.
+        //If there are none, null is returned.
         public async Task<int> Insert_Async(User user, string password)
         {
             return await InsertAsync(await UserToDict(user));
@@ -95,7 +99,7 @@ namespace DBL
         {
             string message = string.Empty;
             bool ValidInsert = true;
-            User Users = await GetByKey_Async("username",user.username);
+            User Users = await GetByUniqueK("username",user.username);
             if (Users is null)
             {
                 await Insert_Async(user, password);
@@ -109,7 +113,6 @@ namespace DBL
                     message += "\nUsername already exists";
                     ValidInsert = false;
                 }
-                Users = await GetByKey_Async("email", user.email);
                 if (Users.email == user.email && !Users.ishidden)
                 {
                     message += "\nEmail already in use";
@@ -127,7 +130,7 @@ namespace DBL
             string ret = string.Empty;
             User user = new User();
             bool ValidLogin = true;
-            if (!string.IsNullOrEmpty(username)) { user = await GetByKey_Async("username", username); }
+            if (!string.IsNullOrEmpty(username)) { user = await GetByUniqueK("username", username); }
             else { return null; }
 
             //Failiure scenarios

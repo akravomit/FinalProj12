@@ -8,7 +8,7 @@ namespace UniTesting
     {
         static async Task Main(string[] args)
         {
-            //await UserTesting();
+            await UserTesting();
             //await MonsterTesting();
         }
         public static async Task UserTesting()
@@ -27,7 +27,10 @@ namespace UniTesting
             //else if (response is string) { Console.WriteLine(response); }
             //else { Console.WriteLine("User not found"); }
 
-            Console.WriteLine(await UDB.Delete_Async(HMan,""));
+            object response = await UDB.Register_Async(HMan, "");
+            Console.WriteLine(response);
+
+            //Console.WriteLine(await UDB.Delete_Async(HMan,""));
         }
         public static async Task MonsterTesting()
         {
