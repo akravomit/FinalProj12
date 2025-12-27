@@ -86,5 +86,18 @@ namespace DBL
         {
             return (await InsertGetObjAsync(await AttackToDict(attack))) as Attack;
         }
+        //Inserts an attack to the DB, returns the object if successful
+        public async Task<int> UpdateAttack(Attack post, Attack pre)
+        {
+            return await UpdateAsync(await AttackToDict(pre), await AttackToDict(post));
+        }
+        //Updates the attack in the DB
+        public async Task<int> Delete(Attack attack)
+        {
+            Attack post = new Attack(attack);
+            post.IsHidden = true;
+            return await UpdateAttack(post, attack);
+        }
+        //"Deletes" an attack from the DB by setting it to be hidden
     }
 }
