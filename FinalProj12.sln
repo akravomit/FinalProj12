@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36603.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FinalProj12", "FinalProj12\FinalProj12.csproj", "{DB08D773-C7B6-4F59-886B-BD0B9E79E665}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniTesting", "UniTesting\UniTesting.csproj", "{1647A2EF-2CBA-4D7B-A4F2-27050041D00E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DBL", "DBL\DBL.csproj", "{48629269-8975-4AF2-9DC3-184E4F95F390}"
@@ -19,10 +17,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{DB08D773-C7B6-4F59-886B-BD0B9E79E665}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DB08D773-C7B6-4F59-886B-BD0B9E79E665}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DB08D773-C7B6-4F59-886B-BD0B9E79E665}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DB08D773-C7B6-4F59-886B-BD0B9E79E665}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1647A2EF-2CBA-4D7B-A4F2-27050041D00E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1647A2EF-2CBA-4D7B-A4F2-27050041D00E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1647A2EF-2CBA-4D7B-A4F2-27050041D00E}.Release|Any CPU.ActiveCfg = Release|Any CPU
