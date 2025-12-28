@@ -43,7 +43,7 @@ namespace DBL
         }
         protected override string GetTableName()
         {
-            return "players";  // Adjust if your table uses a schema prefix, e.g., "game.players"
+            return "game.player";
         }
         protected override async Task<Player> CreateModelAsync(object[] row)
         {

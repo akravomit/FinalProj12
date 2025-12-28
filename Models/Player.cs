@@ -27,5 +27,7 @@ namespace Models
         }
         public Player (int id, string name, int hp, int mana, int coins, bool is_hidden, int owner_id) : this (name, hp, mana, coins, is_hidden, owner_id) { this.id = id; }
         public Player (Player other) : this (other.id, other.name, other.hp, other.mana, other.coins, other.is_hidden, other.owner_id) { }
+        public Player (string name,int owner_id) : this (name, 100, 20, 0, false, owner_id) { }
+        //Default constructor for new users
     }
 }

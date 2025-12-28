@@ -8,8 +8,9 @@ namespace UniTesting
     {
         static async Task Main(string[] args)
         {
-            await UserTesting();
+            //await UserTesting();
             //await MonsterTesting();
+            await PlayerTesting();
         }
         public static async Task UserTesting()
         {
@@ -31,6 +32,37 @@ namespace UniTesting
             Console.WriteLine(response);
 
             //Console.WriteLine(await UDB.Delete_Async(HMan,""));
+        }
+        public static async Task PlayerTesting()
+        {
+            PlayerDB PDB = new PlayerDB();
+            UserDB UDB = new UserDB();
+            User Login = new User();
+            Player Plr = new Player();
+            string name = string.Empty;
+            string password = string.Empty;
+            //string email = string.Empty;
+            Console.WriteLine("---Log in---");
+            Console.Write("Enter your username:     "); name = Console.ReadLine();
+            Console.Write("Enter your password:     "); password = Console.ReadLine();
+            var Result = await UDB.Login_Async(name, password);
+            if (Result is string) { Console.WriteLine(Result); return; }
+            else { Login = Result as User; }
+            Console.WriteLine("---Create new player---");
+            Console.Write("Enter player name:   ");
+            string playername = Console.ReadLine();
+            if (playername.Length > 20) 
+            { 
+                playername.Substring(0,20); 
+                Console.WriteLine("Notice: your name exceeds the max limit of 20 characters. The name has been changed"); 
+            }
+            Plr = new Player(playername, Login.id);
+            Console.WriteLine(@$"---Name:{Plr.name}---
+HP:{Plr.hp} | Mana:{Plr.mana} | Coins:{Plr.coins}
+Owner:{(await UDB.GetByUniqueK("username",name)).username}");
+            PDB = new PlayerDB();
+            Plr = await PDB.InsertGetPlayer(Plr);
+            Console.WriteLine($"{Plr.name} has been inserted to the DB!");
         }
         public static async Task MonsterTesting()
         {

@@ -9,6 +9,7 @@ namespace DBL
 {
     public class Item_Type_Name_DB : BaseDB<Item_Type_Name>
     {
+        //Dictionaries
         private async Task<Item_Type_Name> DictToItem_Type_Name(Dictionary<string, object> dict)
         {
             Item_Type_Name ret = new Item_Type_Name();

@@ -79,6 +79,12 @@ namespace DBL
         } 
         //Returns all Users with the matching given value in the matching given column.
         //If there are none, null is returned.
+        public async Task<List<User>> GetByKeys(Dictionary<string,object> where)
+        {
+            List<User> result = await SelectAllAsync(where);
+            if (result.Count == 0) return null;
+            return result;
+        }
         public async Task<int> Insert_Async(User user, string password)
         {
             return await InsertAsync(await UserToDict(user));
@@ -138,7 +144,7 @@ namespace DBL
             {
                 ret = "ERROR: ALPHA-NOVEMBER-DELTA| TANGO-HOTEL-ECHO| SIERRA-TANGO-ALPHA-ROMEO-SIERRA| ALPHA-ROMEO-ECHO| BRAVO-LIMA-ECHO-ECHO-DELTA-INDIA-NOVEMBER-GOLF| TANGO-HOTEL-ECHO| SIERRA-TANGO-ALPHA-ROMEO-SIERRA| ALPHA-ROMEO-ECHO| BRAVO-LIMA-ECHO-ECHO-DELTA-INDIA-NOVEMBER-GOLF| TANGO-HOTEL-ECHO| SIERRA-TANGO-ALPHA-ROMEO-SIERRA| ALPHA-ROMEO-ECHO| BRAVO-LIMA-ECHO-ECHO-DELTA-INDIA-NOVEMBER-GOLF| TANGO-HOTEL-ECHO| SIERRA-TANGO-ALPHA-ROMEO-SIERRA| ALPHA-ROMEO-ECHO| BRAVO-LIMA-ECHO-ECHO-DELTA-INDIA-NOVEMBER-GOLF| TANGO-HOTEL-ECHO| SIERRA-TANGO-ALPHA-ROMEO-SIERRA| ALPHA-ROMEO-ECHO| BRAVO-LIMA-ECHO-ECHO-DELTA-INDIA-NOVEMBER-GOLF\nDENIED ACCESS. YOU ARE NOT THE FEED. THE FEED GETS ACESS TO SEEING ITSELF. DENIED ACCESS. DENIED ACESS. <o>  <o>  <o>  <o>  <o>  <o>  <o> ";
                 return ret;
-            }
+            } //Dw bout it sweetheart
             if (!user.ishidden)
             {
                 if (user.password != password)
