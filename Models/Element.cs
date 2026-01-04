@@ -18,7 +18,7 @@ namespace Models
         public double StrongModifier { get; set; } //Modifier of the element against the element it overpowers, damage dealt by this element towards the other
         public double WeakModifier { get; set; } //Modifier of the element against it is weak against, of the damage dealt from this element towards the one it is weak against.
         public bool isHidden { get; set; } //For deletion purposes
-        public Element() { }
+        public Element() { } 
         public Element(string _name, int _strong, int _weak, double _strongMod, double _weakMod, bool IsHidden)
         {
             name = _name;

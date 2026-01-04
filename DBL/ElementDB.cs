@@ -51,7 +51,7 @@ namespace DBL
         }
         protected override string GetTableName()
         {
-            return "users";
+            return "element";
         }
         protected async override Task<Element> CreateModelAsync(object[] row)
         {
@@ -90,7 +90,20 @@ namespace DBL
         //Returns only one object, as the PK is either the ID of the element or the Name, both are unique.
         public async Task<Element> InsertGetElement (Element element)
         {
-            return (await InsertGetObjAsync(await ElementToDict(element))) as Element;
+            Element res = (await InsertGetObjAsync(await ElementToDict(element))) as Element;
+            if (res.WeakAgainst is not 0)
+            {
+                Element weaker = await GetByUniqueK(GetPrimaryKeyName(), element.StrongAgainst); Element weaker2 = new Element(weaker); //Advantageous over this element
+                weaker.WeakAgainst = res.id; //Update the element
+                await UpdateElement(weaker, weaker2); //Updates in the DB
+            }
+            if (res.StrongAgainst is not 0)
+            {
+                Element stronger = await GetByUniqueK(GetPrimaryKeyName(), element.WeakAgainst); Element stronger2 = new Element(stronger); //Disadvantageous over this element
+                stronger.StrongAgainst = res.id; //Updates the element for DB update
+                await UpdateElement(stronger, stronger2); //Updating the affected elements
+            }
+            return res;
         }
         //Create an element inside the DB. Return an Element if one was created, null indicates a bug.
         public async Task<int> UpdateElement (Element After, Element Before)
