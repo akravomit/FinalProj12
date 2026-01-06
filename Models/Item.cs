@@ -15,7 +15,7 @@ namespace Models
         public int rarity { get; set; } //Star-based rarity level
         public int value { get; set; } //Base value in coins, affected by rarity
         public int item_type { get; set; } //Item class
-        public int item_increment { get; set; } //Item value increment per level (attack strength, etc)
+        public int item_increment { get; set; } //Item value increment per level (attack strength, value etc)
         public int element_id { get; set; } //FK -> element
         public bool is_hidden { get; set; }
         public Item() { }
