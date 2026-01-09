@@ -11,7 +11,7 @@ namespace Models
         public int id { get; set; }
         public int monsterId { get; set; } //FK -> Monster
         public int attackId { get; set; } //FK -> Attack
-        public int attack_Increment { get; set; } //Attack multiplier, monster-specific
+        public double attack_Increment { get; set; } //Attack multiplier, monster-specific
         public bool isHidden { get; set; } //Monster-specific
         public Monster_Attacks() { }
         public Monster_Attacks(int MonsterID, int AttackID, int Attack_Increment, bool IsHidden) 

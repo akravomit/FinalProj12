@@ -1,4 +1,4 @@
 wwwroot\app.css
-wwwroot\img\do u guys see this noticing.jpg
-wwwroot\img\do u guys see this noticing.png
+wwwroot\img\IMG_20250221_204356.png
 wwwroot\img\noticing.png
+wwwroot\img\Shugi_and_Kimi.png

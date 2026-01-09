@@ -16,6 +16,7 @@ namespace DBL
             ret.id = Convert.ToInt32(dict["id"]);
             ret.ItemID = Convert.ToInt32(dict["ItemID"]);
             ret.AttackID = Convert.ToInt32(dict["AttackID"]);
+            ret.Attack_Increment = Convert.ToDouble(dict["Attack_Increment"]);
             ret.IsHidden = Convert.ToBoolean(dict["IsHidden"]);
             return ret;
         }
@@ -26,6 +27,7 @@ namespace DBL
                 { "id", itemAttacks.id },
                 { "ItemID", itemAttacks.ItemID },
                 { "AttackID", itemAttacks.AttackID },
+                { "Attack_Increment", itemAttacks.Attack_Increment },
                 { "IsHidden", itemAttacks.IsHidden }
             };
             return dict;
