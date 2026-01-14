@@ -14,14 +14,14 @@ namespace Models
         public double attack_Increment { get; set; } //Attack multiplier, monster-specific
         public bool isHidden { get; set; } //Monster-specific
         public Monster_Attacks() { }
-        public Monster_Attacks(int MonsterID, int AttackID, int Attack_Increment, bool IsHidden) 
+        public Monster_Attacks(int MonsterID, int AttackID, double Attack_Increment, bool IsHidden) 
         {
             monsterId = MonsterID;
             attackId = AttackID;
             attack_Increment = Attack_Increment;
             isHidden = IsHidden;
         }
-        public Monster_Attacks(int Id, int monsterId, int attackId, int attack_Increment, bool IsHidden) : this(monsterId, attackId, attack_Increment, IsHidden)
+        public Monster_Attacks(int Id, int monsterId, int attackId, double attack_Increment, bool IsHidden) : this(monsterId, attackId, attack_Increment, IsHidden)
         {
             id = Id;
         }

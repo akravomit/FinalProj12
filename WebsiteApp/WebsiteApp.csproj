@@ -7,11 +7,27 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Components\Pages\Asset Viewer.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\DBL\DBL.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="wwwroot\img\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Components\Pages\Asset Viewer.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Components\Pages\Asset Viewer.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Components\Pages\Asset Viewer.razor" />
   </ItemGroup>
 
 </Project>

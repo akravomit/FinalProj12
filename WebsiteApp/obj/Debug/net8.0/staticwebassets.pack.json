@@ -17,6 +17,86 @@
       "PackagePath": "staticwebassets\\img\\Shugi_and_Kimi.png"
     },
     {
+      "Id": "F:\\repos\\FinalProj12\\WebsiteApp\\wwwroot\\img\\monsters\\Antlion Charger.webp",
+      "PackagePath": "staticwebassets\\img\\monsters\\Antlion Charger.webp"
+    },
+    {
+      "Id": "F:\\repos\\FinalProj12\\WebsiteApp\\wwwroot\\img\\monsters\\Demon Eye.webp",
+      "PackagePath": "staticwebassets\\img\\monsters\\Demon Eye.webp"
+    },
+    {
+      "Id": "F:\\repos\\FinalProj12\\WebsiteApp\\wwwroot\\img\\monsters\\Derpling.webp",
+      "PackagePath": "staticwebassets\\img\\monsters\\Derpling.webp"
+    },
+    {
+      "Id": "F:\\repos\\FinalProj12\\WebsiteApp\\wwwroot\\img\\monsters\\Gastropod.webp",
+      "PackagePath": "staticwebassets\\img\\monsters\\Gastropod.webp"
+    },
+    {
+      "Id": "F:\\repos\\FinalProj12\\WebsiteApp\\wwwroot\\img\\monsters\\Giant Bat.webp",
+      "PackagePath": "staticwebassets\\img\\monsters\\Giant Bat.webp"
+    },
+    {
+      "Id": "F:\\repos\\FinalProj12\\WebsiteApp\\wwwroot\\img\\monsters\\Gnome.webp",
+      "PackagePath": "staticwebassets\\img\\monsters\\Gnome.webp"
+    },
+    {
+      "Id": "F:\\repos\\FinalProj12\\WebsiteApp\\wwwroot\\img\\monsters\\Goblin Archer.webp",
+      "PackagePath": "staticwebassets\\img\\monsters\\Goblin Archer.webp"
+    },
+    {
+      "Id": "F:\\repos\\FinalProj12\\WebsiteApp\\wwwroot\\img\\monsters\\Goblin Warlock.webp",
+      "PackagePath": "staticwebassets\\img\\monsters\\Goblin Warlock.webp"
+    },
+    {
+      "Id": "F:\\repos\\FinalProj12\\WebsiteApp\\wwwroot\\img\\monsters\\Goblin Warrior.webp",
+      "PackagePath": "staticwebassets\\img\\monsters\\Goblin Warrior.webp"
+    },
+    {
+      "Id": "F:\\repos\\FinalProj12\\WebsiteApp\\wwwroot\\img\\monsters\\Goblin.webp",
+      "PackagePath": "staticwebassets\\img\\monsters\\Goblin.webp"
+    },
+    {
+      "Id": "F:\\repos\\FinalProj12\\WebsiteApp\\wwwroot\\img\\monsters\\Harpy.webp",
+      "PackagePath": "staticwebassets\\img\\monsters\\Harpy.webp"
+    },
+    {
+      "Id": "F:\\repos\\FinalProj12\\WebsiteApp\\wwwroot\\img\\monsters\\Medusa.webp",
+      "PackagePath": "staticwebassets\\img\\monsters\\Medusa.webp"
+    },
+    {
+      "Id": "F:\\repos\\FinalProj12\\WebsiteApp\\wwwroot\\img\\monsters\\Shark.webp",
+      "PackagePath": "staticwebassets\\img\\monsters\\Shark.webp"
+    },
+    {
+      "Id": "F:\\repos\\FinalProj12\\WebsiteApp\\wwwroot\\img\\monsters\\Skeleton.webp",
+      "PackagePath": "staticwebassets\\img\\monsters\\Skeleton.webp"
+    },
+    {
+      "Id": "F:\\repos\\FinalProj12\\WebsiteApp\\wwwroot\\img\\monsters\\Slime.webp",
+      "PackagePath": "staticwebassets\\img\\monsters\\Slime.webp"
+    },
+    {
+      "Id": "F:\\repos\\FinalProj12\\WebsiteApp\\wwwroot\\img\\monsters\\Tim.webp",
+      "PackagePath": "staticwebassets\\img\\monsters\\Tim.webp"
+    },
+    {
+      "Id": "F:\\repos\\FinalProj12\\WebsiteApp\\wwwroot\\img\\monsters\\Undead Miner.webp",
+      "PackagePath": "staticwebassets\\img\\monsters\\Undead Miner.webp"
+    },
+    {
+      "Id": "F:\\repos\\FinalProj12\\WebsiteApp\\wwwroot\\img\\monsters\\Unicorn.webp",
+      "PackagePath": "staticwebassets\\img\\monsters\\Unicorn.webp"
+    },
+    {
+      "Id": "F:\\repos\\FinalProj12\\WebsiteApp\\wwwroot\\img\\monsters\\Vulture.webp",
+      "PackagePath": "staticwebassets\\img\\monsters\\Vulture.webp"
+    },
+    {
+      "Id": "F:\\repos\\FinalProj12\\WebsiteApp\\wwwroot\\img\\monsters\\Zombie.webp",
+      "PackagePath": "staticwebassets\\img\\monsters\\Zombie.webp"
+    },
+    {
       "Id": "F:\\repos\\FinalProj12\\WebsiteApp\\wwwroot\\img\\noticing.png",
       "PackagePath": "staticwebassets\\img\\noticing.png"
     },

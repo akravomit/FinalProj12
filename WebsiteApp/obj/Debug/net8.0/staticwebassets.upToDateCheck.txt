@@ -1,4 +1,24 @@
 wwwroot\app.css
 wwwroot\img\IMG_20250221_204356.png
+wwwroot\img\monsters\Antlion Charger.webp
+wwwroot\img\monsters\Demon Eye.webp
+wwwroot\img\monsters\Derpling.webp
+wwwroot\img\monsters\Gastropod.webp
+wwwroot\img\monsters\Giant Bat.webp
+wwwroot\img\monsters\Gnome.webp
+wwwroot\img\monsters\Goblin Archer.webp
+wwwroot\img\monsters\Goblin Warlock.webp
+wwwroot\img\monsters\Goblin Warrior.webp
+wwwroot\img\monsters\Goblin.webp
+wwwroot\img\monsters\Harpy.webp
+wwwroot\img\monsters\Medusa.webp
+wwwroot\img\monsters\Shark.webp
+wwwroot\img\monsters\Skeleton.webp
+wwwroot\img\monsters\Slime.webp
+wwwroot\img\monsters\Tim.webp
+wwwroot\img\monsters\Undead Miner.webp
+wwwroot\img\monsters\Unicorn.webp
+wwwroot\img\monsters\Vulture.webp
+wwwroot\img\monsters\Zombie.webp
 wwwroot\img\noticing.png
 wwwroot\img\Shugi_and_Kimi.png

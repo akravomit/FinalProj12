@@ -4,7 +4,21 @@ namespace WebsiteApp
 {
     public class Middleman
     {
-        private static protected UserDB UDB = new UserDB();
+        private static AttackDB ADB = new AttackDB();
+        private static ElementDB ElDB = new ElementDB();
+        private static EntryDB EnDB = new EntryDB();
+        private static InventoryDB InvDB = new InventoryDB();
+        private static Item_Type_Name_DB I_T_NDB = new Item_Type_Name_DB();
+        private static ItemDB ItmDB = new ItemDB();
+        private static Monster_Attacks_DB M_ADB = new Monster_Attacks_DB();
+        private static MonsterDB MDB = new MonsterDB();
+        private static PlayerDB PDB = new PlayerDB();
+        private static UserDB UDB = new UserDB();
+
+
+        //    >.>
+
+
         public static async Task<object> Login(string user,string password)
         {
             return await UDB.Login_Async(user, password);
@@ -27,8 +41,17 @@ namespace WebsiteApp
         }
         public static async Task<bool> DoesUserExist_ByKey_Async(string key, object value)
         {
-            if (await UDB.GetByKey_Async(key, value) == null) { return false; }
+            if (await UDB.GetByKey(key, value) == null) { return false; }
             return true;
         }
+        public static async Task<bool> DoesExistByKeyWithType(Type T, string key, object value)
+        {
+            bool ret = false;
+            if (T is User) { return await UDB.GetByKey(key, value) is not null; }
+            if (T is Monster) { return await MDB.GetByKey(key, value) is not null; }
+
+            return ret;
+        }
+        public static async Task<List<Player>> GetPlayers(int userID) { return await PDB.GetByKeys(new Dictionary<string, object>() { { "OwnerID", userID }, { "IsHidden", false } }); }
     }
 }
