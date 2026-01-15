@@ -5,12 +5,51 @@
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @inject ProtectedSessionStorage Session
 
-<h1 class="header">Select A Player</h1>
+<h1 class="header">Select a Player from the ones you made</h1>
 <table style="width: 100%; margin: 0 auto; border-collapse: collapse;">
     <tr colspan="100%">
         @if (UserDoesExist)
         {
             <div class="button-container">
+                @if (Playerlist is not null)
+                {
+                    @foreach (Player pingle_pongle in Playerlist)
+                    {
+                        <button class="generic-btn">
+                            <div class="name">@pingle_pongle.name</div>
+                            <div class="tooltip">
+                                HP: @pingle_pongle.hp | Mana: @pingle_pongle.mana <br/>
+                                Coins amount bling bling: @pingle_pongle.coins
+                            </div>
+                        </button>
+                    }
+                }
+                else
+                {
+                    <div class="generic-btn">
+                        <div class="perma_name">You have no characters!<br />Make one!</div>
+                    </div>
+                }
+                <button class="generic-btn">
+                    <div class="name">Make a character!</div>
+                    <div class="tooltip">
+                        <input @bind-value="playername_for_the_fucntion__CreatePlayerAndInsertPlayerToTheDatabaseWhenYouPressThisButtonButtonWithTheButtonTagBecauseApparentlyYouNeedToInsertAPlayerToTheDatabaseViaARazorPage_NoClueWhyWouldSomeoneDoThatThoughItIsNotAFishAnt" placeholder="Enter your player name"></input>
+                    </div>
+                </button>
+                <button class="generic-btn"  @onclick="CreatePlayerAndInsertPlayerToTheDatabaseWhenYouPressThisButtonButtonWithTheButtonTagBecauseApparentlyYouNeedToInsertAPlayerToTheDatabaseViaARazorPage_NoClueWhyWouldSomeoneDoThatThoughItIsNotAFishAnt">
+                    @if (response is null)
+                    {
+                        <div class="perma_name">
+                            Create the character!
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="perma_name">
+                            @response
+                        </div>
+                    }
+                </button>
                 <button class="generic-btn" @onclick="Back">
                     <div class="perma_name">Go back to the main page</div>
                 </button>
@@ -26,7 +65,7 @@
                     allow="autoplay; fullscreen;">
             </iframe>
             <button class="generic-btn" @onclick="() => NavMan.NavigateTo(Login)">
-                <div class="perma_name">Go back to the login page. You are not logged in >:( </div>
+                <div class="perma_name">Go to the login page.<br />You are not logged in >:( </div>
             </button>
         }
     </tr>
@@ -34,9 +73,10 @@
 
 @code {
     User LoggedUser;
-    List<Player> Playerlist;
+    List<Player> Playerlist; Player SelectedPlayer;
     bool UserDoesExist;
-    private string eye = "<o>"; private string Login = "Login";
+    private string eye = "<o>"; private string Login = "Login"; private string response = null;
+    string playername_for_the_fucntion__CreatePlayerAndInsertPlayerToTheDatabaseWhenYouPressThisButtonButtonWithTheButtonTagBecauseApparentlyYouNeedToInsertAPlayerToTheDatabaseViaARazorPage_NoClueWhyWouldSomeoneDoThatThoughItIsNotAFishAnt;
     protected override async Task OnInitializedAsync()
     {
 
@@ -53,6 +93,7 @@
                 Playerlist = await Middleman.GetPlayers(LoggedUser.id);
             }
             else { UserDoesExist = false; }
+            await InvokeAsync(StateHasChanged);
         }
     }
     private async Task Back() { NavMan.NavigateTo("/"); }
@@ -62,5 +103,11 @@
         LoggedUser = null;
         UserDoesExist = false;
         await InvokeAsync(StateHasChanged);
+    }
+    private async Task CreatePlayerAndInsertPlayerToTheDatabaseWhenYouPressThisButtonButtonWithTheButtonTagBecauseApparentlyYouNeedToInsertAPlayerToTheDatabaseViaARazorPage_NoClueWhyWouldSomeoneDoThatThoughItIsNotAFishAnt()
+    {
+        Player result = await Middleman.InsertGetPlayer(playername_for_the_fucntion__CreatePlayerAndInsertPlayerToTheDatabaseWhenYouPressThisButtonButtonWithTheButtonTagBecauseApparentlyYouNeedToInsertAPlayerToTheDatabaseViaARazorPage_NoClueWhyWouldSomeoneDoThatThoughItIsNotAFishAnt.Substring(0,20), LoggedUser.id);
+        if (result is null) { response = "This character already exists! Check its name and try again."; }
+        else { response = $"{result.name} has been inserted into the database! Enjoy."; }
     }
 }

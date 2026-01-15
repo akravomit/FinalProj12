@@ -53,5 +53,6 @@ namespace WebsiteApp
             return ret;
         }
         public static async Task<List<Player>> GetPlayers(int userID) { return await PDB.GetByKeys(new Dictionary<string, object>() { { "OwnerID", userID }, { "IsHidden", false } }); }
+        public static async Task<Player> InsertGetPlayer(string username, int ownerid) { return await PDB.InsertGetPlayer(new Player(username,ownerid)); }
     }
 }

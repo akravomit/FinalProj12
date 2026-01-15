@@ -79,11 +79,15 @@ namespace DBL
         }
         public async Task<List<Player>> GetByKeys(Dictionary<string,object> where)
         {
-            return await SelectAllAsync(where);
+            List<Player> result = await SelectAllAsync(where);
+            if (result.Count is 0) return null;
+            return result;
         }
         public async Task<Player> InsertGetPlayer(Player player)
         {
-            return await InsertGetObjAsync(await PlayerToDict(player)) as Player;
+            if (await GetByKeys(new Dictionary<string, object>(){{"name",player.name},{"OwnerID",player.owner_id},{"IsHidden",false}}) is null)
+            { return await InsertGetObjAsync(await PlayerToDict(player)) as Player; }
+            else { return null; }
         }
         public async Task<int> Update_Async(Player pre, Player post)
         {
