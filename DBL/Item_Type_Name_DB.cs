@@ -38,7 +38,7 @@ namespace DBL
         }
         protected override string GetTableName()
         {
-            return "game.item_type_name";
+            return "game.itemtype_name";
         }
         protected override async Task<Item_Type_Name> CreateModelAsync(object[] row)
         {

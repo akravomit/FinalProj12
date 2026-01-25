@@ -40,6 +40,12 @@ else { <h1 class="header">Hello, user!</h1> }
             }
         </div>
     </tr>
+    @if (false)
+    {
+        <tr>
+            <button @onclick="kms">Crash the website!</button>
+        </tr>
+    }
 </table>
 
 
@@ -76,5 +82,9 @@ else { <h1 class="header">Hello, user!</h1> }
 
             await InvokeAsync(StateHasChanged);
         }
+    }
+    private async Task kms()
+    {
+        await Middleman.Cascade(new List<Dictionary<List<int[,,]>, Dictionary<string[,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,], List<List<List<Dictionary<int, Dictionary<Dictionary<int, int>, object>>>>>>>>());
     }
 }

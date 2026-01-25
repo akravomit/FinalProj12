@@ -51,7 +51,7 @@ namespace DBL
         }
         protected override string GetTableName()
         {
-            return "element";
+            return "game.element";
         }
         protected async override Task<Element> CreateModelAsync(object[] row)
         {

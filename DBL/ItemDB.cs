@@ -45,7 +45,7 @@ namespace DBL
 
         // Overrides
         protected override string GetPrimaryKeyName() { return "id"; }
-        protected override string GetTableName() { return "items"; }
+        protected override string GetTableName() { return "game.item"; }
         protected override async Task<Item> CreateModelAsync(object[] row)
         {
             Item item = new Item();

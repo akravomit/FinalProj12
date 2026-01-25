@@ -40,7 +40,7 @@ namespace DBL
         }
         protected override string GetTableName()
         {
-            return "item_attacks";
+            return "game.item_attacks";
         }
         protected override async Task<Item_Attacks> CreateModelAsync(object[] row)
         {

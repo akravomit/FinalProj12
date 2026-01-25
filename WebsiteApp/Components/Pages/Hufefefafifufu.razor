@@ -1,0 +1,81 @@
+﻿@page "/Dungeon"
+@using DBL
+@using Models
+@inject NavigationManager NavMan
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedSessionStorage Session
+
+<h1 class="header">Dungeon</h1><h6 class="header" style="font-size:10px;">THE NETHER!</h6>
+
+<table style="width: 100%; margin: 0 auto; border-collapse: collapse;">
+    <tr colspan="100%">
+        @if (NoPlayerExists || NoUserExists)
+        {
+            <iframe width="640"
+                    height="480"
+                    src="https://www.youtube.com/embed/WFg0vTeXhWs"
+                    title="Oh, Hi mr frog :)"
+                    frameborder="0"
+                    allow="autoplay; fullscreen;">
+            </iframe>
+            <button class="generic-btn" @onclick="() => NavMan.NavigateTo(Login)">
+                <div class="perma_name">Go to the login page.<br />You are not logged in >:( </div>
+            </button>
+        }
+        else
+        {
+            @if(current is not null)
+            {
+                <button class="generic-btn" @onclick="KillMonster">
+                    <div class="name">Current opponent: <img src="img/@current.filepath.Replace('_',' ')" /> @current.name </div>
+                    <div class="tooltip">
+                        KILL ITTTT
+                    </div>
+                </button>
+            }
+            <button class="generic-btn" @onclick="SelectMonster">
+                <div class="perma_name">Pick a new monster!</div>
+            </button>
+        }
+    </tr>
+</table>
+
+@code {
+    List<Monster> Monsters; Monster current;
+    Player player; bool NoPlayerExists;
+    User Logged; bool NoUserExists;
+    string Login = "Login";
+    Random Jerry = new Random();
+    Dictionary<string, string> Monster_descriptions;
+    protected override async Task OnInitializedAsync()
+    {
+        Monsters = await Middleman.GetMonsters(false);
+        var tmp = await Session.GetAsync<Player>("Selected player");
+        if (tmp.Success) { player = new Player(tmp.Value); }
+        else { NoPlayerExists = true; }
+        var tmp2 = await Session.GetAsync<User>("Logged user");
+        if (tmp.Success) { Logged = new User(tmp2.Value); }
+        else { NoUserExists = true; }
+
+        await InvokeAsync(StateHasChanged);
+    }
+    private async Task SelectMonster()
+    {
+        current = Monsters[Jerry.Next(0,Monsters.Count)];
+
+        Monster_descriptions = new Dictionary<string, string>();
+        switch (current.isboss)
+        {
+            case 0: Monster_descriptions.Add("Isboss", "Normal enemy"); break;
+            case 1: Monster_descriptions.Add("Isboss", "Miniboss"); break;
+            case 2: Monster_descriptions.Add("Isboss", "Boss"); break;
+        } //Is it a boss
+        Monster_descriptions.Add("Description", current.description); //Description
+
+        await InvokeAsync(StateHasChanged);
+    }
+    private async Task KillMonster()
+    {
+        await Middleman.RegisterEntry(player, current);
+    }
+}

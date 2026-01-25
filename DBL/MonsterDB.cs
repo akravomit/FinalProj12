@@ -52,7 +52,7 @@ namespace DBL
         }
         protected override string GetTableName()
         {
-            return "game.monsters";
+            return "game.monster";
         }
         protected override async Task<Monster> CreateModelAsync(object[] row)
         {

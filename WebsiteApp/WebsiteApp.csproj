@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <Content Remove="Components\Pages\Asset Viewer.razor" />
+    <Content Remove="Components\Pages\Dungeon.razor" />
   </ItemGroup>
 
   <ItemGroup>
@@ -24,10 +25,16 @@
 
   <ItemGroup>
     <_ContentIncludedByDefault Remove="Components\Pages\Asset Viewer.razor" />
+    <_ContentIncludedByDefault Remove="Components\Pages\Dungeon.razor" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="Components\Pages\Asset Viewer.razor" />
+    <None Include="Components\Pages\Dungeon.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Components\Pages\Dungeon.razor" />
   </ItemGroup>
 
 </Project>

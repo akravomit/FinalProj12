@@ -21,6 +21,11 @@ namespace Models
             this.date_slain = date;
             this.times_killed = kills;
         }
+        public Entry (int monster_id, int player_id)
+        {
+            this.monster_id = monster_id;
+            this.player_id = player_id;
+        }
         public Entry(int id, int monster_id, int player_id, DateTime date, int kills) : this (monster_id,player_id,date,kills) { this.id = id; }
         public Entry (Entry other) : this (other.id, other.monster_id, other.player_id, other.date_slain, other.times_killed) { }
     }

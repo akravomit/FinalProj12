@@ -15,12 +15,12 @@
                 {
                     @foreach (Player pingle_pongle in Playerlist)
                     {
-                        <button class="generic-btn">
+                        <button class="generic-btn" @onclick="() => SelectPlayerAndGoToTheDungeon(pingle_pongle)">
                             <div class="name">@pingle_pongle.name</div>
                             <div class="tooltip">
                                 HP: @pingle_pongle.hp | Mana: @pingle_pongle.mana <br/>
                                 @pingle_pongle.name.Split([' ', ',', '-', '<', '>', '(', ')'])[0] has @pingle_pongle.coins coins
-                                @*Name trimming, luh mao*@
+                                @*Name trimming, luh mao am I bored*@
                             </div>
                         </button>
                     }
@@ -50,37 +50,40 @@
             </button>
         }
     </tr>
-    <tr colspan="100%">
-        <button class="generic-btn">
-            <div class="name">Make a character!</div>
-            <div class="tooltip">
-                <input @bind-value="playername_for_the_fucntion__CreatePlayerAndInsertPlayerToTheDatabaseWhenYouPressThisButtonButtonWithTheButtonTagBecauseApparentlyYouNeedToInsertAPlayerToTheDatabaseViaARazorPage_NoClueWhyWouldSomeoneDoThatThoughItIsNotAFishAnt" placeholder="Enter your player name"></input>
-            </div>
-        </button>
-        <button class="generic-btn" @onclick="CreatePlayerAndInsertPlayerToTheDatabaseWhenYouPressThisButtonButtonWithTheButtonTagBecauseApparentlyYouNeedToInsertAPlayerToTheDatabaseViaARazorPage_NoClueWhyWouldSomeoneDoThatThoughItIsNotAFishAnt">
-            @if (response is null)
-            {
-                <div class="perma_name">
-                    Create the character!
+    @if (UserDoesExist)
+    {
+        <tr colspan="100%">
+            <button class="generic-btn">
+                <div class="name">Make a character!</div>
+                <div class="tooltip">
+                    <input @bind-value="playername_for_the_fucntion__CreatePlayerAndInsertPlayerToTheDatabaseWhenYouPressThisButtonButtonWithTheButtonTagBecauseApparentlyYouNeedToInsertAPlayerToTheDatabaseViaARazorPage_NoClueWhyWouldSomeoneDoThatThoughItIsNotAFishAnt" placeholder="Enter your player name"></input>
                 </div>
-            }
-            else
-            {
-                <div class="perma_name">
-                    @response
-                </div>
-            }
-        </button>
-        <button class="generic-btn" @onclick="Back">
-            <div class="perma_name">Go back to the main page</div>
-        </button>
+            </button>
+            <button class="generic-btn" @onclick="Create_Player_And_Insert_Player_To_The_Database_When_You_Press_This_Button_Button_With_The_Button_Tag_Because_Apparently_You_Need_To_Insert_A_Player_To_The_Database_Via_A_Razor_Page___No_Clue_Why_Would_Someone_Do_That_Though_It_Is_Not_A_Fish_Ant">
+                @if (response is null)
+                {
+                    <div class="perma_name">
+                        Create the character!
+                    </div>
+                }
+                else
+                {
+                    <div class="perma_name">
+                        @response
+                    </div>
+                }
+            </button>
+            <button class="generic-btn" @onclick="Back">
+                <div class="perma_name">Go back to the main page</div>
+            </button>
 
-    </tr>
+        </tr>
+    }
 </table>
 
 @code {
     User LoggedUser;
-    List<Player> Playerlist; Player SelectedPlayer;
+    List<Player> Playerlist;
     bool UserDoesExist;
     private string eye = "<o>"; private string Login = "Login"; private string response = null;
     string playername_for_the_fucntion__CreatePlayerAndInsertPlayerToTheDatabaseWhenYouPressThisButtonButtonWithTheButtonTagBecauseApparentlyYouNeedToInsertAPlayerToTheDatabaseViaARazorPage_NoClueWhyWouldSomeoneDoThatThoughItIsNotAFishAnt;
@@ -109,9 +112,14 @@
         await Session.DeleteAsync("Logged user");
         LoggedUser = null;
         UserDoesExist = false;
-        await InvokeAsync(StateHasChanged);
+        await Back();
     }
-    private async Task CreatePlayerAndInsertPlayerToTheDatabaseWhenYouPressThisButtonButtonWithTheButtonTagBecauseApparentlyYouNeedToInsertAPlayerToTheDatabaseViaARazorPage_NoClueWhyWouldSomeoneDoThatThoughItIsNotAFishAnt()
+    private async Task SelectPlayerAndGoToTheDungeon(Player p)
+    {
+        await Session.SetAsync("Selected player", p);
+        NavMan.NavigateTo("/Dungeon");
+    }
+    private async Task Create_Player_And_Insert_Player_To_The_Database_When_You_Press_This_Button_Button_With_The_Button_Tag_Because_Apparently_You_Need_To_Insert_A_Player_To_The_Database_Via_A_Razor_Page___No_Clue_Why_Would_Someone_Do_That_Though_It_Is_Not_A_Fish_Ant()
     {
         Player result = await Middleman.InsertGetPlayer(playername_for_the_fucntion__CreatePlayerAndInsertPlayerToTheDatabaseWhenYouPressThisButtonButtonWithTheButtonTagBecauseApparentlyYouNeedToInsertAPlayerToTheDatabaseViaARazorPage_NoClueWhyWouldSomeoneDoThatThoughItIsNotAFishAnt.Substring(0,20), LoggedUser.id);
         if (result is null) { response = "This character already exists! Check its name and try again."; }

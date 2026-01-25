@@ -59,17 +59,15 @@ namespace DBL
         {
             return await SelectAllAsync();
         }
-        public async Task<Entry> GetByUniqueK(string keyname, object val)
+        public async Task<Entry> GetByUniqueK(Dictionary<string,object> where)
         {
-            List<Entry> result = await GetByKey(keyname, val);
+            List<Entry> result = await GetByKeys(where);
             if (result == null || result.Count == 0) return null;
             return result[0];
         }
-        public async Task<List<Entry>> GetByKey(string keyname, object obj)
+        public async Task<List<Entry>> GetByKeys(Dictionary<string,object> Where)
         {
-            Dictionary<string, object> where = new Dictionary<string, object>();
-            where.Add(keyname, obj);
-            List<Entry> result = await SelectAllAsync(where);
+            List<Entry> result = await SelectAllAsync(Where);
             if (result.Count == 0) return null;
             return result;
         }
@@ -83,12 +81,18 @@ namespace DBL
         {
             return await UpdateAsync(await EntryToDict(post), await EntryToDict(pre));
         }
-        public async Task<int> IncrementEntry(Entry pre)
+        public async Task<Entry> IncrementEntry(Entry pre)
         {
             Entry post = new Entry(pre);
             post.times_killed++;
-            return await Update_Async(pre, post);
+            await Update_Async(pre, post);
+            return post;
+        } //Auto-updates the killcount, adding 1 to times killed as another mosnter of that type was slain
+        public async Task<Entry> RegisterEntry(Player owner, Monster victim)
+        {
+            List<Entry> result = await GetByKeys(new Dictionary<string, object>() { { "MonsterID", victim.id }, { "PlayerID", owner.id } });
+            if (result is null) { return await InsertGetEntry(new Entry(victim.id, owner.id)); }
+            else { return await IncrementEntry(result[0]); }
         }
-        //Auto-updates the killcount, adding 1 to times killed as another mosnter of that type was slain
     }
 }

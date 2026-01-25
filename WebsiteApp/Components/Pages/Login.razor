@@ -10,8 +10,8 @@
 <table style="width: 100%; margin: 0 auto; border-collapse: collapse;">
     <tr colspan="100%">
         <div class="button-container">
-            <input class="generic-btn" placeholder="Enter username here" @bind-value="username" style="font-size:20px;" />
-            <input class="generic-btn" placeholder="Enter your password here" @bind-value="password" style="font-size:20px;" />
+            <input class="generic-btn" type="text" placeholder="Enter username here" @bind-value="username" style="font-size:20px;" />
+            <input class="generic-btn" type="password" placeholder="Enter your password here" @bind-value="password" style="font-size:20px;" />
             @* <input class="generic-btn" placeholder="Enter your email here" @bind-value="email" style="font-size:20px;" /> *@
             <button class="generic-btn" @onclick="Login_Async">
                 <div class="perma_name">Log In!</div>
