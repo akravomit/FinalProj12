@@ -57,21 +57,21 @@ body {
     left: 0;
     z-index: 1;
     min-width: 180px;
-    max-width: 100%;*/
+    max-width: 100%;
     display: none;
-    padding: inherit;
+    padding: inherit;*/
     font-size: 20px;
     font-family: forte;
-    background-color: transparent;
+    /*background-color: transparent;*/
     color: black;
 }
 .generic-btn:hover .name {
     /*color: limegreen;*/
     display:none;
 }
-.generic-btn:hover .tooltip {
+/*.generic-btn:hover .tooltip {
     display: inline-block;
-}
+}*/
 .generic-btn:hover{
     background-color: rgba(30,205,50,0.55);
 }

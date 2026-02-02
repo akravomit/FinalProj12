@@ -25,9 +25,9 @@ namespace WebsiteApp
         { return await UDB.Register_Async(user, password); }
         public static async Task<List<User>> GetAllUsers()
         { return await UDB.GetAllAsync(); } //Just in case I'll need it? Idk
-        public static async Task<int> Delete(User target)
+        public static async Task<int> DeleteUser(User target)
         { return await UDB.Delete_Async(target, ""); }
-        public static async Task<int> Update(User target, User replacement)
+        public static async Task<int> UpdateUser(User target, User replacement)
         { return await UDB.Update_Async(target, replacement); }
         public static async Task<bool> DoesUserExist_ByKey_Async(string key, object value)
         { if (await UDB.GetByKey(key, value) == null) { return false; } return true; }
@@ -47,11 +47,27 @@ namespace WebsiteApp
         {  if (IncludeInvis) { return await MDB.GetAllAsync(); }
            return await MDB.GetByKeys(new Dictionary<string, object>() { {"IsHidden", false } }); 
         }
-        public static async Task<List<Dictionary<List<int[,,]>, Dictionary<string[,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,], List<List<List<Dictionary<int, Dictionary<Dictionary<int,int>,object>>>>>>>>> Cascade(List<Dictionary<List<int[,,]>, Dictionary<string[,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,], List<List<List<Dictionary<int, Dictionary<Dictionary<int, int>, object>>>>>>>> fart) { throw new NotImplementedException(); }
+        public static async Task<List<Dictionary<List<int[,,]>, Dictionary<string[,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,], List<List<List<Dictionary<int, Dictionary<Dictionary<int,int>,object>>>>>>>>> Cascade(List<Dictionary<List<int[,,]>, Dictionary<string[,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,], List<List<List<Dictionary<int, Dictionary<Dictionary<int, int>, object>>>>>>>> fart) { throw new NotImplementedException(); }
         //Yes, this is not used
         public static async Task RegisterEntry(Player owner, Monster monster)
         {
             await EnDB.RegisterEntry(owner, victim:monster);
         }
+        public static async Task<Dictionary<string,object>> DescribeMonster(Monster m)
+        {
+            return await MDB.MonsterToDict(m);
+        }
+        public static async Task<Player> AwardPlayerForKill(Monster m, Player p)
+        {
+            Random Jerry = new Random();
+            double DiffMultiplier = ((double)((m.rarity * 100 + m.defense * 10) / 10)) / 100 + 1;
+            int BossMultiplier = 10 * m.isboss;
+            int RawCoin = Jerry.Next(1 + BossMultiplier, (int)(Math.Pow(10 + BossMultiplier, 2)) + 1);
+            double TotalCoin = RawCoin * DiffMultiplier;
+            Player UpdatedPlr = new Player(p); UpdatedPlr.coins += (int)TotalCoin;
+            await UpdatePlayer(p, UpdatedPlr);
+            return UpdatedPlr;
+        }
+        public static async Task<int> UpdatePlayer(Player Old, Player New) { return await PDB.Update_Async(Old, New); }
     }
 }

@@ -24,18 +24,42 @@
         }
         else
         {
+            @if(player is not null)
+            {
+                <button class="generic-btn">
+                    <div class="perma_name">
+                        @player.name <br />
+                        <div style="font-size:20px">
+                            HP: @player.hp | Mana: @player.mana <br />
+                            Coins: @player.coins
+                        </div>
+                    </div>
+                    
+                </button>
+            }
             @if(current is not null)
             {
                 <button class="generic-btn" @onclick="KillMonster">
-                    <div class="name">Current opponent: <img src="img/@current.filepath.Replace('_',' ')" /> @current.name </div>
-                    <div class="tooltip">
-                        KILL ITTTT
+                    <div class="perma_name">Current opponent: <img src="img/@current.filepath.Replace('_',' ')" /> 
+                        @current.name <br />
+                        <div style="font-size:20px">
+                            KILL ITTTT
+                        </div>
                     </div>
                 </button>
             }
-            <button class="generic-btn" @onclick="SelectMonster">
-                <div class="perma_name">Pick a new monster!</div>
-            </button>
+            @if(player is not null && current is null)
+            {
+                <button class="generic-btn" @onclick="SelectMonster">
+                    <div class="perma_name">Pick a new monster!</div>
+                </button>
+            }
+            else
+            {
+                <button class="generic-btn" @onclick="Back">
+                    <div class="perma_name">Go back to the home page</div>
+                </button>
+            }
         }
     </tr>
 </table>
@@ -46,7 +70,8 @@
     User Logged; bool NoUserExists;
     string Login = "Login";
     Random Jerry = new Random();
-    Dictionary<string, string> Monster_descriptions;
+    Dictionary<string, object> Monster_descriptions;
+
     protected override async Task OnInitializedAsync()
     {
         Monsters = await Middleman.GetMonsters(false);
@@ -54,8 +79,9 @@
         if (tmp.Success) { player = new Player(tmp.Value); }
         else { NoPlayerExists = true; }
         var tmp2 = await Session.GetAsync<User>("Logged user");
-        if (tmp.Success) { Logged = new User(tmp2.Value); }
+        if (tmp2.Success) { Logged = new User(tmp2.Value); }
         else { NoUserExists = true; }
+
 
         await InvokeAsync(StateHasChanged);
     }
@@ -63,19 +89,21 @@
     {
         current = Monsters[Jerry.Next(0,Monsters.Count)];
 
-        Monster_descriptions = new Dictionary<string, string>();
+        Monster_descriptions = await Middleman.DescribeMonster(current);
         switch (current.isboss)
         {
-            case 0: Monster_descriptions.Add("Isboss", "Normal enemy"); break;
-            case 1: Monster_descriptions.Add("Isboss", "Miniboss"); break;
-            case 2: Monster_descriptions.Add("Isboss", "Boss"); break;
+            case 0: Monster_descriptions["IsBoss"] = "normal enemy"; break;
+            case 1: Monster_descriptions["IsBoss"] = "miniboss"; break;
+            case 2: Monster_descriptions["IsBoss"] = "boss"; break;
         } //Is it a boss
-        Monster_descriptions.Add("Description", current.description); //Description
 
         await InvokeAsync(StateHasChanged);
     }
     private async Task KillMonster()
     {
         await Middleman.RegisterEntry(player, current);
+        player = await Middleman.AwardPlayerForKill(current, player);
+        await SelectMonster();
     }
+    private async Task Back() { NavMan.NavigateTo("/"); }
 }

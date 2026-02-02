@@ -26,7 +26,7 @@ namespace DBL
             ret.ishidden = Convert.ToBoolean(dict["IsHidden"]);
             return ret;
         }
-        private async Task<Dictionary<string, object>> MonsterToDict(Monster monster)
+        public async Task<Dictionary<string, object>> MonsterToDict(Monster monster)
         {
             Dictionary<string, object> dict = new Dictionary<string, object>()
             {

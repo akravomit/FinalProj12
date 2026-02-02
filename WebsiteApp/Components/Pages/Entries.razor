@@ -1,0 +1,46 @@
+﻿@page "/Entries"
+@using DBL
+@using Models
+@inject NavigationManager NavMan
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedSessionStorage Session
+
+<h1 class="header">Entries</h1>
+
+<table style="width: 100%; margin: 0 auto; border-collapse: collapse;">
+    <tr colspan="100%">
+        @if (NoPlayerExists || NoUserExists)
+        {
+            <iframe width="640"
+                    height="480"
+                    src="https://www.youtube.com/embed/WFg0vTeXhWs"
+                    title="Oh, Hi mr frog :)"
+                    frameborder="0"
+                    allow="autoplay; fullscreen;">
+            </iframe>
+            <button class="generic-btn" @onclick="() => NavMan.NavigateTo(Login)">
+                <div class="perma_name">Go to the login page.<br />You are not logged in >:( </div>
+            </button>
+        }
+    </tr>
+</table>
+
+@code {
+    string Login = "Login";
+    Player player; User Logged;
+    bool NoPlayerExists; bool NoUserExists;
+    protected override async Task OnInitializedAsync()
+    {
+        //Monsters = await Middleman.GetMonsters(false);
+        var tmp = await Session.GetAsync<Player>("Selected player");
+        if (tmp.Success) { player = new Player(tmp.Value); }
+        else { NoPlayerExists = true; }
+        var tmp2 = await Session.GetAsync<User>("Logged user");
+        if (tmp2.Success) { Logged = new User(tmp2.Value); }
+        else { NoUserExists = true; }
+
+
+        await InvokeAsync(StateHasChanged);
+    }
+    private async Task Back() { NavMan.NavigateTo("/"); }
+}

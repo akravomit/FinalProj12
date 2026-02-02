@@ -25,8 +25,7 @@ namespace DBL
         {
             Dictionary<string, object> dict = new Dictionary<string, object>()
             {
-                { "id", player.id },
-                { "Name", player.name },
+                { "name", player.name },
                 { "HP", player.hp },
                 { "Mana", player.mana },
                 { "Coins", player.coins },
