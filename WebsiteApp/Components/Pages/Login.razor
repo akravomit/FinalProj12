@@ -7,23 +7,29 @@
 @*@inherits Microsoft.AspNetCore.Components.ComponentBase*@
 
 <h1 class="header">Login</h1>
-<table style="width: 100%; margin: 0 auto; border-collapse: collapse;">
-    <tr colspan="100%">
-        <div class="button-container">
-            <input class="generic-btn" type="text" placeholder="Enter username here" @bind-value="username" style="font-size:20px;" />
-            <input class="generic-btn" type="password" placeholder="Enter your password here" @bind-value="password" style="font-size:20px;" />
-            @* <input class="generic-btn" placeholder="Enter your email here" @bind-value="email" style="font-size:20px;" /> *@
-            <button class="generic-btn" @onclick="Login_Async">
-                <div class="perma_name">Log In!</div>
-            </button>
-            <button class="generic-btn" @onclick="Back">
-                <div class="perma_name">Go back to the main page</div>
-            </button>
-        </div>
-    </tr>
-    <tr colspan="100%">
+<form @onsubmit="Login_Async">
+    <div class="button-container">
+        <input class="generic-btn" type="text" placeholder="Enter username here" @bind-value="username" required style="font-size:20px; font-family:Forte;" />
+        @if (tries >= 5)
+        {
+            <input class="generic-btn" type="email" pattern="[a-z0-9._%+-]+@@[a-z0-9.-]+\.[a-z]{2,}$" placeholder="Enter your email here" @bind-value="email" required style="font-size:20px; font-family:Forte;" />
+        }
+        else
+        {
+            <input class="generic-btn" type="password" pattern="(?=.*[A-Z]).{6,20}" placeholder="Enter your password here." title="Password must be between 6 and 20 characters long and contain at least one uppercase letter" @bind-value="password" required style="font-size:20px; font-family:Forte;" />
+        } @*"(?=.*[A-Z])(?=.*\d).{6,20}"*@
+        <button class="generic-btn" type="submit">
+            <div class="perma_name">Log in</div>
+        </button>
+        <button class="generic-btn" type="reset">
+            <div class="perma_name">Reset all fields</div>
+        </button>
+        <button class="generic-btn" type="button" @onclick="Back">
+            <div class="perma_name">Go to the main menu</div>
+        </button>
         @if (RenderUser)
         {
+            <br />
             if (response is User)
             {
                 User tmp = new User(response as User);
@@ -35,18 +41,17 @@
             }
             if (response is string)
             {
+                @if(tries >= 5) { response += "Log in with your email instead." ; }
                 <div class="generic-btn">
                     <div class="perma_name">
                         @response
                     </div>
                 </div>
             }
-            
+
         }
-    </tr>
-</table>
-
-
+    </div>
+</form>
 
 @code {
     string username;
@@ -54,11 +59,13 @@
     string email;
     object response;
     bool RenderUser = false;
+    int tries = 0;
     private async Task Login_Async()
-    {
+    { 
         response = await Middleman.Login(username, password);
         RenderUser = true;
         if (response is User) { await Session.SetAsync("Logged user", response as User); }
+        else { tries++; }
         await InvokeAsync(StateHasChanged);
     }
     private async Task Back() { NavMan.NavigateTo("/"); }

@@ -1,5 +1,12 @@
 wwwroot\app.css
-wwwroot\img\IMG_20250221_204356.png
+wwwroot\img\bg\armory.png
+wwwroot\img\bg\dungeon.png
+wwwroot\img\bg\farm.png
+wwwroot\img\bg\IMG_20250221_204356.png
+wwwroot\img\bg\library.png
+wwwroot\img\bg\monsters.png
+wwwroot\img\bg\noticing.png
+wwwroot\img\bg\Shugi_and_Kimi.png
 wwwroot\img\monsters\Antlion Charger.webp
 wwwroot\img\monsters\Demon Eye.webp
 wwwroot\img\monsters\Derpling.webp
@@ -20,5 +27,3 @@ wwwroot\img\monsters\Undead Miner.webp
 wwwroot\img\monsters\Unicorn.webp
 wwwroot\img\monsters\Vulture.webp
 wwwroot\img\monsters\Zombie.webp
-wwwroot\img\noticing.png
-wwwroot\img\Shugi_and_Kimi.png

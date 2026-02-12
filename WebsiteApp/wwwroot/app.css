@@ -29,7 +29,7 @@ h1:focus {
 }
 
 body {
-    background-image: url('/img/Shugi_and_Kimi.png');
+    background-image: url('\img\bg\library.png');
     background-size: cover;
 }
 
@@ -48,18 +48,15 @@ body {
     color: black;
 }
 .tooltip {
-    /*display: none;
+    display: none;
     position: absolute;
     background-color: rgba(255, 255, 255, 0.8);
     padding: 1px;
-    border: 2px solid #ddd;
-    top: 50%;
+    border: 1px solid #ddd;
+    top: 100%;
     left: 0;
     z-index: 1;
-    min-width: 180px;
-    max-width: 100%;
-    display: none;
-    padding: inherit;*/
+    /*min-width: 180px;*/
     font-size: 20px;
     font-family: forte;
     /*background-color: transparent;*/

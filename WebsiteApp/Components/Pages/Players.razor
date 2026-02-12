@@ -7,7 +7,7 @@
 
 <h1 class="header">Select a Player from the ones you made</h1>
 <table style="width: 100%; margin: 0 auto; border-collapse: collapse;">
-    <tr colspan="100%">
+    <tr>
         @if (UserDoesExist)
         {
             <div class="button-container">
@@ -18,12 +18,12 @@
                         <button class="generic-btn" @onclick="() => SelectPlayerAndGoToTheDungeon(pingle_pongle)">
                             <div class="perma_name">
                                 @pingle_pongle.name <br />
-                                <div style="font-size:20px">
-                                    HP: @pingle_pongle.hp | Mana: @pingle_pongle.mana <br />
-                                    @pingle_pongle.name.Split([' ', ',', '-', '<', '>', '(', ')'])[0] has @pingle_pongle.coins coins
-                                    @*Name trimming, luh mao am I bored*@
-                                </div>
-                            </div> @* @onmouseover="() => IAmCreativelyBankruptINeedNameIdeas(pingle_pongle)" *@
+                            </div>
+                            <div class="tooltip">
+                                HP: @pingle_pongle.hp | Mana: @pingle_pongle.mana <br />
+                                @pingle_pongle.name.Split([' ', ',', '-', '<', '>', '(', ')'])[0] has @pingle_pongle.coins coins
+                                @*Name trimming, luh mao am I bored*@
+                            </div>
                         </button>
                     }
                 }
@@ -35,7 +35,11 @@
                         </div>
                     </div>
                 }
-                
+                <button class="generic-btn" @onclick="Back">
+                    <div class="perma_name">
+                        Go back to the main page
+                    </div>
+                </button>
             </div>
         }
         else
@@ -51,41 +55,44 @@
                 <div class="perma_name">Go to the login page.<br />You are not logged in >:( </div>
             </button>
         }
+
     </tr>
-    @if (UserDoesExist)
-    {
-        <tr colspan="100%">
-            <button class="generic-btn">
-                <div class="perma_name"><input @bind-value="playername_for_the_fucntion__CreatePlayerAndInsertPlayerToTheDatabaseWhenYouPressThisButtonButtonWithTheButtonTagBecauseApparentlyYouNeedToInsertAPlayerToTheDatabaseViaARazorPage_NoClueWhyWouldSomeoneDoThatThoughItIsNotAFishAnt" placeholder="Enter a name for a new player"></input></div>
+</table>
+@if (UserDoesExist)
+{
+    <form @onsubmit="CreatePlr">
+        <div class="button-container">
+            <input class="generic-btn" @bind-value="playername" placeholder="Enter a name for a new character" style="font-size:20px; font-family:Forte;" required pattern="^.{0,20}$" title="Please input a name under 20 characters long" />
+            <button class="generic-btn" type="submit">
+                <div class="perma_name">Create the new character!</div>
             </button>
-            <button class="generic-btn" @onclick="Create_Player_And_Insert_Player_To_The_Database_When_You_Press_This_Button_Button_With_The_Button_Tag_Because_Apparently_You_Need_To_Insert_A_Player_To_The_Database_Via_A_Razor_Page___No_Clue_Why_Would_Someone_Do_That_Though_It_Is_Not_A_Fish_Ant">
-                @if (response is null)
-                {
-                    <div class="perma_name">
-                        Create the character!
-                    </div>
-                }
-                else
-                {
+            <button class="generic-btn" type="reset">
+                <div class="perma_name">Reset all fields</div>
+            </button>
+            @if (response is not null)
+            {
+                <button class="generic-btn">
                     <div class="perma_name">
                         @response
                     </div>
-                }
-            </button>
-            <button class="generic-btn" @onclick="Back">
-                <div class="perma_name">Go back to the main page</div>
-            </button>
+                </button>
+            }
+        </div>
+    </form>
+}
 
-        </tr>
+<style>
+    body {
+        background-image: url('img/bg/noticing.png');
     }
-</table>
+</style>
 
 @code {
     User LoggedUser;
     List<Player> Playerlist;
     bool UserDoesExist;
     private string eye = "<o>"; private string Login = "Login"; private string response = null; private List<string> Player_Display_String = new List<string>();
-    string playername_for_the_fucntion__CreatePlayerAndInsertPlayerToTheDatabaseWhenYouPressThisButtonButtonWithTheButtonTagBecauseApparentlyYouNeedToInsertAPlayerToTheDatabaseViaARazorPage_NoClueWhyWouldSomeoneDoThatThoughItIsNotAFishAnt;
+    string playername;
     protected override async Task OnInitializedAsync()
     {
 
@@ -113,18 +120,17 @@
         UserDoesExist = false;
         await Back();
     }
+    private async Task CreatePlr()
+    {
+        Playerlist.Add(await Middleman.InsertGetPlayer(playername,LoggedUser.id));
+        await InvokeAsync(StateHasChanged);
+    }
     private async Task SelectPlayerAndGoToTheDungeon(Player p)
     {
         await Session.SetAsync("Selected player", p);
         NavMan.NavigateTo("/Dungeon");
     }
-    private async Task Create_Player_And_Insert_Player_To_The_Database_When_You_Press_This_Button_Button_With_The_Button_Tag_Because_Apparently_You_Need_To_Insert_A_Player_To_The_Database_Via_A_Razor_Page___No_Clue_Why_Would_Someone_Do_That_Though_It_Is_Not_A_Fish_Ant()
-    {
-        Player result = await Middleman.InsertGetPlayer(playername_for_the_fucntion__CreatePlayerAndInsertPlayerToTheDatabaseWhenYouPressThisButtonButtonWithTheButtonTagBecauseApparentlyYouNeedToInsertAPlayerToTheDatabaseViaARazorPage_NoClueWhyWouldSomeoneDoThatThoughItIsNotAFishAnt.Substring(0,20), LoggedUser.id);
-        if (result is null) { response = "This character already exists! Check its name and try again."; }
-        else { response = $"{result.name} has been inserted into the database! Enjoy."; }
-    }
-    private async Task IAmCreativelyBankruptINeedNameIdeas(Player p)
+    private async Task PlayerDescription(Player p)
     {
         Player_Display_String.Add($"HP: {p.hp} | Mana: {p.mana}");
         Player_Display_String.Add($"{p.name.Split([' ', ',', '-', '<', '>', '(', ')'])[0]} has {p.coins} coins");
