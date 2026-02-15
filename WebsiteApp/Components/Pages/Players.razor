@@ -95,13 +95,7 @@
     string playername;
     protected override async Task OnInitializedAsync()
     {
-
-    }
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            var tmp = await Session.GetAsync<User>("Logged user");
+        var tmp = await Session.GetAsync<User>("Logged user");
             if (tmp.Success) 
             { 
                 LoggedUser = tmp.Value; 
@@ -110,6 +104,12 @@
             }
             else { UserDoesExist = false; }
             await InvokeAsync(StateHasChanged);
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            
         }
     }
     private async Task Back() { NavMan.NavigateTo("/"); }
@@ -122,8 +122,13 @@
     }
     private async Task CreatePlr()
     {
-        Playerlist.Add(await Middleman.InsertGetPlayer(playername,LoggedUser.id));
-        await InvokeAsync(StateHasChanged);
+        Player tmp = await Middleman.InsertGetPlayer(playername,LoggedUser.id);
+        if (Playerlist is null)
+        {
+            Playerlist = new List<Player>();
+            Playerlist.Add(tmp);
+        }
+        StateHasChanged();
     }
     private async Task SelectPlayerAndGoToTheDungeon(Player p)
     {

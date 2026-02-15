@@ -13,6 +13,7 @@ namespace UniTesting
             //await MonsterTesting();
             //await PlayerTesting(); //--DONE
             //await ElementTesting(); //--DONE
+            await Console.Out.WriteLineAsync(Environment.MachineName);
         }
         public static async Task UserTesting()
         {
