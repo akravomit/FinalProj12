@@ -22,7 +22,7 @@
 }
 else
 {
-    <form @onsubmit="UpdateUser" style="font-size:20px; font-family:Forte;"> Update your user
+    <form @onsubmit="UpdateUser" style="font-size:20px; font-family:Forte;">
         <input class="generic-btn" type="text" placeholder="Enter an updated username, if you want to update it" @bind-value="username" style="font-size:20px; font-family:Forte;" />
         <input class="generic-btn" type="password" pattern="(?=.*[A-Z]).{6,20}" placeholder="Enter an updated password, if you want to update it" title="Password must be between 6 and 20 characters long and contain at least one uppercase letter" @bind-value="password" style="font-size:20px; font-family:Forte;" />
         <input class="generic-btn" type="email" pattern="[a-z0-9._%+-]+@@[a-z0-9.-]+\.[a-z]{2,}$" placeholder="Your email goes here" @bind-value="email" required title="Your email goes here for verification purposes" style="font-size:20px; font-family:Forte;" />
@@ -32,23 +32,19 @@ else
         <button type="button" class="generic-btn" style="font-size:20px; font-family:Forte;" @onclick="Back">
             Go back
         </button>
-        <button type="button" class="generic-btn" style="font-size:20px; font-family:Forte;" onclick="Confirmation">
+        <button type="button" class="generic-btn" style="font-size:20px; font-family:Forte;" @onclick="DeleteUser">
 
         </button>
     </form>
 }
 
-<script>
-    function Confirmation(){
-        confirm("Are you SURE you want to delete your user? This action is permanent!"):@Delete();
-    }
-</script>
 
 @code {
     User LoggedUser;
     UserDB UDB;
     bool UserDoesExist;
     string username; string password; string email; string Login = "Login";
+    [Inject] IJSRuntime JS { get; set; } = default!;
     protected override async Task OnInitializedAsync()
     {
         var tmp = await Session.GetAsync<User>("Logged user");
@@ -76,5 +72,10 @@ else
         LoggedUser = new User(toupdate);
         await Session.SetAsync("Logged user", LoggedUser);
         await InvokeAsync(StateHasChanged);
+    }
+    private async Task DeleteUser()
+    {
+        bool confirmed = await JS.InvokeAsync<bool>("confirm", "Are you SURE you want to delete your user? This action is permanent!");
+        if (confirmed) { await Delete(); }
     }
 }

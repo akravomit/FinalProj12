@@ -153,6 +153,11 @@ namespace DBL
                     ValidLogin = false;
                 }
             }
+            else
+            {
+                ret += "This user does not exist!";
+                ValidLogin = false;
+            }
             if (ValidLogin)
             {
                 return user;
