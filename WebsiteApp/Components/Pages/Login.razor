@@ -6,7 +6,12 @@
 @inject ProtectedSessionStorage Session
 @*@inherits Microsoft.AspNetCore.Components.ComponentBase*@
 
-<h1 class="header">Login</h1>
+
+<ul>
+    <li><div class="perma_name">Log into your account</div></li>
+    <navname><button @onclick="Back" class="generic-btn"><div class="perma_name">Go back to the main page</div></button></navname>
+</ul>
+
 <form @onsubmit="Login_Async">
     <div class="button-container">
         <input class="generic-btn" type="text" placeholder="Enter username here" @bind-value="username" required style="font-size:20px; font-family:Forte;" />
@@ -24,9 +29,6 @@
         <button class="generic-btn" type="reset">
             <div class="perma_name">Reset all fields</div>
         </button>
-        <button class="generic-btn" type="button" @onclick="Back">
-            <div class="perma_name">Go to the main menu</div>
-        </button>
         @if (RenderUser)
         {
             <br />
@@ -41,7 +43,7 @@
             }
             if (response is string)
             {
-                @if(tries >= 5) { response += "Log in with your email instead." ; }
+                @if(tries >= 5) { UseEmail = true; response += "Log in with your email instead." ; }
                 <div class="generic-btn">
                     <div class="perma_name">
                         @response
@@ -64,13 +66,18 @@
     string password;
     string email;
     object response;
+    bool UseEmail = false;
     bool RenderUser = false;
     int tries = 0;
     private async Task Login_Async()
     { 
-        response = await Middleman.Login(username, password);
+        if (!UseEmail) { response = await Middleman.Login(username, password); }
+        else { response = await Middleman.Login(username, email); }
         RenderUser = true;
-        if (response is User) { await Session.SetAsync("Logged user", response as User); }
+        if (response is User) 
+        { 
+            await Session.SetAsync("Logged user", response as User);
+        }
         else { tries++; }
         await InvokeAsync(StateHasChanged);
     }

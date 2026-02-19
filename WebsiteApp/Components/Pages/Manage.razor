@@ -5,78 +5,94 @@
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @inject ProtectedSessionStorage Session
 
-<h1 class="header">Manage</h1>
-<table style="width: 100%; margin: 0 auto; border-collapse: collapse;">
-    <tr colspan="100%">
-        <div class="button-container">
-            @if (UserDoesExist)
-            {
-                <div class="generic-btn">
-                    <div class="name">Your name:</div>
-                    <div class="tooltip">@LoggedUser.username</div>
-                </div>
-                <div class="generic-btn">
-                    <div class="name">Your email:</div>
-                    <div class="tooltip">@LoggedUser.email</div>
-                </div>
-                <div class="generic-btn">
-                    <div class="name">Your password:</div>
-                    <div class="tooltip">@LoggedUser.password</div>
-                </div>
-                <button @onclick="Log_Out_Async" class="generic-btn">
-                    <div class="name">Log out</div>
-                    <div class="tooltip">Log out of your current user</div>
-                </button>
-            }
-        </div>
-    </tr>
-    <tr colspan="100%">
-        <div class="generic-btn"><div class="perma_name">Change your data</div></div>
-        <input class="generic-btn" placeholder="Enter username here" @bind-value="username" style="font-size:20px;" />
-        <input class="generic-btn" placeholder="Enter your password here" @bind-value="password" style="font-size:20px;" />
-        <button @onclick="Update" class="generic-btn">
-            <div class="name">Update user</div>
-            <div class="tooltip">WARNING: This is irreversible</div>
-        </button>
-        <button @onclick="Delete" class="generic-btn">
-            <div class="name">Delete user</div>
-            <div class="tooltip">WARNING: This is irreversible</div>
-        </button>
-    </tr>
-    <tr colspan="100%">
-        <button class="generic-btn" @onclick="Back">
-            <div class="perma_name">Go back to the main page</div>
-        </button>
-    </tr>
-</table>
 
+@if (!UserDoesExist || !IsAdmin)
+{
+    <iframe width="640"
+            height="480"
+            src="https://www.youtube.com/embed/WFg0vTeXhWs"
+            title="Oh, Hi mr frog :)"
+            frameborder="0"
+            allow="autoplay; fullscreen;">
+    </iframe>
+    <button class="generic-btn" @onclick="() => NavMan.NavigateTo(Login)">
+        <div class="perma_name">Go to the login page.<br />You are not logged in >:( </div>
+    </button>
+}
+else
+{
+    <ul>
+        <li><div class="perma_name">Manage other users</div></li>
+        <li><div class="perma_name">Hello, @LoggedUser.username!</div></li>
+        <navname><button @onclick="Back" class="generic-btn"><div class="perma_name">Go back to the main page</div></button></navname>
+    </ul>
+    <table style="width: 100%; margin: 0 auto; border-collapse: collapse;">
+        <tr colspan="100%">
+            <div class="button-container">
+                @if (SelectedUsers is not null)
+                {
+                    @foreach (User user in SelectedUsers)
+                    {
+                        <button class="generic-btn">
+                            <div class="perma_name">@user.username</div>
+                        </button>
+                    }
+                }
+            </div>
+        </tr>
+    </table>
+}
+
+
+<style>
+    .body {
+        background-image: url('img\bg\library.png');
+    }
+</style>
 
 @code {
+    List<User> AllUsers;
+    List<User> SelectedUsers;
     User LoggedUser;
-    bool UserDoesExist;
+    bool UserDoesExist; bool IsAdmin;
     string username; string password; string email;
+    const string Login = "Login"; [Inject] IJSRuntime JS { get; set; } = default!;
+
     protected override async Task OnInitializedAsync()
     {
         var tmp = await Session.GetAsync<User>("Logged user");
-        if (tmp.Success) { LoggedUser = tmp.Value; }
-        UserDoesExist = await Middleman.DoesUserExist_ByKey_Async("username",LoggedUser.username);
-    }
+        if (tmp.Success) 
+        { 
+            LoggedUser = tmp.Value; 
+            UserDoesExist = true;
+            IsAdmin = tmp.Value.isadmin;
+        }
+    } //Gets the logged user and verifies logged user is an admin
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            AllUsers = await Middleman.GetAllUsers();
+            StateHasChanged();
+            //List<User> result = SelectedUsers.FindAll(x => x.ishidden == false);
+        }
+    } //Gets all users to manage
     private async Task Back() { NavMan.NavigateTo("/"); }
-    private async Task Delete() { await Middleman.DeleteUser(LoggedUser); await Log_Out_Async(); }
+    private async Task DeleteUser(User user)
+    {
+        bool confirmed = await JS.InvokeAsync<bool>("confirm", "Are you sure you want to delete your user?");
+        if (confirmed) { await Middleman.DeleteUser(user); }
+    }
+    private async Task RestoreUser(User user)
+    {
+        bool confirmed = await JS.InvokeAsync<bool>("confirm", "Are you sure you want to restore your user?");
+        if (confirmed) { await Middleman.UnDeleteUser(user); }
+    }
     private async Task Log_Out_Async()
     {
         await Session.DeleteAsync("Logged user");
         LoggedUser = null;
         UserDoesExist = false;
-        await InvokeAsync(StateHasChanged);
-    }
-    private async Task Update()
-    {
-        User Post = new User(LoggedUser);
-        if (username is not null) { Post.username = username; }
-        if (password is not null) { Post.password = password; }
-        await Middleman.UpdateUser(LoggedUser, Post);
-        await Session.SetAsync("Logged user", Post);
         await InvokeAsync(StateHasChanged);
     }
 }

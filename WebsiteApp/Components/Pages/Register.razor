@@ -5,7 +5,11 @@
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @inject ProtectedSessionStorage Session
 
-<h1 class="header">Register a new user!</h1>
+<ul>
+    <li><div class="perma_name">Register a new account</div></li>
+    <navname><button @onclick="Back" class="generic-btn"><div class="perma_name">Go back to the main page</div></button></navname>
+</ul>
+
 <form @onsubmit="Register_Async">
     <div class="button-container">
         <input class="generic-btn" type="text" placeholder="Enter username here" @bind-value="username" required style="font-size:20px; font-family:Forte;" />
@@ -16,9 +20,6 @@
         </button>
         <button class="generic-btn" type="reset">
             <div class="perma_name">Reset all fields</div>
-        </button>
-        <button class="generic-btn" @onclick="Back">
-            <div class="perma_name">Go back.</div>
         </button>
         <br />
         @if (RenderUser)

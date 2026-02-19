@@ -1,5 +1,6 @@
 ﻿using Models;
 using DBL;
+using System.Net.NetworkInformation;
 namespace WebsiteApp
 {
     public class Middleman
@@ -24,9 +25,17 @@ namespace WebsiteApp
         public static async Task<object> Register(User user, string password)
         { return await UDB.Register_Async(user, password); }
         public static async Task<List<User>> GetAllUsers()
-        { return await UDB.GetAllAsync(); } //Just in case I'll need it? Idk
+        { return await UDB.GetAllAsync();  } //Used exclusively by admins
+        public static async Task<List<User>> GetAllUsers(bool GetInvis)
+        { return await UDB.GetByKey("ishidden", GetInvis); }
         public static async Task<int> DeleteUser(User target)
         { return await UDB.Delete_Async(target, ""); }
+        public static async Task<int> UnDeleteUser(User target) 
+        {
+            User Undeleted = new User(target);
+            Undeleted.ishidden = false;
+            return await UDB.Update_Async(target, Undeleted); 
+        }
         public static async Task<int> UpdateUser(User target, User replacement)
         { return await UDB.Update_Async(target, replacement); }
         public static async Task<bool> DoesUserExist_ByKey_Async(string key, object value)

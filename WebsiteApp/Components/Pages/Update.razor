@@ -5,8 +5,6 @@
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @inject ProtectedSessionStorage Session
 
-<h1 class="header">Update your user data</h1>
-
 @if (!UserDoesExist)
 {
     <iframe width="640"
@@ -22,6 +20,11 @@
 }
 else
 {
+    <ul>
+        <li><div class="perma_name">Manage or update your user</div></li>
+        <li><div class="perma_name">Hello, @LoggedUser.username!</div></li>
+        <navname><button @onclick="Back" class="generic-btn"><div class="perma_name">Go back to the main page</div></button></navname>
+    </ul>
     <form @onsubmit="UpdateUser" style="font-size:20px; font-family:Forte;">
         <input class="generic-btn" type="text" placeholder="Enter an updated username, if you want to update it" @bind-value="username" style="font-size:20px; font-family:Forte;" />
         <input class="generic-btn" type="password" pattern="(?=.*[A-Z]).{6,20}" placeholder="Enter an updated password, if you want to update it" title="Password must be between 6 and 20 characters long and contain at least one uppercase letter" @bind-value="password" style="font-size:20px; font-family:Forte;" />
@@ -29,11 +32,8 @@ else
         <button type="submit" class="generic-btn" style="font-size:20px; font-family:Forte;">
             Update your user
         </button>
-        <button type="button" class="generic-btn" style="font-size:20px; font-family:Forte;" @onclick="Back">
-            Go back
-        </button>
         <button type="button" class="generic-btn" style="font-size:20px; font-family:Forte;" @onclick="DeleteUser">
-
+            Delete your user
         </button>
     </form>
 }
@@ -48,8 +48,7 @@ else
     protected override async Task OnInitializedAsync()
     {
         var tmp = await Session.GetAsync<User>("Logged user");
-        if (tmp.Success) { LoggedUser = tmp.Value; }
-        UserDoesExist = await Middleman.DoesUserExist_ByKey_Async("username", LoggedUser.username);
+        if (tmp.Success) { LoggedUser = tmp.Value; UserDoesExist = true; }
         UDB = new UserDB();
     }
     private async Task Back() { NavMan.NavigateTo("/"); }
@@ -76,6 +75,6 @@ else
     private async Task DeleteUser()
     {
         bool confirmed = await JS.InvokeAsync<bool>("confirm", "Are you SURE you want to delete your user? This action is permanent!");
-        if (confirmed) { await Delete(); }
+        if (confirmed) { await Delete(); await Log_Out_Async(); }
     }
 }

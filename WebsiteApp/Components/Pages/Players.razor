@@ -96,14 +96,14 @@
     protected override async Task OnInitializedAsync()
     {
         var tmp = await Session.GetAsync<User>("Logged user");
-            if (tmp.Success) 
-            { 
-                LoggedUser = tmp.Value; 
-                UserDoesExist = await Middleman.DoesUserExist_ByKey_Async("username", LoggedUser.username);
-                Playerlist = await Middleman.GetPlayers(LoggedUser.id);
-            }
-            else { UserDoesExist = false; }
-            await InvokeAsync(StateHasChanged);
+        if (tmp.Success) 
+        { 
+            LoggedUser = tmp.Value;
+            UserDoesExist = true;
+            Playerlist = await Middleman.GetPlayers(LoggedUser.id);
+        }
+        else { UserDoesExist = false; }
+        await InvokeAsync(StateHasChanged);
     }
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {

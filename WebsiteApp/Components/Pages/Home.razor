@@ -5,44 +5,32 @@
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @inject ProtectedSessionStorage Session
 
-@* <h1 class="header">Hello, world!</h1> *@
-@if (LoggedUsername is not null) { <h1 class="header">Hello, @LoggedUsername!</h1> }
-else { <h1 class="header">Hello, user!</h1> }
-
-<table style="width: 100%; margin: 0 auto; border-collapse: collapse;">
-    <tr colspan="100%"> 
-        <div class="button-container">
-            @if (LoggedUsername is null)
-            {
-                <button @onclick="() => Navigate('L')" class="generic-btn">
-                    <div class="perma_name">Login</div>
-                </button>
-                <button @onclick="() => Navigate('R')" class="generic-btn">
-                    <div class="perma_name">Register</div>
-                </button>
-            }
-            else
-            {
-                <button @onclick="() => Navigate('M')" class="generic-btn">
-                    <div class="perma_name">Manage your user</div>
-                </button>
-            
-                <button @onclick="() => Navigate('P')" class="generic-btn">
-                    <div class="perma_name">See your characters</div>
-                </button>
-                <button @onclick="Log_Out_Async" class="generic-btn">
-                    <div class="perma_name">Log out</div>
-                </button>
-            }
-        </div>
-    </tr>
-    @if (false)
+<ul>
+    @if (LoggedUser is null)
     {
-        <tr>
-            <button @onclick="kms">Crash the website!</button>
-        </tr>
+        <li><button @onclick="() => Navigate('L')" class="generic-btn"><div class="perma_name">Login</div></button></li>
+        <li><button @onclick="() => Navigate('R')" class="generic-btn"><div class="perma_name">Register</div></button></li>
+        <navname><div class="perma_name">Hello user!</div></navname>
     }
-</table>
+    else
+    {
+        <li><button @onclick="() => Navigate('U')" class="generic-btn"><div class="perma_name">Manage your user</div></button></li>
+        @if (LoggedUser.isadmin)
+        {
+            <li><button @onclick="() => Navigate('M')" class="generic-btn"><div class="perma_name">Manage other users</div></button></li>
+        }
+        <li><button @onclick="() => Navigate('P')" class="generic-btn"><div class="perma_name">See your characters</div></button></li>
+        <li><button @onclick="Log_Out_Async" class="generic-btn"><div class="perma_name">Log out of your account</div></button></li>
+        <navname><div class="perma_name">Hello, @LoggedUser.username!</div></navname>
+    }
+</ul>
+
+@if (LoggedUser is not null && LoggedUser.isadmin)
+{
+    <tr>
+        <button @onclick="kms">Crash the website!</button>
+    </tr>
+}
 
 <style>
     body { 
@@ -52,7 +40,6 @@ else { <h1 class="header">Hello, user!</h1> }
 
 @code {
     protected User LoggedUser;
-    protected string LoggedUsername;
     async Task Navigate(char c)
     {
         string dest = "/";
@@ -60,8 +47,9 @@ else { <h1 class="header">Hello, user!</h1> }
         {   
             case 'L': dest = "Login"; break;
             case 'R': dest = "Register"; break;
-            case 'M': dest = "Update"; break;
+            case 'U': dest = "Update"; break;
             case 'P': dest = "Players"; break;
+            case 'M': dest = "Manage"; break;
         }
         NavMan.NavigateTo(dest);
     }
@@ -70,8 +58,6 @@ else { <h1 class="header">Hello, user!</h1> }
         await Session.DeleteAsync("Logged user");
         await Session.DeleteAsync("Selected player");
         LoggedUser = null;
-        LoggedUsername = null;
-
         await InvokeAsync(StateHasChanged);
     }
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -79,7 +65,7 @@ else { <h1 class="header">Hello, user!</h1> }
         if (firstRender)
         {
             var tmp = await Session.GetAsync<User>("Logged user");
-            if (tmp.Success) { LoggedUser = tmp.Value; LoggedUsername = LoggedUser.username; }
+            if (tmp.Success) { LoggedUser = tmp.Value; }
 
             await InvokeAsync(StateHasChanged);
         }
