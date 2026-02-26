@@ -18,8 +18,9 @@ namespace Models
         public int item_increment { get; set; } //Item value increment per level (attack strength, value etc)
         public int element_id { get; set; } //FK -> element
         public bool is_hidden { get; set; }
+        public int MaxStack { get; set; } //Self explanatory
         public Item() { }
-        public Item(string filepath, string name, string description, int rarity, int value, int item_type, int item_increment, int element_id, bool is_hidden)
+        public Item(string filepath, string name, string description, int rarity, int value, int item_type, int item_increment, int element_id, bool is_hidden, int maxstack)
         {
             this.filepath = filepath;
             this.name = name;
@@ -30,8 +31,9 @@ namespace Models
             this.item_increment = item_increment;
             this.element_id = element_id;
             this.is_hidden = is_hidden;
+            this.MaxStack = maxstack;
         }
-        public Item(int id, string filepath, string name, string description, int rarity, int value, int item_type, int item_increment, int element_id, bool is_hidden) : this (filepath, name, description,rarity,value,item_type, item_increment, element_id,is_hidden) { this.id = id; }
-        public Item(Item other) : this (other.id, other.filepath, other.name, other.description, other.rarity, other.value, other.item_type, other.item_increment, other.element_id, other.is_hidden) { }
+        public Item(int id, string filepath, string name, string description, int rarity, int value, int item_type, int item_increment, int element_id, bool is_hidden, int maxstack) : this (filepath, name, description,rarity,value,item_type, item_increment, element_id,is_hidden,maxstack) { this.id = id; }
+        public Item(Item other) : this (other.id, other.filepath, other.name, other.description, other.rarity, other.value, other.item_type, other.item_increment, other.element_id, other.is_hidden, other.MaxStack) { }
     }
 }

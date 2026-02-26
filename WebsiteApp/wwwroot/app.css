@@ -29,7 +29,8 @@ h1:focus {
 }
 
 body {
-    background-image: url('\img\bg\library.png');
+    /*background-image: url('\img\bg\farm.png');*/
+    background-image: url('img/bg/farm.png');
     background-size: cover;
 }
 
@@ -63,8 +64,9 @@ body {
 .generic-btn:hover .name {
     display:none;
 }
-.generic-btn:hover{
+.generic-btn:hover {
     background-color: rgba(30,205,50,0.55);
+    border-color: rgba(30,205,50,0.55);
 }
 .button-container {
     display: flex;
@@ -81,6 +83,7 @@ body {
     vertical-align: middle;
     background-color: rgba(255, 255, 255, 0.8);
     display: inline-block;
+    border: 2px solid #ddd;
 }
 .header {
     font-family: Forte;
@@ -88,37 +91,39 @@ body {
     text-align: center;
 }
 ul {
+    position:sticky; top:0;
     list-style-type: none;
     margin: 0;
     padding: 0;
     overflow: hidden;
-    background-color: rgba(51, 51, 51, 0);
+    background-color: rgba(51, 51, 51, 0.25);
+    width:100%;
 }
 ul li {
     float: left;
     font-family:Forte;
-    font-size:20px;
-    padding: 14px 16px;
+    font-size:15px;
+    padding: 14px 5px;
 }
 ul navname {
     float: right;
     font-family: Forte;
-    font-size: 20px;
+    font-size: 15px;
     display: block;
     color: white;
     text-align: center;
-    padding: 10px 20px;
+    padding: 10px;
     margin: 5px;
     text-decoration: none;
 }
 ul .perma_name !li {
     float: right;
     font-family: Forte;
-    font-size: 20px;
+    font-size: 15px;
     display: block;
     color: white;
     text-align: center;
-    padding: 10px 20px;
+    padding: 10px;
     margin: 5px;
     text-decoration: none;
 }
@@ -135,3 +140,37 @@ ul li generic-btn:hover {
 
 
 
+.dropdown {
+    position: relative;
+}
+.dropbtn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+}
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 200px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    overflow: auto;
+}
+.dropdown-content button {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+.dropdown-content button:hover {
+    background-color: #f1f1f1
+}
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+.dropdown:hover .dropbtn {
+    background-color: #3e8e41;
+}

@@ -1,4 +1,5 @@
 ﻿using Models;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +24,7 @@ namespace DBL
             ret.item_increment = Convert.ToInt32(dict["ItemIncrement"]);
             ret.element_id = Convert.ToInt32(dict["ElementID"]);
             ret.is_hidden = Convert.ToBoolean(dict["IsHidden"]);
+            ret.MaxStack = Convert.ToInt32(dict["MaxStack"]);
             return ret;
         }
         private async Task<Dictionary<string, object>> ItemToDict(Item item)
@@ -38,7 +40,8 @@ namespace DBL
                 { "ItemType", item.item_type },
                 { "ItemIncrement", item.item_increment },
                 { "ElementID", item.element_id },
-                { "IsHidden", item.is_hidden }
+                { "IsHidden", item.is_hidden },
+                { "MaxStack", item.MaxStack },
             };
             return dict;
         }
@@ -59,6 +62,7 @@ namespace DBL
             item.item_increment = Convert.ToInt32(row[7]);
             item.element_id = Convert.ToInt32(row[8]);
             item.is_hidden = Convert.ToBoolean(row[9]);
+            item.MaxStack = Convert.ToInt32(row[10]);
             return item;
         }
 
@@ -76,7 +80,7 @@ namespace DBL
         public async Task<List<Item>> GetByKey(string keyname, object obj)
         {
             Dictionary<string, object> where = new Dictionary<string, object>();
-            where.Add(keyname, obj);
+            where.Add($"{keyname}", obj);
             List<Item> result = await SelectAllAsync(where);
             if (result.Count == 0) return null;
             return result;
@@ -104,5 +108,10 @@ namespace DBL
             return await SelectAllAsync(where);
         }
         //Instead of getall
+        public async Task<string> GetItemName(int ItemID)
+        {
+            var result = await GetByUniqueK(GetPrimaryKeyName(), ItemID);
+            return result.name;
+        }
     }
 }

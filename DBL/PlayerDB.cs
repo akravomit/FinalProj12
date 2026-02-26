@@ -13,7 +13,7 @@ namespace DBL
         {
             Player ret = new Player();
             ret.id = Convert.ToInt32(dict["id"]);
-            ret.name = Convert.ToString(dict["Name"]);
+            ret.name = Convert.ToString(dict["name"]);
             ret.hp = Convert.ToInt32(dict["HP"]);
             ret.mana = Convert.ToInt32(dict["Mana"]);
             ret.coins = Convert.ToInt32(dict["Coins"]);

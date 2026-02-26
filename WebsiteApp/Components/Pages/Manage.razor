@@ -33,9 +33,18 @@ else
                 {
                     @foreach (User user in SelectedUsers)
                     {
-                        <button class="generic-btn">
+                        @* <button class="generic-btn">
                             <div class="perma_name">@user.username</div>
-                        </button>
+                        </button> *@
+                        <Dropdown Color="DropdownColor.Primary">
+                        <DropdownToggleButton>Primary</DropdownToggleButton>
+                        <DropdownMenu>
+                            <DropdownItem To="#" Type="DropdownItemType.Link">Action</DropdownItem>
+                            <DropdownItem To="#" Type="DropdownItemType.Link">Another action</DropdownItem>
+                            <DropdownItem To="#" Type="DropdownItemType.Link">Something else here</DropdownItem>
+                        </DropdownMenu>
+                        </Dropdown>
+
                     }
                 }
             </div>
@@ -45,8 +54,8 @@ else
 
 
 <style>
-    .body {
-        background-image: url('img\bg\library.png');
+    body {
+        background-image: url('/img/bg/library.png');
     }
 </style>
 
@@ -73,8 +82,8 @@ else
         if (firstRender)
         {
             AllUsers = await Middleman.GetAllUsers();
+            SelectedUsers = new List<User>(AllUsers);
             StateHasChanged();
-            //List<User> result = SelectedUsers.FindAll(x => x.ishidden == false);
         }
     } //Gets all users to manage
     private async Task Back() { NavMan.NavigateTo("/"); }
@@ -94,5 +103,9 @@ else
         LoggedUser = null;
         UserDoesExist = false;
         await InvokeAsync(StateHasChanged);
+    }
+    private async Task FilterUsers()
+    {
+        SelectedUsers = AllUsers.FindAll(x => x.ishidden == false);
     }
 }

@@ -1,0 +1,173 @@
+﻿@page "/Lobby"
+@using DBL
+@using Models
+@inject NavigationManager NavMan
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedSessionStorage Session
+
+<ul>
+    @if(LoggedUser is not null)
+    {
+        <li class="dropdown">
+            
+        </li>
+        <li>
+            <button @onclick="Back" class="perma_name generic-btn">
+                Go back to the main menu
+            </button>
+        </li>
+
+        @if(Selected is not null)
+        {
+            <navname>
+                <div class="perma_name generic-btn">
+                    Viewing things as @Selected.name
+                </div>
+            </navname>
+        }
+        <navname>
+            <div class="perma_name generic-btn">
+                Hello, @LoggedUser.username!
+            </div>
+        </navname>
+    }
+</ul>
+
+@if(LoggedUser is not null)
+{
+    <table>
+        <td style="background-color:rgba(51, 51, 51, 0.25); max-width:15%">
+            <div class="dropdown" style="padding: 20px 0px 40px 20px;">
+                <button class="dropbtn">Select a character to view</button>
+                <div class="dropdown-content" style="max-height:80px; overflow:auto;">
+                    @foreach (Player plr in Playerlist)
+                    {
+                        <button class="generic-btn" @onclick="() => Select_Player(plr)">@plr.name</button>
+                    }
+                </div>
+            </div>
+            <br />
+            <form @onsubmit="CreatePlr" style="padding: 20px 0px 30px 20px;">
+                <div class="generic-btn" style="font-family:Forte; text-align:center;">Create a new character!</div> <br />
+                <input class="generic-btn" @bind-value="playername" placeholder="Enter a name for a new character" style="font-size:20px; font-family:Forte;" required pattern="^.{0,20}$" title="Please input a name under 20 characters long" />
+                <br />
+                <button class="generic-btn" type="submit">
+                    <div class="perma_name" style="font-size:20px">Create the new character!</div>
+                </button>
+            </form>
+            @if(Selected is not null)
+            {
+                <button class="generic-btn" style="padding:10px;">
+                    <div style="font-family:Forte; text-align:center; font-size:30px;">
+                        @Selected.name
+                    </div>
+                    <div style="font-family:Forte; text-align:center; font-size:20px;">
+                        Character stats: <br />
+                        HP: @Selected.hp <br />
+                        Coins: @Selected.coins <br />
+                        Mana: @Selected.mana <br />
+                    </div>
+                </button>
+            }
+        </td>
+        <td style="background-color:rgba(51, 51, 51, 0.25); max-width:65%">
+            @if (Selected is not null)
+            {
+                <div class="generic-btn">
+                    <div class="header">
+                        All the monsters you killed:
+                    </div>
+                </div>
+                <div style="display:flex; flex-flow:row wrap; max-width:56%; overflow:auto; max-height:750px">
+                    @foreach (Entry E in Entries)
+                    {
+                        <button class="generic-btn" style="padding:10px;">
+                            <div style="font-family:Forte; text-align:center; font-size:30px;">
+                                <img src=@GetMonsterIcon(E.monster_id) />
+                                @MonsterNames[E.monster_id]
+                            </div>
+                            <div style="font-family:Forte; text-align:center; font-size:20px;">
+                                Entry info: <br />
+                                Killed on @E.date_slain <br />
+                                @DateTime.Today.Subtract(E.date_slain).Days days ago <br />
+                                Times killed: @E.times_killed <br />
+                            </div>
+                        </button>
+                    }
+                </div>
+            }
+        </td>
+        <td style="background-color:rgba(51, 51, 51, 0.25); max-width:25%">
+            @if (Selected is not null)
+            {
+                <div class="generic-btn">
+                    <div class="header">
+                        All the items you own:
+                    </div>
+                </div>
+                <br />
+                <div style="display:flex; flex-flow: row wrap; overflow:auto; max-height:750px;">
+                    @foreach(Inventory inv in PlayerInv)
+                    {
+                        <button class="generic-btn" style="padding:10px;">
+                            <div style="font-family:Forte; text-align:center; font-size:30px;">
+                                @* <img src=@GetMonsterIcon(E.monster_id) /> *@
+                                @ItemNames[inv.ItemID]
+                            </div>
+                            <div style="font-family:Forte; text-align:center; font-size:20px;">
+                                Item info: <br />
+                                
+                            </div>
+                        </button>
+                    }
+                </div>
+            }
+        </td>
+    </table>
+}
+
+
+@code {
+    User LoggedUser; List<Player> Playerlist; Player Selected; List<Entry> Entries; List<Inventory> PlayerInv;
+    string playername; Dictionary<int, string> MonsterNames; Dictionary<int, string> ItemNames;
+    protected override async Task OnInitializedAsync()
+    {
+        var tmp = await Session.GetAsync<User>("Logged user");
+        if (tmp.Success)
+        {
+            LoggedUser = tmp.Value;
+            Playerlist = await Middleman.GetPlayers(LoggedUser.id);
+        }
+        await InvokeAsync(StateHasChanged);
+    }
+    private async Task Back() { NavMan.NavigateTo("/"); }
+    private async Task Select_Player(Player plr)
+    {
+        Selected = new Player(plr);
+        Entries = new List<Entry>(); MonsterNames = new Dictionary<int, string>(); 
+        PlayerInv = new List<Inventory>(); ItemNames = new Dictionary<int, string>();
+        Entries = await Middleman.GetEntriesOfPlayer(Selected);
+        foreach(Entry E in Entries)
+        {
+            MonsterNames.Add(E.monster_id, await Middleman.GetMonsterNameByID(E.monster_id));
+        }
+        foreach(Inventory inv in PlayerInv)
+        {
+            ItemNames.Add(inv.ItemID, await Middleman.GetItemNameByID(inv.ItemID));
+        }
+        PlayerInv = await Middleman.GetInvOfPlayer(Selected);
+        StateHasChanged();
+    }
+    private async Task CreatePlr()
+    {
+        Player tmp = await Middleman.InsertGetPlayer(playername, LoggedUser.id);
+        if (Playerlist is null)
+        {
+            Playerlist = new List<Player>();
+        }
+        Playerlist.Add(tmp);
+        await Task.Delay(80);
+        StateHasChanged();
+    }
+    private string GetMonsterIcon(int MonsterID) { return $"/img/monsters/{MonsterNames[MonsterID]}.webp"; }
+}

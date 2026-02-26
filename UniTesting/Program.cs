@@ -1,5 +1,6 @@
 ﻿using DBL;
 using Models;
+using MySql.Data.MySqlClient;
 using System;
 using System.Xml.Linq;
 
@@ -13,7 +14,20 @@ namespace UniTesting
             //await MonsterTesting();
             //await PlayerTesting(); //--DONE
             //await ElementTesting(); //--DONE
-            await Console.Out.WriteLineAsync(Environment.MachineName);
+
+            //EntryDB entryDB = new EntryDB();
+            //List<Entry> Entries = await entryDB.GetAllAsync();
+            //await Console.Out.WriteLineAsync(Environment.MachineName);
+            //Console.WriteLine(DateTime.Today - Entries[0].date_slain.Date);
+            //Console.WriteLine(DateTime.Today.Subtract(Entries[0].date_slain).Days+" days ago");
+
+            DeeBee a = new DeeBee();
+            a.conn.Open(); a.cmd.Connection = a.conn; a.cmd.CommandText = $"SELECT Name FROM game.item WHERE ID >= {5} LIMIT 5";
+            a.reader = a.cmd.ExecuteReader();
+            while(a.reader.Read())
+            {
+                Console.WriteLine(a.reader.GetString(0));
+            }
         }
         public static async Task UserTesting()
         {

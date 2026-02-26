@@ -1,20 +1,24 @@
 ﻿using MySql.Data.MySqlClient;
+using System;
+using System.Collections.Generic;
 using System.Data.Common;
-using System.Linq.Expressions;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace DBL
+namespace UniTesting
 {
-    public abstract class DB
+    public class DeeBee
     {
-        private List<string> passwords = [ "12345", "josh17rog" ];
+        private List<string> passwords = ["12345", "josh17rog"];
         private const string MySqlConnSTR = $"server=localhost; user id=root; password=josh17rog;persistsecurityinfo=True;database=game";
 
-        protected DbConnection conn;
-        protected DbCommand cmd;
-        protected DbCommand cmd2;
-        protected DbDataReader reader;
+        public DbConnection conn;
+        public DbCommand cmd;
+        public DbCommand cmd2;
+        public DbDataReader reader;
 
-        protected DB()
+        public DeeBee()
         {
             if (conn == null)
             {

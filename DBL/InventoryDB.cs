@@ -17,6 +17,7 @@ namespace DBL
             ret.ItemID = Convert.ToInt32(dict["ItemID"]);
             ret.Item_level = Convert.ToInt32(dict["ItemLevel"]);
             ret.IsHidden = Convert.ToBoolean(dict["IsHidden"]);
+            ret.Amount = Convert.ToInt32(dict["Amount"]);
             return ret;
         }
 
@@ -28,7 +29,8 @@ namespace DBL
                 { "PlayerID", inventory.PlayerID },
                 { "ItemID", inventory.ItemID },
                 { "ItemLevel", inventory.Item_level },
-                { "IsHidden", inventory.IsHidden }
+                { "IsHidden", inventory.IsHidden },
+                { "Amount", inventory.Amount},
             };
             return dict;
         }
@@ -50,6 +52,7 @@ namespace DBL
             inventory.ItemID = Convert.ToInt32(row[2]);
             inventory.Item_level = Convert.ToInt32(row[3]);
             inventory.IsHidden = Convert.ToBoolean(row[4]);
+            inventory.Amount = Convert.ToInt32(row[5]);
             return inventory;
         }
 
@@ -86,6 +89,7 @@ namespace DBL
             post.IsHidden = true;
             return await Update_Async(pre, post);
         }
+
         //AI knows what's up with this one
         // Optional: Get all non-hidden items for a specific player
         public async Task<List<Inventory>> GetByPlayerAsync(int playerId)

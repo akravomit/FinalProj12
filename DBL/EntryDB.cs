@@ -59,12 +59,6 @@ namespace DBL
         {
             return await SelectAllAsync();
         }
-        public async Task<Entry> GetByUniqueK(Dictionary<string,object> where)
-        {
-            List<Entry> result = await GetByKeys(where);
-            if (result == null || result.Count == 0) return null;
-            return result[0];
-        }
         public async Task<List<Entry>> GetByKeys(Dictionary<string,object> Where)
         {
             List<Entry> result = await SelectAllAsync(Where);
@@ -93,6 +87,10 @@ namespace DBL
             List<Entry> result = await GetByKeys(new Dictionary<string, object>() { { "MonsterID", victim.id }, { "PlayerID", owner.id } });
             if (result is null) { return await InsertGetEntry(new Entry(victim.id, owner.id)); }
             else { return await IncrementEntry(result[0]); }
+        }
+        public async Task<List<Entry>> GetByPlayer(Player p)
+        {
+            return await GetByKeys(new Dictionary<string, object> { { "PlayerID" , p.id } });
         }
     }
 }

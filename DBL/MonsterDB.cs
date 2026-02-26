@@ -85,7 +85,7 @@ namespace DBL
         public async Task<List<Monster>> GetByKey(string keyname, object obj)
         {
             Dictionary<string, object> where = new Dictionary<string, object>();
-            where.Add(keyname, obj);
+            where.Add($"{keyname}", obj);
             List<Monster> result = await SelectAllAsync(where);
             if (result.Count == 0) return null;
             return result;
@@ -129,6 +129,11 @@ namespace DBL
                 { "IsHidden", false },
             };
             return await GetByKeys(where);
+        }
+        public async Task<string> FetchMonsterName(int MonsterID)
+        {
+            var result = await GetByUniqueK(GetPrimaryKeyName(), MonsterID);
+            return result.name;
         }
     }
 }
