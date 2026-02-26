@@ -6,6 +6,12 @@
 @inject ProtectedSessionStorage Session
 @*@inherits Microsoft.AspNetCore.Components.ComponentBase*@
 
+<style>
+    body {
+        background-image: url('/img/bg/library.png');
+        background-size: cover;
+    }
+</style>
 
 <ul>
     <li><div class="perma_name">Log into your account</div></li>
@@ -55,11 +61,7 @@
     </div>
 </form>
 
-<style>
-    .body{
-        background-image: url('img\bg\library.png');
-    }
-</style>
+
 
 @code {
     string username;

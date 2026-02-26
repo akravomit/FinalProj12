@@ -17,7 +17,7 @@
                     {
                         <button class="generic-btn" @onclick="() => SelectPlayerAndGoToTheDungeon(pingle_pongle)">
                             <div class="perma_name">
-                                @pingle_pongle.name <br />
+                                @pingle_pongle.name<br />
                             </div>
                             <div class="tooltip">
                                 HP: @pingle_pongle.hp | Mana: @pingle_pongle.mana <br />
@@ -109,7 +109,7 @@
     {
         if (firstRender)
         {
-            
+
         }
     }
     private async Task Back() { NavMan.NavigateTo("/"); }
@@ -126,8 +126,9 @@
         if (Playerlist is null)
         {
             Playerlist = new List<Player>();
-            Playerlist.Add(tmp);
         }
+        Playerlist.Add(tmp);
+        await Task.Delay(150);
         StateHasChanged();
     }
     private async Task SelectPlayerAndGoToTheDungeon(Player p)

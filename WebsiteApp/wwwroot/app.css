@@ -29,7 +29,7 @@ h1:focus {
 }
 
 body {
-    background-image: url('\img\bg\library.png');
+    background-image: url('\img\bg\farm.png');
     background-size: cover;
 }
 
@@ -81,6 +81,7 @@ body {
     vertical-align: middle;
     background-color: rgba(255, 255, 255, 0.8);
     display: inline-block;
+    border: 2px solid #ddd;
 }
 .header {
     font-family: Forte;

@@ -10,7 +10,7 @@
     {
         <li><button @onclick="() => Navigate('L')" class="generic-btn"><div class="perma_name">Login</div></button></li>
         <li><button @onclick="() => Navigate('R')" class="generic-btn"><div class="perma_name">Register</div></button></li>
-        <navname><div class="perma_name">Hello user!</div></navname>
+        <navname><div class="perma_name generic-btn">Hello user!</div></navname>
     }
     else
     {
@@ -21,7 +21,7 @@
         }
         <li><button @onclick="() => Navigate('P')" class="generic-btn"><div class="perma_name">See your characters</div></button></li>
         <li><button @onclick="Log_Out_Async" class="generic-btn"><div class="perma_name">Log out of your account</div></button></li>
-        <navname><div class="perma_name">Hello, @LoggedUser.username!</div></navname>
+        <navname><div class="perma_name generic-btn">Hello, @LoggedUser.username!</div></navname>
     }
 </ul>
 
