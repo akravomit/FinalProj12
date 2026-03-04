@@ -92,9 +92,5 @@ namespace DBL
         {
             return await GetByKeys(new Dictionary<string, object> { { "PlayerID" , p.id } });
         }
-        public async Task<List<Entry>> GetByPlayerEXP(Player p)
-        {
-            return await base.SelectAllAsync("SELECT * FROM game.entry etr JOIN monster m ON etr.MonsterID = m.id", new Dictionary<string, object> { { "PlayerID",p.id } });
-        }
     }
 }

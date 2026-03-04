@@ -37,7 +37,7 @@ namespace UniTesting
             //}
 
             EntryMonstersOfPlayerDB EnMoPDB = new EntryMonstersOfPlayerDB();
-            List<Dictionary<string, object>> result = await EnMoPDB.GetByPlayer(new Player(1, "Tinman player edition", 100, 20, 3219, false, 1));
+            List<Dictionary<string, object>> result = await EnMoPDB.GetEntriesOfPlayer(new Player(1, "Tinman player edition", 100, 20, 3219, false, 1));
             foreach (Dictionary<string, object> item in result)
             {
                 foreach (KeyValuePair<string,object> pair in item)

@@ -84,5 +84,15 @@ namespace WebsiteApp
         {
             return await ItmDB.GetItemName(ItemID);
         }
+        public static async Task<List<Dictionary<string,object>>> NewGetInvOfPlayer(Player p)
+        {
+            InventoryItemsOfPlayerDB InvItmOPDB = new InventoryItemsOfPlayerDB();
+            return await InvItmOPDB.GetInvOfPlayer(p);
+        }
+        public static async Task<List<Dictionary<string,object>>> NewGetEntriesOfPlayer(Player p)
+        {
+            EntryMonstersOfPlayerDB EtrMOPDB = new EntryMonstersOfPlayerDB();
+            return await EtrMOPDB.GetEntriesOfPlayer(p);
+        }
     }
 }
