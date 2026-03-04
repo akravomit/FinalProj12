@@ -70,44 +70,17 @@
                 </button>
             }
         </td>
-        <td style="background-color:rgba(51, 51, 51, 0.25); max-width:65%">
+        <td style="background-color:rgba(51, 51, 51, 0.25); max-width:60%">
             @if (Selected is not null)
             {
                 <div class="generic-btn">
                     <div class="header">
-                        All the monsters you killed:
-                    </div>
-                </div>
-                <div style="display:flex; flex-flow:row wrap; max-width:56%; overflow:auto; max-height:750px">
-                    @foreach (Entry E in Entries)
-                    {
-                        <button class="generic-btn" style="padding:10px;">
-                            <div style="font-family:Forte; text-align:center; font-size:30px;">
-                                <img src=@GetMonsterIcon(E.monster_id) />
-                                @MonsterNames[E.monster_id]
-                            </div>
-                            <div style="font-family:Forte; text-align:center; font-size:20px;">
-                                Entry info: <br />
-                                Killed on @E.date_slain <br />
-                                @DateTime.Today.Subtract(E.date_slain).Days days ago <br />
-                                Times killed: @E.times_killed <br />
-                            </div>
-                        </button>
-                    }
-                </div>
-            }
-        </td>
-        <td style="background-color:rgba(51, 51, 51, 0.25); max-width:25%">
-            @if (Selected is not null)
-            {
-                <div class="generic-btn">
-                    <div class="header">
-                        All the items you own:
+                        The items you own:
                     </div>
                 </div>
                 <br />
-                <div style="display:flex; flex-flow: row wrap; overflow:auto; max-height:750px;">
-                    @foreach(Inventory inv in PlayerInv)
+                <div style="display:flex; flex-flow: row wrap; overflow:auto; width:inherit; max-height:750px;">
+                    @foreach (Inventory inv in PlayerInv)
                     {
                         <button class="generic-btn" style="padding:10px;">
                             <div style="font-family:Forte; text-align:center; font-size:30px;">
@@ -116,13 +89,42 @@
                             </div>
                             <div style="font-family:Forte; text-align:center; font-size:20px;">
                                 Item info: <br />
-                                
+                                Item level: @inv.Item_level <br />
+                                Amount in the stack: @inv.Amount <br />
                             </div>
                         </button>
                     }
                 </div>
             }
         </td>
+        <td style="background-color:rgba(51, 51, 51, 0.25); max-width:60%;">
+            @if (Selected is not null)
+            {
+                <div class="generic-btn">
+                    <div class="header">
+                        All the monsters you killed:
+                    </div>
+                </div>
+                <div style="display:flex; flex-flow:column wrap; overflow:auto; max-width:60%; max-height:750px">
+                    @foreach (Entry E in Entries)
+                    {
+                        <button class="generic-btn" style="padding:10px;">
+                            <div style="font-family:Forte; text-align:center; vertical-align:middle; font-size:30px;">
+                                <img src=@GetMonsterIcon(E.monster_id) />
+                                @MonsterNames[E.monster_id]
+                            </div>
+                            <div style="font-family:Forte; text-align:center; font-size:20px;">
+                                Entry info: <br />
+                                Killed on @E.date_slain, <br />
+                                for the first time @DateTime.Today.Subtract(E.date_slain).Days days ago <br />
+                                Times killed: @E.times_killed <br />
+                            </div>
+                        </button>
+                    }
+                </div>
+            }
+        </td>
+        
     </table>
 }
 
@@ -147,6 +149,7 @@
         Entries = new List<Entry>(); MonsterNames = new Dictionary<int, string>(); 
         PlayerInv = new List<Inventory>(); ItemNames = new Dictionary<int, string>();
         Entries = await Middleman.GetEntriesOfPlayer(Selected);
+        PlayerInv = await Middleman.GetInvOfPlayer(plr);
         foreach(Entry E in Entries)
         {
             MonsterNames.Add(E.monster_id, await Middleman.GetMonsterNameByID(E.monster_id));

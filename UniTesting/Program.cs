@@ -21,12 +21,30 @@ namespace UniTesting
             //Console.WriteLine(DateTime.Today - Entries[0].date_slain.Date);
             //Console.WriteLine(DateTime.Today.Subtract(Entries[0].date_slain).Days+" days ago");
 
-            DeeBee a = new DeeBee();
-            a.conn.Open(); a.cmd.Connection = a.conn; a.cmd.CommandText = $"SELECT Name FROM game.item WHERE ID >= {5} LIMIT 5";
-            a.reader = a.cmd.ExecuteReader();
-            while(a.reader.Read())
+            //DeeBee a = new DeeBee();
+            //a.conn.Open(); a.cmd.Connection = a.conn; a.cmd.CommandText = $"SELECT Name FROM game.item WHERE ID >= {5} LIMIT 5";
+            //a.reader = a.cmd.ExecuteReader();
+            //while(a.reader.Read())
+            //{
+            //    Console.WriteLine(a.reader.GetString(0));
+            //}
+
+            //EntryDB EnDB = new EntryDB();
+            //var result = await EnDB.GetByPlayerEXP(new Player(1,"Tinman player edition",100,20,3219,false,1));
+            //foreach (var item in result)
+            //{
+            //    Console.WriteLine(item);
+            //}
+
+            EntryMonstersOfPlayerDB EnMoPDB = new EntryMonstersOfPlayerDB();
+            List<Dictionary<string, object>> result = await EnMoPDB.GetByPlayer(new Player(1, "Tinman player edition", 100, 20, 3219, false, 1));
+            foreach (Dictionary<string, object> item in result)
             {
-                Console.WriteLine(a.reader.GetString(0));
+                foreach (KeyValuePair<string,object> pair in item)
+                {
+                    Console.Write($"| Key: {pair.Key} - Value: {pair.Value}  ");
+                }
+                Console.WriteLine();
             }
         }
         public static async Task UserTesting()

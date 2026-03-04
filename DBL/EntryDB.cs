@@ -47,7 +47,7 @@ namespace DBL
         {
             Entry entry = new Entry();
             entry.id = Convert.ToInt32(row[0]);
-            entry.monster_id = Convert.ToInt32(row[1]);
+            entry.monster_id = Convert.ToInt32(row[1]); 
             entry.player_id = Convert.ToInt32(row[2]);
             entry.date_slain = Convert.ToDateTime(row[3]);
             entry.times_killed = Convert.ToInt32(row[4]);
@@ -91,6 +91,10 @@ namespace DBL
         public async Task<List<Entry>> GetByPlayer(Player p)
         {
             return await GetByKeys(new Dictionary<string, object> { { "PlayerID" , p.id } });
+        }
+        public async Task<List<Entry>> GetByPlayerEXP(Player p)
+        {
+            return await base.SelectAllAsync("SELECT * FROM game.entry etr JOIN monster m ON etr.MonsterID = m.id", new Dictionary<string, object> { { "PlayerID",p.id } });
         }
     }
 }

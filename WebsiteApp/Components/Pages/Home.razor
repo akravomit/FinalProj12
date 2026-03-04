@@ -8,35 +8,70 @@
 <ul>
     @if (LoggedUser is null)
     {
-        <li><button @onclick="() => Navigate('L')" class="generic-btn"><div class="perma_name">Login</div></button></li>
-        <li><button @onclick="() => Navigate('R')" class="generic-btn"><div class="perma_name">Register</div></button></li>
-        <navname><div class="perma_name generic-btn">Hello user!</div></navname>
+        <li>
+            <button @onclick="() => Navigate('L')" class="generic-btn">
+                <div class="perma_name">
+                    Login
+                </div>
+            </button>
+        </li>
+        <li>
+            <button @onclick="() => Navigate('R')" class="generic-btn">
+                <div class="perma_name">
+                    Register
+                </div>
+            </button>
+        </li>
+        <navname>
+            <div class="perma_name generic-btn">
+                Hello user!
+            </div>
+        </navname>
     }
     else
     {
-        <li><button @onclick="() => Navigate('U')" class="generic-btn"><div class="perma_name">Manage your user</div></button></li>
+        <li>
+            <button @onclick="() => Navigate('U')" class="generic-btn">
+                <div class="perma_name">
+                    Manage your user
+                </div>
+            </button>
+        </li>
         @if (LoggedUser.isadmin)
         {
-            <li><button @onclick="() => Navigate('M')" class="generic-btn"><div class="perma_name">Manage other users</div></button></li>
+            <li>
+                <button @onclick="() => Navigate('M')" class="generic-btn">
+                    <div class="perma_name">
+                        Manage other users
+                    </div>
+                </button>
+            </li>
         }
-        <li><button @onclick="() => Navigate('P')" class="generic-btn"><div class="perma_name">See your characters</div></button></li>
-        <li><button @onclick="Log_Out_Async" class="generic-btn"><div class="perma_name">Log out of your account</div></button></li>
-        <navname><div class="perma_name generic-btn">Hello, @LoggedUser.username!</div></navname>
+        @* <li><button @onclick="() => Navigate('P')" class="generic-btn"><div class="perma_name">See your characters</div></button></li> *@
+        <li>
+            <button @onclick="() => Navigate('G')" class="generic-btn">
+                <div class="perma_name">
+                    Go to the lobby
+                </div>
+            </button>
+        </li>
+        <li>
+            <button @onclick="Log_Out_Async" class="generic-btn">
+                <div class="perma_name">
+                    Log out of your account
+                </div>
+            </button>
+        </li>
+        <navname>
+            <div class="perma_name generic-btn">
+                Hello, @LoggedUser.username!
+            </div>
+        </navname>
     }
 </ul>
 
-@if (LoggedUser is not null && LoggedUser.isadmin)
-{
-    <tr>
-        <button @onclick="kms">Crash the website!</button>
-    </tr>
-}
 
-<style>
-    body { 
-        background-image: url('img/bg/farm.png');
-    }
-</style>
+
 
 @code {
     protected User LoggedUser;
@@ -50,6 +85,7 @@
             case 'U': dest = "Update"; break;
             case 'P': dest = "Players"; break;
             case 'M': dest = "Manage"; break;
+            case 'G': dest = "Lobby"; break;
         }
         NavMan.NavigateTo(dest);
     }
@@ -69,9 +105,5 @@
 
             await InvokeAsync(StateHasChanged);
         }
-    }
-    private async Task kms()
-    {
-        await Middleman.Cascade(new List<Dictionary<List<int[,,]>, Dictionary<string[,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,], List<List<List<Dictionary<int, Dictionary<Dictionary<int, int>, object>>>>>>>>());
     }
 }

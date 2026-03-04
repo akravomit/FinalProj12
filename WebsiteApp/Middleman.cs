@@ -82,7 +82,7 @@ namespace WebsiteApp
         }
         public static async Task<string> GetItemNameByID(int ItemID)
         {
-            return await ItmDB.
+            return await ItmDB.GetItemName(ItemID);
         }
     }
 }
