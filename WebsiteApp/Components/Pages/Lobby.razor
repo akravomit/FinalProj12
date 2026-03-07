@@ -8,9 +8,6 @@
 <ul>
     @if(LoggedUser is not null)
     {
-        <li class="dropdown">
-            
-        </li>
         <li>
             <button @onclick="Back" class="perma_name generic-btn">
                 Go back to the main menu
@@ -37,18 +34,21 @@
 {
     <table>
         <td style="background-color:rgba(51, 51, 51, 0.25); max-width:15%">
-            <div class="dropdown" style="padding: 20px 0px 40px 20px;">
-                <button class="dropbtn">Select a character to view</button>
-                <div class="dropdown-content" style="max-height:80px; overflow:auto;">
-                    @foreach (Player plr in Playerlist)
-                    {
-                        <button class="generic-btn" @onclick="() => Select_Player(plr)">@plr.name</button>
-                    }
+            @if (Playerlist is not null)
+            {
+                <div class="dropdown" style="padding: 20px 0px 40px 20px;">
+                    <button class="dropbtn">Select a character to view</button>
+                    <div class="dropdown-content" style="max-height:80px; overflow:auto;">
+                        @foreach (Player plr in Playerlist)
+                        {
+                            <button class="generic-btn" @onclick="() => Select_Player(plr)">@plr.name</button>
+                        }
+                    </div>
                 </div>
-            </div>
+            }
             <br />
             <form @onsubmit="CreatePlr" style="padding: 20px 0px 30px 20px;">
-                <div class="generic-btn" style="font-family:Forte; text-align:center;">Create a new character!</div> <br />
+                @* <div class="generic-btn" style="font-family:Forte; text-align:center;">Create a new character!</div> <br /> *@
                 <input class="generic-btn" @bind-value="playername" placeholder="Enter a name for a new character" style="font-size:20px; font-family:Forte;" required pattern="^.{0,20}$" title="Please input a name under 20 characters long" />
                 <br />
                 <button class="generic-btn" type="submit">
@@ -70,7 +70,7 @@
                 </button>
             }
         </td>
-        <td style="background-color:rgba(51, 51, 51, 0.25); max-width:60%">
+        <td style="background-color:rgba(51, 51, 51, 0.25); max-width:35%; padding: 20px 0px 30px 20px;">
             @if (Selected is not null)
             {
                 <div class="generic-btn">
@@ -79,22 +79,7 @@
                     </div>
                 </div>
                 <br />
-                @* <div style="display:flex; flex-flow: row wrap; overflow:auto; width:inherit; max-height:750px;">
-                    @foreach (Inventory inv in PlayerInv)
-                    {
-                        <button class="generic-btn" style="padding:10px;">
-                            <div style="font-family:Forte; text-align:center; font-size:30px;">
-                                @ItemNames[inv.ItemID]
-                            </div>
-                            <div style="font-family:Forte; text-align:center; font-size:20px;">
-                                Item info: <br />
-                                Item level: @inv.Item_level <br />
-                                Amount in the stack: @inv.Amount <br />
-                            </div>
-                        </button>
-                    }
-                </div> *@
-                 <div style="display:flex; flex-flow: row wrap; overflow:auto; width:inherit; max-height:750px;">
+                <div style="display:flex; flex-flow: column wrap; overflow:auto; max-height:750px;">
                     @foreach (Dictionary<string,object> inv in PlayerFullInv)
                     {
                         <button class="generic-btn" style="padding: 10px;">
@@ -112,7 +97,7 @@
                 </div>
             }
         </td>
-        <td style="background-color:rgba(51, 51, 51, 0.25); max-width:60%;">
+        <td style="background-color:rgba(51, 51, 51, 0.25); max-width:60%; padding: 0px 0px 30px 20px;">
             @if (Selected is not null)
             {
                 <div class="generic-btn">
@@ -120,24 +105,7 @@
                         All the monsters you killed:
                     </div>
                 </div>
-                @* <div style="display:flex; flex-flow:column wrap; overflow:auto; max-width:60%; max-height:750px">
-                    @foreach (Entry E in Entries)
-                    {
-                        <button class="generic-btn" style="padding:10px;">
-                            <div style="font-family:Forte; text-align:center; vertical-align:middle; font-size:30px;">
-                                <img src=@GetMonsterIcon(E.monster_id) />
-                                @MonsterNames[E.monster_id]
-                            </div>
-                            <div style="font-family:Forte; text-align:center; font-size:20px;">
-                                Entry info: <br />
-                                Killed on @E.date_slain, <br />
-                                for the first time @DateTime.Today.Subtract(E.date_slain).Days days ago <br />
-                                Times killed: @E.times_killed <br />
-                            </div>
-                        </button>
-                    }
-                </div> *@
-                <div style="display:flex; flex-flow:column wrap; overflow:auto; max-width:60%; max-height:750px">
+                <div style="display:flex; flex-flow:column wrap; overflow:auto; max-width:inherit; max-height:750px">
                     @foreach (Dictionary<string,object> Entr in PlayerFullEntr)
                     {
                         <button class="generic-btn" style="padding:10px;">
@@ -155,14 +123,23 @@
                 </div>
             }
         </td>
-        
+        <td style="background-color:rgba(51, 51, 51, 0.25); max-width:20%;">
+            @if (Selected is not null)
+            {
+                <button class="generic-btn" @onclick="() => Goto('D')">
+                    <div class="perma_name" style="font-size:25px;">
+                        Go to the dungeon with your selected character
+                    </div>
+                </button>
+            }
+        </td>
     </table>
 }
 
 
 @code {
-    User LoggedUser; List<Player> Playerlist; Player Selected; List<Entry> Entries; List<Inventory> PlayerInv;
-    string playername; Dictionary<int, string> MonsterNames; Dictionary<int, string> ItemNames;
+    User LoggedUser; List<Player> Playerlist; Player Selected;
+    string playername; string Dungeon = "Dungeon";
     List<Dictionary<string, object>> PlayerFullInv;
     List<Dictionary<string, object>> PlayerFullEntr;
     protected override async Task OnInitializedAsync()
@@ -179,18 +156,6 @@
     private async Task Select_Player(Player plr)
     {
         Selected = new Player(plr);
-        // Entries = new List<Entry>(); MonsterNames = new Dictionary<int, string>(); 
-        // PlayerInv = new List<Inventory>(); ItemNames = new Dictionary<int, string>();
-        // Entries = await Middleman.GetEntriesOfPlayer(Selected);
-        // PlayerInv = await Middleman.GetInvOfPlayer(plr);
-        // foreach(Entry E in Entries)
-        // {
-        //     MonsterNames.Add(E.monster_id, await Middleman.GetMonsterNameByID(E.monster_id));
-        // }
-        // foreach(Inventory inv in PlayerInv)
-        // {
-        //     ItemNames.Add(inv.ItemID, await Middleman.GetItemNameByID(inv.ItemID));
-        // }
         PlayerFullEntr = new List<Dictionary<string, object>>();
         PlayerFullInv = new List<Dictionary<string, object>>();
         PlayerFullInv = await Middleman.NewGetInvOfPlayer(Selected);
@@ -199,14 +164,26 @@
     }
     private async Task CreatePlr()
     {
-        Player tmp = await Middleman.InsertGetPlayer(playername, LoggedUser.id);
+        Player tmp = new Player(playername,LoggedUser.id);
+        await Middleman.InsertGetPlayer(playername, LoggedUser.id);
         if (Playerlist is null)
         {
             Playerlist = new List<Player>();
         }
         Playerlist.Add(tmp);
-        await Task.Delay(80);
         StateHasChanged();
     }
     private string GetImageIcon(String s) { return $"/img/{s}"; }
+    private async Task Goto(char dest)
+    {
+        await Session.SetAsync("Selected player", Selected);
+        await Session.SetAsync("Player's inventory", PlayerFullInv);
+        await Session.SetAsync("Player's entries", PlayerFullEntr);
+        switch (dest)
+        {
+            case 'D': NavMan.NavigateTo(Dungeon); break;
+
+            default: break;
+        }
+    }
 }

@@ -4,106 +4,185 @@
 @inject NavigationManager NavMan
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @inject ProtectedSessionStorage Session
+@using System.Media;
 
-<h1 class="header">Dungeon</h1><h6 class="header" style="font-size:10px;">THE NETHER!</h6>
 
-<table style="width: 100%; margin: 0 auto; border-collapse: collapse;">
-    <tr colspan="100%">
-        @if (NoPlayerExists || NoUserExists)
-        {
-            <iframe width="640"
-                    height="480"
-                    src="https://www.youtube.com/embed/WFg0vTeXhWs"
-                    title="Oh, Hi mr frog :)"
-                    frameborder="0"
-                    allow="autoplay; fullscreen;">
-            </iframe>
-            <button class="generic-btn" @onclick="() => NavMan.NavigateTo(Login)">
-                <div class="perma_name">Go to the login page.<br />You are not logged in >:( </div>
+
+<ul>
+    @if (LoggedUser is not null)
+    {
+        <li>
+            <button @onclick="Back" class="perma_name generic-btn">
+                Go back to the lobby
             </button>
-        }
-        else
+        </li>
+
+        @if (Selected is not null)
         {
-            @if(player is not null)
+            <navname>
+                <div class="perma_name generic-btn">
+                    Playing as @Selected.name
+                </div>
+            </navname>
+        }
+        <navname>
+            <div class="perma_name generic-btn">
+                The Dungeon
+            </div>
+        </navname>
+    }
+</ul>
+
+@if (LoggedUser is not null)
+{
+    <table>
+        <td style="background-color:rgba(51, 51, 51, 0.25); max-width:15%">
+            @if (Selected is not null)
             {
-                <button class="generic-btn">
-                    <div class="perma_name">
-                        @player.name <br />
-                        <div style="font-size:20px">
-                            HP: @player.hp | Mana: @player.mana <br />
-                            Coins: @player.coins
-                        </div>
+                <div class="generic-btn" style="padding:10px;">
+                    <div style="font-family:Forte; text-align:center; font-size:30px;">
+                        @Selected.name
                     </div>
-                    
-                </button>
-            }
-            @if(current is not null)
-            {
-                <button class="generic-btn" @onclick="KillMonster">
-                    <div class="perma_name">Current opponent: <img src="img/@current.filepath.Replace('_',' ')" /> 
-                        @current.name <br />
-                        <div style="font-size:20px">
-                            KILL ITTTT
-                        </div>
+                    <div style="font-family:Forte; text-align:center; font-size:20px;">
+                        Character stats: <br />
+                        HP: @Selected.hp <br />
+                        Coins: @Selected.coins <br />
+                        Mana: @Selected.mana <br />
                     </div>
-                </button>
+                </div>
+                <br />
+                
             }
-            @if(player is not null && current is null)
+        </td>
+        <td style="background-color: rgba(51,51,51,0.25); max-width:45%">
+            @if (PlayerInventory is not null)
             {
-                <button class="generic-btn" @onclick="SelectMonster">
-                    <div class="perma_name">Pick a new monster!</div>
-                </button>
+                <div style="display:flex; flex-flow: column wrap; overflow:auto; max-height:750px;">
+                    @foreach (Dictionary<string, object> inv in PlayerInventory)
+                    {
+                        @if (IsItemArmor(inv))
+                        {
+                            <button class="generic-btn" style="padding: 10px;">
+                                <div style="font-family:Forte; text-align:center; font-size:30px;">
+                                    @*Image icon goes here*@
+                                    @inv["Name"]
+                                </div>
+                                <div style="font-family:Forte; text-align:center; font-size:20px;">
+                                    Item info: <br />
+                                    Item Level: @inv["Item_Level"] | Amount owned: @inv["Amount"] <br />
+                                    Item rarity: @inv["Rarity"] stars | Value per item: @inv["Value"] <br />
+                                </div>
+                            </button>
+                        }
+                    }
+                </div>
+            }
+        </td>
+        <td style="background-color: rgba(51, 51, 51, 0.25); max-width:50%; vertical-align:central">
+            @if (current is not null)
+            {
+                <div style="display:flex; flex-flow: column wrap; overflow:auto; max-height:750px; max-width: 369px;">
+                    <button class="generic-btn" style="vertical-align:middle;">
+                        <div style="font-family:Forte; font-size:30px;">
+                            <img src=@GetImageIcon(current.filepath) />
+                            @current.name
+                        </div>
+                        <div style="font-family:Forte; text-align:center; font-size:20px;">
+                            HP: @current.hp / @Ghost.hp
+                            Defense: @current.defense <br />
+                            Rarity: @GetRarityString(current.rarity) <br />
+                            <div style="max-width: 369px; font-size:15px; font-family:sans-serif">
+                                @current.description
+                            </div>
+                        </div>
+                    </button>
+                    <button class="generic-btn" @onclick="DamageMonster" style="max-width: 369px;">
+                        <div class="perma_name">
+                            Damage the monster googoo gaga
+                        </div>
+                    </button>
+                </div>
             }
             else
             {
-                <button class="generic-btn" @onclick="Back">
-                    <div class="perma_name">Go back to the home page</div>
+                <button class="generic-btn" @onclick="SelectMonster">
+                    <div class="header">
+                        Start fighting monsters here!
+                    </div>
                 </button>
             }
-        }
-    </tr>
-</table>
+        </td>
+    </table>
+}
+
+
 
 @code {
-    List<Monster> Monsters; Monster current;
-    Player player; bool NoPlayerExists;
-    User Logged; bool NoUserExists;
+    List<Monster> Monsters; Monster current; Monster Ghost;
+    Player Selected; User LoggedUser;
     string Login = "Login";
     Random Jerry = new Random();
-    Dictionary<string, object> Monster_descriptions;
-
+    List<Dictionary<string, object>> PlayerInventory = new List<Dictionary<string, object>>();
+    List<Dictionary<string, object>> PlayerEntries = new List<Dictionary<string, object>>();
+    List<Element> Elements = new List<Element>();
+    List<Item_Type_Name> Item_Type_Names = new List<Item_Type_Name>();
     protected override async Task OnInitializedAsync()
     {
         Monsters = await Middleman.GetMonsters(false);
-        var tmp = await Session.GetAsync<Player>("Selected player");
-        if (tmp.Success) { player = new Player(tmp.Value); }
-        else { NoPlayerExists = true; }
-        var tmp2 = await Session.GetAsync<User>("Logged user");
-        if (tmp2.Success) { Logged = new User(tmp2.Value); }
-        else { NoUserExists = true; }
-
-
+        var GetPlayer = await Session.GetAsync<Player>("Selected player");
+        if (GetPlayer.Success) { Selected = new Player(GetPlayer.Value); }
+        var GetUser = await Session.GetAsync<User>("Logged user");
+        if (GetUser.Success) { LoggedUser = new User(GetUser.Value); }
+        var GetInventory = await Session.GetAsync<List<Dictionary<string,object>>>("Player's inventory");
+        if (GetInventory.Success) { PlayerInventory = GetInventory.Value; }
+        var GetEntries = await Session.GetAsync<List<Dictionary<string, object>>>("Player's entries");
+        if (GetEntries.Success) { PlayerEntries = GetEntries.Value; }
+        Elements = await Middleman.GetAllElements();
+        Item_Type_Names = await Middleman.GetAllItem_Type_Names();
         await InvokeAsync(StateHasChanged);
     }
     private async Task SelectMonster()
     {
-        current = Monsters[Jerry.Next(0,Monsters.Count)];
-
-        Monster_descriptions = await Middleman.DescribeMonster(current);
-        switch (current.isboss)
-        {
-            case 0: Monster_descriptions["IsBoss"] = "normal enemy"; break;
-            case 1: Monster_descriptions["IsBoss"] = "miniboss"; break;
-            case 2: Monster_descriptions["IsBoss"] = "boss"; break;
-        } //Is it a boss
-
+        current = new Monster(Monsters[Jerry.Next(0, Monsters.Count)]);
+        Ghost = new Monster(current);
         await InvokeAsync(StateHasChanged);
     }
-    private async Task KillMonster()
+    private async Task DamageMonster()
     {
-        await Middleman.RegisterEntry(player, current);
-        player = await Middleman.AwardPlayerForKill(current, player);
-        await SelectMonster();
+        int damage = Jerry.Next(5, 21);
+        damage -= current.defense;
+        if (damage <= 0) damage = 1;
+        current.hp -= damage;
+        if (current.hp <= 0) 
+        { 
+            if (Jerry.Next(0, 1) == 0)
+            {
+                string filepath = "F:\\repos\\FinalProj12\\WebsiteApp\\wwwroot\\misc\\TheFunnyAudio.wav";
+                SoundPlayer player = new SoundPlayer(filepath);
+                try { player.Play(); }
+                catch (Exception e){}
+        }
+            await SelectMonster(); 
+        }
     }
-    private async Task Back() { NavMan.NavigateTo("/"); }
+    private async Task Back() { NavMan.NavigateTo("/Lobby"); }
+    private async Task Escape()
+    {
+        int chance = Jerry.Next( 0, Math.Abs(Selected.hp - current.hp) ); 
+    }
+    private string GetImageIcon(String s) { return $"/img/{s}"; }
+    private string GetRarityString(int Rarity)
+    {
+        string ret = string.Empty;
+        for (int i = 0; i < Rarity; i++)
+        {
+            ret += "⭐";
+        }
+        return ret;
+    }
+    private bool IsItemArmor(Dictionary<string,object> item)
+    {
+        if (Convert.ToInt32(item["ItemType"].ToString()) == 4) { return false; }
+        return true;
+    }
 }

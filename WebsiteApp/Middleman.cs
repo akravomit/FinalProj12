@@ -94,5 +94,13 @@ namespace WebsiteApp
             EntryMonstersOfPlayerDB EtrMOPDB = new EntryMonstersOfPlayerDB();
             return await EtrMOPDB.GetEntriesOfPlayer(p);
         }
+        public static async Task<List<Element>> GetAllElements()
+        {
+            return await ElDB.GetAll();
+        }
+        public static async Task<List<Item_Type_Name>> GetAllItem_Type_Names()
+        {
+            return await I_T_NDB.GetAllAsync();
+        }
     }
 }
