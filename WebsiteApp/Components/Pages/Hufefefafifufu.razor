@@ -60,17 +60,17 @@
                 <div style="display:flex; flex-flow: column wrap; overflow:auto; max-height:750px;">
                     @foreach (Dictionary<string, object> inv in PlayerInventory)
                     {
-                        @if (IsItemArmor(inv))
+                        @if (IsItemNotArmor(inv))
                         {
-                            <button class="generic-btn" style="padding: 10px;">
+                            <button class="generic-btn" style="padding: 10px;" @onclick="() => SelectItem(inv)">
                                 <div style="font-family:Forte; text-align:center; font-size:30px;">
                                     @*Image icon goes here*@
                                     @inv["Name"]
                                 </div>
                                 <div style="font-family:Forte; text-align:center; font-size:20px;">
                                     Item info: <br />
-                                    Item Level: @inv["Item_Level"] | Amount owned: @inv["Amount"] <br />
-                                    Item rarity: @inv["Rarity"] stars | Value per item: @inv["Value"] <br />
+                                    Item Level: @inv["Item_Level"] | Amount owned: @inv["Amount"]/@inv["MaxStack"] <br />
+                                    Item rarity: @GetRarityString(Convert.ToInt32(inv["Rarity"].ToString())) | Value per item: @inv["Value"] <br />
                                 </div>
                             </button>
                         }
@@ -98,7 +98,7 @@
                     </button>
                     <button class="generic-btn" @onclick="DamageMonster" style="max-width: 369px;">
                         <div class="perma_name">
-                            Damage the monster googoo gaga
+                            Damage the monster
                         </div>
                     </button>
                 </div>
@@ -112,6 +112,24 @@
                 </button>
             }
         </td>
+        <td style="background-color: rgba(51, 51, 51, 0.25); max-width:50%; vertical-align:central"> 
+            @if (SelectedItem is not null && current is not null)
+            {
+                <div class="generic-btn perma_name">
+                    Attacks you can do with @SelectedItem["Name"] <br />
+                    Click an attack to execute it
+                </div> <br />
+                @foreach (Dictionary<string,object> ItmAtk in ItemAttacks)
+                {
+                    <button class="generic-btn" @onclick="() => DamageMonster(ItmAtk)">
+                        <div style="font-family:Forte; text-align:center; font-size:20px;">
+                            @ItmAtk["Name"] -- @ItmAtk["Damage"] damage <br />
+                            Lasts for @ItmAtk["Duration"] turns <br />
+                        </div>
+                    </button>
+                }
+            }
+        </td>
     </table>
 }
 
@@ -120,12 +138,15 @@
 @code {
     List<Monster> Monsters; Monster current; Monster Ghost;
     Player Selected; User LoggedUser;
+    Dictionary<string, object> SelectedItem;
     string Login = "Login";
     Random Jerry = new Random();
     List<Dictionary<string, object>> PlayerInventory = new List<Dictionary<string, object>>();
     List<Dictionary<string, object>> PlayerEntries = new List<Dictionary<string, object>>();
     List<Element> Elements = new List<Element>();
     List<Item_Type_Name> Item_Type_Names = new List<Item_Type_Name>();
+    List<Dictionary<string, object>> ItemAttacks = new List<Dictionary<string, object>>();
+    Dictionary<string, object> SelectedAttack = new Dictionary<string, object>();
     protected override async Task OnInitializedAsync()
     {
         Monsters = await Middleman.GetMonsters(false);
@@ -155,14 +176,55 @@
         current.hp -= damage;
         if (current.hp <= 0) 
         { 
-            if (Jerry.Next(0, 1) == 0)
+            if (Jerry.Next(0, 1001) == 0)
             {
                 string filepath = "F:\\repos\\FinalProj12\\WebsiteApp\\wwwroot\\misc\\TheFunnyAudio.wav";
                 SoundPlayer player = new SoundPlayer(filepath);
                 try { player.Play(); }
                 catch (Exception e){}
-        }
+            }
+            await OnMonsterKilled();
             await SelectMonster(); 
+        }
+    }
+    private async Task DamageMonster(Dictionary<string,object> attack)
+    {
+        int basedamage = Convert.ToInt32(attack["Damage"].ToString()) + (Convert.ToInt32(SelectedItem["ItemIncrement"].ToString()) * Convert.ToInt32(SelectedItem["Item_Level"].ToString()));
+        if (basedamage < 0)
+        {
+            Selected.hp -= basedamage;
+            int stackamount = Convert.ToInt32(SelectedItem["Amount"].ToString());
+            await Middleman.UseItem(SelectedItem);
+            stackamount--;
+            SelectedItem["Amount"] = stackamount;
+            if (stackamount <= 0) { SelectedItem = null; return; }
+            foreach (Dictionary<string,object> eeee in PlayerInventory)
+            {
+                if (eeee["InventoryID"] == SelectedItem["InventoryID"])
+                {
+                    eeee["Amount"] = SelectedItem["Amount"];
+                    break;
+                }
+            }
+        }
+        else
+        {
+            int damage = Jerry.Next((int)(basedamage * 0.9), (int)(basedamage * 1.1));
+            damage -= current.defense;
+            if (damage <= 0) damage = 1; //Pity mechanic
+            current.hp -= damage;
+            if (current.hp <= 0)
+            {
+                if (Jerry.Next(0, 1001) == 0)
+                {
+                    string filepath = "F:\\repos\\FinalProj12\\WebsiteApp\\wwwroot\\misc\\TheFunnyAudio.wav";
+                    SoundPlayer player = new SoundPlayer(filepath);
+                    try { player.Play(); }
+                    catch (Exception e) { }
+                }
+                await OnMonsterKilled();
+                await SelectMonster();
+            }
         }
     }
     private async Task Back() { NavMan.NavigateTo("/Lobby"); }
@@ -180,9 +242,21 @@
         }
         return ret;
     }
-    private bool IsItemArmor(Dictionary<string,object> item)
+    private bool IsItemNotArmor(Dictionary<string,object> item)
     {
         if (Convert.ToInt32(item["ItemType"].ToString()) == 4) { return false; }
         return true;
+    }
+    private async Task OnMonsterKilled()
+    {
+        Selected = await Middleman.AwardPlayerForKill(Ghost, Selected);
+        await Middleman.RegisterEntry(Selected,Ghost,PlayerEntries);
+    }
+    private async Task SelectItem(Dictionary<string,object> itm)
+    {
+        SelectedItem = itm;
+        int itmid = Convert.ToInt32(itm["ItemID"].ToString());
+        ItemAttacks = await Middleman.GetAttacksOfItem(itmid);
+        await InvokeAsync(StateHasChanged);
     }
 }

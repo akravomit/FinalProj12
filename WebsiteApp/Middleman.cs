@@ -48,13 +48,28 @@ namespace WebsiteApp
         {  if (IncludeInvis) { return await MDB.GetAllAsync(); }
            return await MDB.GetByKeys(new Dictionary<string, object>() { {"IsHidden", false } }); 
         }
-        public static async Task RegisterEntry(Player owner, Monster monster)
+        public static async Task RegisterEntry(Player owner, Monster monster, List<Dictionary<string,object>> Entries)
         {
-            await EnDB.RegisterEntry(owner, victim:monster);
-        }
-        public static async Task<Dictionary<string,object>> DescribeMonster(Monster m)
-        {
-            return await MDB.MonsterToDict(m);
+            Entry e = await EnDB.RegisterEntry(owner, victim:monster);
+            if (e.times_killed == 1) 
+            {
+                EntryMonstersOfPlayerDB EnMoOPDB = new EntryMonstersOfPlayerDB();
+                Entries.Add(await EnMoOPDB.AddEntryToList(e, monster));
+            }
+            else
+            {
+                Dictionary<string, object> result = new Dictionary<string, object>();
+                foreach (Dictionary<string, object> entry in Entries)
+                {
+                    if (entry["Name"] == monster.name || Convert.ToInt32(entry["MonsterID"].ToString()) == monster.id) 
+                    { 
+                        result = entry;
+                        int tmp = Convert.ToInt32(result["TimesKilled"].ToString()); tmp++;
+                        entry["TimesKilled"] = tmp;
+                        break;
+                    }
+                }                
+            } 
         }
         public static async Task<Player> AwardPlayerForKill(Monster m, Player p)
         {
@@ -68,22 +83,6 @@ namespace WebsiteApp
             return UpdatedPlr;
         }
         public static async Task<int> UpdatePlayer(Player Old, Player New) { return await PDB.Update_Async(Old, New); }
-        public static async Task<List<Entry>> GetEntriesOfPlayer(Player p)
-        {
-            return await EnDB.GetByPlayer(p);
-        }
-        public static async Task<string> GetMonsterNameByID(int MonsterID)
-        {
-            return await MDB.FetchMonsterName(MonsterID);
-        }
-        public static async Task<List<Inventory>> GetInvOfPlayer(Player p)
-        {
-            return await InvDB.GetByPlayerAsync(p.id);
-        }
-        public static async Task<string> GetItemNameByID(int ItemID)
-        {
-            return await ItmDB.GetItemName(ItemID);
-        }
         public static async Task<List<Dictionary<string,object>>> NewGetInvOfPlayer(Player p)
         {
             InventoryItemsOfPlayerDB InvItmOPDB = new InventoryItemsOfPlayerDB();
@@ -101,6 +100,15 @@ namespace WebsiteApp
         public static async Task<List<Item_Type_Name>> GetAllItem_Type_Names()
         {
             return await I_T_NDB.GetAllAsync();
+        }
+        public static async Task<List<Dictionary<string,object>>> GetAttacksOfItem(int itm)
+        {
+            AttacksOfItemByItemID AtkOItmBItmID = new AttacksOfItemByItemID();
+            return await AtkOItmBItmID.GetAttacksOfItemByItemID(itm);
+        }
+        public static async Task UseItem(Dictionary<string,object> item)
+        {
+            await InvDB.UseItem(item);
         }
     }
 }

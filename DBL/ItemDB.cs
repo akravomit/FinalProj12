@@ -99,19 +99,5 @@ namespace DBL
             post.is_hidden = true;
             return await Update_Async(pre, post);
         }
-        public async Task<List<Item>> GetVisibleItemsAsync()
-        {
-            Dictionary<string, object> where = new Dictionary<string, object>()
-            {
-                { "IsHidden", false }
-            };
-            return await SelectAllAsync(where);
-        }
-        //Instead of getall
-        public async Task<string> GetItemName(int ItemID)
-        {
-            var result = await GetByUniqueK(GetPrimaryKeyName(), ItemID);
-            return result.name;
-        }
     }
 }

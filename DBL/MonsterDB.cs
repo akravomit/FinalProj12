@@ -106,34 +106,7 @@ namespace DBL
         }
         public async Task<int> Delete_Async(Monster pre)
         {
-            Monster post = new Monster(pre);
-            post.ishidden = true;
-            return await Update_Async(pre, post);
-        }
-
-        //Derivatives
-        public async Task<List<Monster>> GetBosses()
-        {
-            Dictionary<string,object> where = new Dictionary<string, object>() 
-            {
-                { "IsBoss", 2 }, //Bosses only
-                { "IsHidden", false },
-            };
-            return await GetByKeys(where);
-        }
-        public async Task<List<Monster>> GetMinibosses()
-        {
-            Dictionary<string, object> where = new Dictionary<string, object>()
-            {
-                { "IsBoss", 1 }, //Minibosses only
-                { "IsHidden", false },
-            };
-            return await GetByKeys(where);
-        }
-        public async Task<string> FetchMonsterName(int MonsterID)
-        {
-            var result = await GetByUniqueK(GetPrimaryKeyName(), MonsterID);
-            return result.name;
+            return await DeleteAsync(await MonsterToDict(pre));
         }
     }
 }

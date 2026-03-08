@@ -88,9 +88,5 @@ namespace DBL
             if (result is null) { return await InsertGetEntry(new Entry(victim.id, owner.id)); }
             else { return await IncrementEntry(result[0]); }
         }
-        public async Task<List<Entry>> GetByPlayer(Player p)
-        {
-            return await GetByKeys(new Dictionary<string, object> { { "PlayerID" , p.id } });
-        }
     }
 }

@@ -12,12 +12,12 @@ namespace DBL
         private async Task<Inventory> DictToInventory(Dictionary<string, object> dict)
         {
             Inventory ret = new Inventory();
-            ret.Id = Convert.ToInt32(dict["id"]);
-            ret.PlayerID = Convert.ToInt32(dict["PlayerID"]);
-            ret.ItemID = Convert.ToInt32(dict["ItemID"]);
-            ret.Item_level = Convert.ToInt32(dict["ItemLevel"]);
-            ret.IsHidden = Convert.ToBoolean(dict["IsHidden"]);
-            ret.Amount = Convert.ToInt32(dict["Amount"]);
+            ret.Id = Convert.ToInt32(dict["InventoryID"].ToString());
+            ret.PlayerID = Convert.ToInt32(dict["PlayerID"].ToString());
+            ret.ItemID = Convert.ToInt32(dict["ItemID"].ToString());
+            ret.Item_level = Convert.ToInt32(dict["Item_Level"].ToString());
+            ret.IsHidden = Convert.ToBoolean(dict["Inv_IsHidden"].ToString());
+            ret.Amount = Convert.ToInt32(dict["Amount"].ToString());
             return ret;
         }
 
@@ -28,7 +28,7 @@ namespace DBL
                 { "id", inventory.Id },
                 { "PlayerID", inventory.PlayerID },
                 { "ItemID", inventory.ItemID },
-                { "ItemLevel", inventory.Item_level },
+                { "Item_Level", inventory.Item_level },
                 { "IsHidden", inventory.IsHidden },
                 { "Amount", inventory.Amount},
             };
@@ -85,21 +85,36 @@ namespace DBL
         }
         public async Task<int> Delete_Async(Inventory pre)
         {
-            Inventory post = new Inventory(pre);
-            post.IsHidden = true;
-            return await Update_Async(pre, post);
+            return await DeleteAsync(await InventoryToDict(pre));
         }
 
-        //AI knows what's up with this one
-        // Optional: Get all non-hidden items for a specific player
-        public async Task<List<Inventory>> GetByPlayerAsync(int playerId)
+        public async Task UseItem(Inventory item)
         {
-            Dictionary<string, object> where = new Dictionary<string, object>()
+            //UPDATE `game`.`inventory` SET `Amount` = '68' WHERE (`id` = '3');
+            if (item.Amount > 0)
             {
-                { "PlayerID", playerId },
-                { "IsHidden", false }
-            };
-            return await SelectAllAsync(where);
+                Inventory post = new Inventory(item);
+                post.Amount--;
+                await Update_Async(item, post);
+            }
+            else
+            {
+                await Delete_Async(item);
+            }
+        }
+        public async Task UseItem(Dictionary<string,object> item)
+        {
+            Inventory inv = await DictToInventory(item);
+            if (inv.Amount > 0)
+            {
+                Inventory post = new Inventory(inv);
+                post.Amount--;
+                await Update_Async(inv, post);
+            }
+            else
+            {
+                await Delete_Async(inv);
+            }
         }
     }
 }

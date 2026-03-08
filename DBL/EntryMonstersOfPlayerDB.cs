@@ -42,6 +42,27 @@ namespace DBL
         {
             return await SelectAllAsync("SELECT * FROM game.entry etr JOIN monster m ON etr.MonsterID = m.id", new Dictionary<string, object> { { "PlayerID", p.id } });
         }
+        public async Task<Dictionary<string,object>> AddEntryToList(Entry e, Monster m)
+        {
+            object[] row = new object[16];
+            row[0] = e.id;
+            row[1] = e.monster_id;
+            row[2] = e.player_id;
+            row[3] = e.date_slain;
+            row[4] = e.times_killed;
+            row[5] = m.id;
+            row[6] = m.name;
+            row[7] = m.filepath;
+            row[8] = m.hp;
+            row[9] = m.defense;
+            row[10] = m.description;
+            row[11] = m.size;
+            row[12] = m.rarity;
+            row[13] = m.isboss;
+            row[14] = m.monsterElement;
+            row[15] = m.ishidden;
+            return await CreateModelAsync(row);
+        }
     }
     public class InventoryItemsOfPlayerDB : BaseDB<Dictionary<string, object>>
     {
@@ -78,6 +99,40 @@ namespace DBL
         public async Task<List<Dictionary<string,object>>> GetInvOfPlayer(Player p)
         {
             return await SelectAllAsync("SELECT * FROM game.inventory inv RIGHT JOIN item i ON i.id = inv.ItemID", new Dictionary<string, object> { { "PlayerID", p.id } });
+        }
+    }
+    public class AttacksOfItemByItemID : BaseDB<Dictionary<string, object>>
+    {
+        protected override async Task<Dictionary<string, object>> CreateModelAsync(object[] row)
+        {
+            Dictionary<string, object> model = new Dictionary<string, object>();
+            model.Add("Id", row[0]);
+            model.Add("ItemID", row[1]);
+            model.Add("AttackID", row[2]);
+            model.Add("AttackIncrement", row[3]);
+            //model.Add("IsHidden", row[4]);
+            //model.Add("AttackID", row[5]);
+            model.Add("FilePath", row[6]);
+            model.Add("Name", row[7]);
+            model.Add("Damage", row[8]);
+            model.Add("Decay", row[9]);
+            model.Add("DecayFactor", row[10]);
+            model.Add("Duration", row[11]);
+            model.Add("ElementID", row[12]);
+            model.Add("IsHidden", row[13]);
+            return model;
+        }
+        protected override string GetPrimaryKeyName()
+        {
+            return "id";
+        }
+        protected override string GetTableName()
+        {
+            return "item_attacks";
+        }
+        public async Task<List<Dictionary<string, object>>> GetAttacksOfItemByItemID(int itmid) 
+        {
+            return await SelectAllAsync("SELECT * FROM item_attacks iatk JOIN game.attack atk ON atk.id = iatk.AttackID", new Dictionary<string, object> {{ "iatk.ItemID", itmid }});
         }
     }
 }
