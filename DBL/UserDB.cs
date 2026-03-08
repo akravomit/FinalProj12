@@ -167,5 +167,41 @@ namespace DBL
                 return ret;
             }
         }
+        public async Task<object> Login_Async(string username, string email, object SEND_NULL_HERE)
+        {
+            string ret = string.Empty;
+            User user = new User();
+            bool ValidLogin = true;
+            if (!string.IsNullOrEmpty(username)) { user = await GetByUniqueK("username", username); }
+            else { return null; }
+
+            //Failiure scenarios
+            if (username == "Jungelist" || username == "jungelist")
+            {
+                ret = "ERROR: ALPHA-NOVEMBER-DELTA| TANGO-HOTEL-ECHO| SIERRA-TANGO-ALPHA-ROMEO-SIERRA| ALPHA-ROMEO-ECHO| BRAVO-LIMA-ECHO-ECHO-DELTA-INDIA-NOVEMBER-GOLF| TANGO-HOTEL-ECHO| SIERRA-TANGO-ALPHA-ROMEO-SIERRA| ALPHA-ROMEO-ECHO| BRAVO-LIMA-ECHO-ECHO-DELTA-INDIA-NOVEMBER-GOLF| TANGO-HOTEL-ECHO| SIERRA-TANGO-ALPHA-ROMEO-SIERRA| ALPHA-ROMEO-ECHO| BRAVO-LIMA-ECHO-ECHO-DELTA-INDIA-NOVEMBER-GOLF| TANGO-HOTEL-ECHO| SIERRA-TANGO-ALPHA-ROMEO-SIERRA| ALPHA-ROMEO-ECHO| BRAVO-LIMA-ECHO-ECHO-DELTA-INDIA-NOVEMBER-GOLF| TANGO-HOTEL-ECHO| SIERRA-TANGO-ALPHA-ROMEO-SIERRA| ALPHA-ROMEO-ECHO| BRAVO-LIMA-ECHO-ECHO-DELTA-INDIA-NOVEMBER-GOLF\nDENIED ACCESS. YOU ARE NOT THE FEED. THE FEED GETS ACESS TO SEEING ITSELF. DENIED ACCESS. DENIED ACESS. <o>  <o>  <o>  <o>  <o>  <o>  <o> ";
+                return ret;
+            } //Dw bout it sweetheart
+            if (!user.ishidden)
+            {
+                if (user.email != email)
+                {
+                    ret += "\nError: Emails do not match!";
+                    ValidLogin = false;
+                }
+            }
+            else
+            {
+                ret += "This user does not exist!";
+                ValidLogin = false;
+            }
+            if (ValidLogin)
+            {
+                return user;
+            }
+            else
+            {
+                return ret;
+            }
+        }
     }
 }

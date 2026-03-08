@@ -135,4 +135,38 @@ namespace DBL
             return await SelectAllAsync("SELECT * FROM item_attacks iatk JOIN game.attack atk ON atk.id = iatk.AttackID", new Dictionary<string, object> {{ "iatk.ItemID", itmid }});
         }
     }
+    public class AttacksOfMonsterByMonsterID : BaseDB<Dictionary<string, object>>
+    {
+        protected override async Task<Dictionary<string, object>> CreateModelAsync(object[] row)
+        {
+            Dictionary<string,object> model = new Dictionary<string,object>();
+            model.Add("Id", row[0]);
+            model.Add("MonsterID", row[1]);
+            model.Add("AttackID", row[2]);
+            model.Add("AttackIncrement", row[3]);
+            model.Add("IsHidden", row[4]);
+            //model.Add("AttackID", row[5]);
+            model.Add("FilePath", row[6]);
+            model.Add("Name", row[7]);
+            model.Add("Damage", row[8]);
+            model.Add("Decay", row[9]);
+            model.Add("DecayFactor", row[10]);
+            model.Add("Duration", row[12]);
+            model.Add("ElementID", row[12]);
+            //model.Add("IsHidden", row[13]);
+            return model;
+        }
+        protected override string GetPrimaryKeyName()
+        {
+            return "id";
+        }
+        protected override string GetTableName()
+        {
+            return "monster_attacks";
+        }
+        public async Task<List<Dictionary<string,object>>> GetMonsterAttacks(int id)
+        {
+            return await SelectAllAsync("SELECT * FROM monster_attacks matk JOIN game.attack atk ON atk.id = matk.AttackID", new Dictionary<string, object> { { "MonsterID", id } });
+        }
+    }
 }

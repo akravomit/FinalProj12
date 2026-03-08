@@ -25,7 +25,7 @@ namespace Models
         }
         public User(int id, string username, string password, string email, bool isadmin, bool ishidden) : this (username, password, email, isadmin, ishidden) { this.id = id; }
         public User(string username, string password, string email) : this (username, password, email, false, false) { } //Deafault constructor
-        public User(User user) : this (user.id, user.username, user.password, user.email, user.ishidden, user.ishidden) { }
+        public User(User user) : this (user.id, user.username, user.password, user.email, user.isadmin, user.ishidden) { }
         
         
         //For console unitesting

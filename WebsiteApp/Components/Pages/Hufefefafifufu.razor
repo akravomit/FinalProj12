@@ -146,6 +146,7 @@
     List<Element> Elements = new List<Element>();
     List<Item_Type_Name> Item_Type_Names = new List<Item_Type_Name>();
     List<Dictionary<string, object>> ItemAttacks = new List<Dictionary<string, object>>();
+    List<Dictionary<string, object>> MonsterAttacks = new List<Dictionary<string, object>>();
     Dictionary<string, object> SelectedAttack = new Dictionary<string, object>();
     protected override async Task OnInitializedAsync()
     {
@@ -163,14 +164,15 @@
         await InvokeAsync(StateHasChanged);
     }
     private async Task SelectMonster()
-    {
+    { 
         current = new Monster(Monsters[Jerry.Next(0, Monsters.Count)]);
         Ghost = new Monster(current);
+        MonsterAttacks = await Middleman.GetMonsterAttacks(Ghost);
         await InvokeAsync(StateHasChanged);
     }
     private async Task DamageMonster()
     {
-        int damage = Jerry.Next(5, 21);
+        int damage = Jerry.Next(1, 6);
         damage -= current.defense;
         if (damage <= 0) damage = 1;
         current.hp -= damage;
@@ -189,9 +191,10 @@
     }
     private async Task DamageMonster(Dictionary<string,object> attack)
     {
-        int basedamage = Convert.ToInt32(attack["Damage"].ToString()) + (Convert.ToInt32(SelectedItem["ItemIncrement"].ToString()) * Convert.ToInt32(SelectedItem["Item_Level"].ToString()));
+        int basedamage = Convert.ToInt32(attack["Damage"].ToString());
         if (basedamage < 0)
         {
+            basedamage -= (Convert.ToInt32(SelectedItem["ItemIncrement"].ToString()) * Convert.ToInt32(SelectedItem["Item_Level"].ToString()));
             Selected.hp -= basedamage;
             int stackamount = Convert.ToInt32(SelectedItem["Amount"].ToString());
             await Middleman.UseItem(SelectedItem);
@@ -203,13 +206,15 @@
                 if (eeee["InventoryID"] == SelectedItem["InventoryID"])
                 {
                     eeee["Amount"] = SelectedItem["Amount"];
+                    await MonsterTurn();
                     break;
                 }
             }
         }
         else
         {
-            int damage = Jerry.Next((int)(basedamage * 0.9), (int)(basedamage * 1.1));
+            int amplifiedDamage = basedamage + (Convert.ToInt32(SelectedItem["ItemIncrement"].ToString()) * Convert.ToInt32(SelectedItem["Item_Level"].ToString()));
+            int damage = Jerry.Next((int)(amplifiedDamage * 0.9), (int)(amplifiedDamage * 1.1));
             damage -= current.defense;
             if (damage <= 0) damage = 1; //Pity mechanic
             current.hp -= damage;
@@ -225,9 +230,30 @@
                 await OnMonsterKilled();
                 await SelectMonster();
             }
+            else
+            {
+                await MonsterTurn();
+            }
         }
     }
-    private async Task Back() { NavMan.NavigateTo("/Lobby"); }
+    private async Task MonsterTurn()
+    {
+        Dictionary<string, object> AttackToDo = new Dictionary<string, object>();
+        if (MonsterAttacks.Count > 1) { AttackToDo = MonsterAttacks[Jerry.Next(0, MonsterAttacks.Count)]; }
+        else { AttackToDo = MonsterAttacks[0]; }
+        int basedamage = Convert.ToInt32(AttackToDo["Damage"].ToString());
+        if (basedamage < 0) { basedamage = 1; }
+        Selected.hp -= basedamage;
+    }
+    private async Task Back() 
+    {
+        var GetPlayer = await Session.GetAsync<Player>("Selected player");
+        if (GetPlayer.Success) 
+        { 
+            await Middleman.UpdatePlayer(GetPlayer.Value,Selected); 
+        } 
+        NavMan.NavigateTo("/Lobby"); 
+    }
     private async Task Escape()
     {
         int chance = Jerry.Next( 0, Math.Abs(Selected.hp - current.hp) ); 
@@ -251,6 +277,11 @@
     {
         Selected = await Middleman.AwardPlayerForKill(Ghost, Selected);
         await Middleman.RegisterEntry(Selected,Ghost,PlayerEntries);
+        var GetPlayer = await Session.GetAsync<Player>("Selected player");
+        if (GetPlayer.Success)
+        {
+            await Middleman.UpdatePlayer(GetPlayer.Value, Selected);
+        }
     }
     private async Task SelectItem(Dictionary<string,object> itm)
     {

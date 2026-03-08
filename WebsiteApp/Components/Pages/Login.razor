@@ -73,8 +73,8 @@
     int tries = 0;
     private async Task Login_Async()
     { 
-        if (!UseEmail) { response = await Middleman.Login(username, password); }
-        else { response = await Middleman.Login(username, email); }
+        if (!UseEmail) { response = await Middleman.Login(username, password, false); }
+        else { response = await Middleman.Login(username, email, true); }
         RenderUser = true;
         if (response is User) 
         { 

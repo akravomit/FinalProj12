@@ -20,8 +20,11 @@ namespace WebsiteApp
         //    >.>
 
 
-        public static async Task<object> Login(string user,string password)
-        { return await UDB.Login_Async(user, password); }
+        public static async Task<object> Login(string user,string password, bool UsesEmail)
+        { 
+            if (UsesEmail) { return await UDB.Login_Async(user,password, null); }
+            return await UDB.Login_Async(user, password); 
+        }
         public static async Task<object> Register(User user, string password)
         { return await UDB.Register_Async(user, password); }
         public static async Task<List<User>> GetAllUsers()
@@ -51,25 +54,28 @@ namespace WebsiteApp
         public static async Task RegisterEntry(Player owner, Monster monster, List<Dictionary<string,object>> Entries)
         {
             Entry e = await EnDB.RegisterEntry(owner, victim:monster);
-            if (e.times_killed == 1) 
+            if (e is not null)
             {
-                EntryMonstersOfPlayerDB EnMoOPDB = new EntryMonstersOfPlayerDB();
-                Entries.Add(await EnMoOPDB.AddEntryToList(e, monster));
-            }
-            else
-            {
-                Dictionary<string, object> result = new Dictionary<string, object>();
-                foreach (Dictionary<string, object> entry in Entries)
+                if (e.times_killed == 1)
                 {
-                    if (entry["Name"] == monster.name || Convert.ToInt32(entry["MonsterID"].ToString()) == monster.id) 
-                    { 
-                        result = entry;
-                        int tmp = Convert.ToInt32(result["TimesKilled"].ToString()); tmp++;
-                        entry["TimesKilled"] = tmp;
-                        break;
+                    EntryMonstersOfPlayerDB EnMoOPDB = new EntryMonstersOfPlayerDB();
+                    Entries.Add(await EnMoOPDB.AddEntryToList(e, monster));
+                }
+                else
+                {
+                    Dictionary<string, object> result = new Dictionary<string, object>();
+                    foreach (Dictionary<string, object> entry in Entries)
+                    {
+                        if (entry["Name"] == monster.name || Convert.ToInt32(entry["MonsterID"].ToString()) == monster.id)
+                        {
+                            result = entry;
+                            int tmp = Convert.ToInt32(result["TimesKilled"].ToString()); tmp++;
+                            entry["TimesKilled"] = tmp;
+                            break;
+                        }
                     }
-                }                
-            } 
+                }
+            }
         }
         public static async Task<Player> AwardPlayerForKill(Monster m, Player p)
         {
@@ -109,6 +115,17 @@ namespace WebsiteApp
         public static async Task UseItem(Dictionary<string,object> item)
         {
             await InvDB.UseItem(item);
+        }
+        public static async Task<List<Dictionary<string,object>>> GetMonsterAttacks(Monster m)
+        {
+            AttacksOfMonsterByMonsterID AtkOMBMID = new AttacksOfMonsterByMonsterID();
+            return await AtkOMBMID.GetMonsterAttacks(m.id);
+        }
+        public static async Task GiftItem(int ItemID, Player owner)
+        {
+            Item gift = await ItmDB.GetByUniqueK("id", ItemID);
+            Inventory Gift = new Inventory(owner.id, ItemID, 1, false, 1);
+            await InvDB.Insert_Async(Gift);
         }
     }
 }

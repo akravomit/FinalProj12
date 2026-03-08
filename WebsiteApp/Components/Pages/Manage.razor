@@ -6,51 +6,46 @@
 @inject ProtectedSessionStorage Session
 
 
-@if (!UserDoesExist || !IsAdmin)
-{
-    <iframe width="640"
-            height="480"
-            src="https://www.youtube.com/embed/WFg0vTeXhWs"
-            title="Oh, Hi mr frog :)"
-            frameborder="0"
-            allow="autoplay; fullscreen;">
-    </iframe>
-    <button class="generic-btn" @onclick="() => NavMan.NavigateTo(Login)">
-        <div class="perma_name">Go to the login page.<br />You are not logged in >:( </div>
-    </button>
-}
-else
-{
-    <ul>
-        <li><div class="perma_name">Manage other users</div></li>
-        <li><div class="perma_name">Hello, @LoggedUser.username!</div></li>
-        <navname><button @onclick="Back" class="generic-btn"><div class="perma_name">Go back to the main page</div></button></navname>
-    </ul>
-    <table style="width: 100%; margin: 0 auto; border-collapse: collapse;">
-        <tr colspan="100%">
-            <div class="button-container">
-                @if (SelectedUsers is not null)
-                {
-                    @foreach (User user in SelectedUsers)
-                    {
-                        @* <button class="generic-btn">
-                            <div class="perma_name">@user.username</div>
-                        </button> *@
-                        <Dropdown Color="DropdownColor.Primary">
-                        <DropdownToggleButton>Primary</DropdownToggleButton>
-                        <DropdownMenu>
-                            <DropdownItem To="#" Type="DropdownItemType.Link">Action</DropdownItem>
-                            <DropdownItem To="#" Type="DropdownItemType.Link">Another action</DropdownItem>
-                            <DropdownItem To="#" Type="DropdownItemType.Link">Something else here</DropdownItem>
-                        </DropdownMenu>
-                        </Dropdown>
 
-                    }
+<ul>
+    <li><div class="perma_name generic-btn">Manage other users</div></li>
+    @if (LoggedUser is not null)
+    {
+        <li><div class="perma_name generic-btn">Hello, @LoggedUser.username!</div></li>
+    }
+    <navname><button @onclick="Back" class="generic-btn"><div class="perma_name">Go back to the main page</div></button></navname>
+</ul>
+<table>
+    <td style="background-color: rgba(51, 51, 51, 0.25); max-width:50%; vertical-align:central">
+        @if (AllUsers is not null)
+        {
+            <div style="display:flex; flex-flow: column wrap; overflow:auto; max-height:730px; min-width:450px;">
+                @foreach (User user in AllUsers)
+                {
+                    <div class="dropdown" style="padding: 20px 0px 40px 20px;">
+                        <div class="perma_name dropbtn">
+                            @user.username
+                        </div>
+                        <div class="dropdown-content">
+                            @if (user.ishidden)
+                            {
+                                <button @onclick="() => RestoreUser(user)">
+                                    Restore this user
+                                </button>
+                            }
+                            else
+                            {
+                                <button @onclick="() => DeleteUser(user)">
+                                    Delete this user
+                                </button>
+                            }
+                        </div>
+                    </div>
                 }
             </div>
-        </tr>
-    </table>
-}
+        }
+    </td>
+</table>
 
 
 <style>
@@ -61,20 +56,16 @@ else
 
 @code {
     List<User> AllUsers;
-    List<User> SelectedUsers;
     User LoggedUser;
-    bool UserDoesExist; bool IsAdmin;
     string username; string password; string email;
     const string Login = "Login"; [Inject] IJSRuntime JS { get; set; } = default!;
-
     protected override async Task OnInitializedAsync()
     {
         var tmp = await Session.GetAsync<User>("Logged user");
-        if (tmp.Success) 
-        { 
-            LoggedUser = tmp.Value; 
-            UserDoesExist = true;
-            IsAdmin = tmp.Value.isadmin;
+        if (tmp.Success)
+        {
+            LoggedUser = tmp.Value;
+            if (!LoggedUser.isadmin){ await Back(); }
         }
     } //Gets the logged user and verifies logged user is an admin
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -82,30 +73,31 @@ else
         if (firstRender)
         {
             AllUsers = await Middleman.GetAllUsers();
-            SelectedUsers = new List<User>(AllUsers);
             StateHasChanged();
         }
     } //Gets all users to manage
     private async Task Back() { NavMan.NavigateTo("/"); }
     private async Task DeleteUser(User user)
     {
-        bool confirmed = await JS.InvokeAsync<bool>("confirm", "Are you sure you want to delete your user?");
+        bool confirmed = await JS.InvokeAsync<bool>("confirm", "Are you sure you want to delete this user?");
         if (confirmed) { await Middleman.DeleteUser(user); }
+        await PostActionCleanup();
     }
     private async Task RestoreUser(User user)
     {
-        bool confirmed = await JS.InvokeAsync<bool>("confirm", "Are you sure you want to restore your user?");
+        bool confirmed = await JS.InvokeAsync<bool>("confirm", "Are you sure you want to restore this user?");
         if (confirmed) { await Middleman.UnDeleteUser(user); }
+        await PostActionCleanup();
+    }
+    private async Task PostActionCleanup()
+    {
+        AllUsers = await Middleman.GetAllUsers();
+        await InvokeAsync(StateHasChanged);
     }
     private async Task Log_Out_Async()
     {
         await Session.DeleteAsync("Logged user");
         LoggedUser = null;
-        UserDoesExist = false;
         await InvokeAsync(StateHasChanged);
-    }
-    private async Task FilterUsers()
-    {
-        SelectedUsers = AllUsers.FindAll(x => x.ishidden == false);
     }
 }

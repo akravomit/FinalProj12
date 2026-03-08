@@ -79,7 +79,7 @@
                     </div>
                 </div>
                 <br />
-                <div style="display:flex; flex-flow: column wrap; overflow:auto; max-height:750px;">
+                <div style="display:flex; flex-flow: column wrap; overflow:auto; max-height:730px;">
                     @foreach (Dictionary<string,object> inv in PlayerFullInv)
                     {
                         <button class="generic-btn" style="padding: 10px;">
@@ -105,7 +105,7 @@
                         All the monsters you killed:
                     </div>
                 </div>
-                <div style="display:flex; flex-flow:column wrap; overflow:auto; max-width:inherit; max-height:750px">
+                <div style="display:flex; flex-flow:column wrap; overflow:auto; max-width:inherit; max-height:730px">
                     @foreach (Dictionary<string,object> Entr in PlayerFullEntr)
                     {
                         <button class="generic-btn" style="padding:10px;">
@@ -142,6 +142,7 @@
     string playername; string Dungeon = "Dungeon";
     List<Dictionary<string, object>> PlayerFullInv;
     List<Dictionary<string, object>> PlayerFullEntr;
+    Random Jerry = new Random();
     protected override async Task OnInitializedAsync()
     {
         var tmp = await Session.GetAsync<User>("Logged user");
@@ -171,7 +172,8 @@
             Playerlist = new List<Player>();
         }
         Playerlist.Add(tmp);
-        StateHasChanged();
+        List<int> ItemsToGift = new List<int>() { 1, 5, 19 };
+        await Middleman.GiftItem(ItemsToGift[Jerry.Next(0, ItemsToGift.Count)], tmp);
     }
     private string GetImageIcon(String s) { return $"/img/{s}"; }
     private async Task Goto(char dest)
