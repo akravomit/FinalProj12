@@ -8,6 +8,7 @@ wwwroot\img\bg\monsters.png
 wwwroot\img\bg\noticing.png
 wwwroot\img\bg\Shugi_and_Kimi.png
 wwwroot\img\monsters\Antlion Charger.webp
+wwwroot\img\monsters\Boogie Monster.webp
 wwwroot\img\monsters\Demon Eye.webp
 wwwroot\img\monsters\Derpling.webp
 wwwroot\img\monsters\Gastropod.webp
@@ -27,3 +28,6 @@ wwwroot\img\monsters\Undead Miner.webp
 wwwroot\img\monsters\Unicorn.webp
 wwwroot\img\monsters\Vulture.webp
 wwwroot\img\monsters\Zombie.webp
+wwwroot\misc\27ae40b67145315f7a71e88d02d5f52c.jpg
+wwwroot\misc\Fireboy and Watergirl Death Sound.mp3
+wwwroot\misc\TheFunnyAudio.wav

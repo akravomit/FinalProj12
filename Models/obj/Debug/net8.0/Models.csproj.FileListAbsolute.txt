@@ -1,14 +1,3 @@
-D:\repos\monkey business\Models\bin\Debug\net8.0\Models.deps.json
-D:\repos\monkey business\Models\bin\Debug\net8.0\Models.dll
-D:\repos\monkey business\Models\bin\Debug\net8.0\Models.pdb
-D:\repos\monkey business\Models\obj\Debug\net8.0\Models.GeneratedMSBuildEditorConfig.editorconfig
-D:\repos\monkey business\Models\obj\Debug\net8.0\Models.AssemblyInfoInputs.cache
-D:\repos\monkey business\Models\obj\Debug\net8.0\Models.AssemblyInfo.cs
-D:\repos\monkey business\Models\obj\Debug\net8.0\Models.csproj.CoreCompileInputs.cache
-D:\repos\monkey business\Models\obj\Debug\net8.0\Models.dll
-D:\repos\monkey business\Models\obj\Debug\net8.0\refint\Models.dll
-D:\repos\monkey business\Models\obj\Debug\net8.0\Models.pdb
-D:\repos\monkey business\Models\obj\Debug\net8.0\ref\Models.dll
 D:\repos\FinalProj12\Models\bin\Debug\net8.0\Models.deps.json
 D:\repos\FinalProj12\Models\bin\Debug\net8.0\Models.dll
 D:\repos\FinalProj12\Models\bin\Debug\net8.0\Models.pdb
@@ -21,15 +10,3 @@ D:\repos\FinalProj12\Models\obj\Debug\net8.0\Models.dll
 D:\repos\FinalProj12\Models\obj\Debug\net8.0\refint\Models.dll
 D:\repos\FinalProj12\Models\obj\Debug\net8.0\Models.pdb
 D:\repos\FinalProj12\Models\obj\Debug\net8.0\ref\Models.dll
-F:\repos\FinalProj12\Models\bin\Debug\net8.0\Models.deps.json
-F:\repos\FinalProj12\Models\bin\Debug\net8.0\Models.dll
-F:\repos\FinalProj12\Models\bin\Debug\net8.0\Models.pdb
-F:\repos\FinalProj12\Models\obj\Debug\net8.0\Models.GeneratedMSBuildEditorConfig.editorconfig
-F:\repos\FinalProj12\Models\obj\Debug\net8.0\Models.AssemblyInfoInputs.cache
-F:\repos\FinalProj12\Models\obj\Debug\net8.0\Models.AssemblyInfo.cs
-F:\repos\FinalProj12\Models\obj\Debug\net8.0\Models.csproj.CoreCompileInputs.cache
-F:\repos\FinalProj12\Models\obj\Debug\net8.0\Models.sourcelink.json
-F:\repos\FinalProj12\Models\obj\Debug\net8.0\Models.dll
-F:\repos\FinalProj12\Models\obj\Debug\net8.0\refint\Models.dll
-F:\repos\FinalProj12\Models\obj\Debug\net8.0\Models.pdb
-F:\repos\FinalProj12\Models\obj\Debug\net8.0\ref\Models.dll

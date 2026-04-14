@@ -129,9 +129,9 @@ namespace DBL
         }
         public async Task<object> Login_Async(User user)
         {
-            return await Login_Async(user.username, user.password);
+            return await Login_Async_Username(user.username, user.password);
         } //Extra argument just in case the function takes a user
-        public async Task<object> Login_Async(string username, string password)
+        public async Task<object> Login_Async_Username(string username, string password)
         {
             string ret = string.Empty;
             User user = new User();
@@ -167,7 +167,7 @@ namespace DBL
                 return ret;
             }
         }
-        public async Task<object> Login_Async(string username, string email, object SEND_NULL_HERE)
+        public async Task<object> Login_Async_Email(string username, string email)
         {
             string ret = string.Empty;
             User user = new User();

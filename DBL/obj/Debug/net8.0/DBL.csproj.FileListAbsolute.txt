@@ -1,47 +1,16 @@
-D:\repos\monkey business\DBL\bin\Debug\net8.0\DBL.deps.json
-D:\repos\monkey business\DBL\bin\Debug\net8.0\DBL.dll
-D:\repos\monkey business\DBL\bin\Debug\net8.0\DBL.pdb
-D:\repos\monkey business\DBL\bin\Debug\net8.0\Models.dll
-D:\repos\monkey business\DBL\bin\Debug\net8.0\Models.pdb
-D:\repos\monkey business\DBL\obj\Debug\net8.0\DBL.csproj.AssemblyReference.cache
-D:\repos\monkey business\DBL\obj\Debug\net8.0\DBL.GeneratedMSBuildEditorConfig.editorconfig
-D:\repos\monkey business\DBL\obj\Debug\net8.0\DBL.AssemblyInfoInputs.cache
-D:\repos\monkey business\DBL\obj\Debug\net8.0\DBL.AssemblyInfo.cs
-D:\repos\monkey business\DBL\obj\Debug\net8.0\DBL.csproj.CoreCompileInputs.cache
-D:\repos\monkey business\DBL\obj\Debug\net8.0\DBL.csproj.Up2Date
-D:\repos\monkey business\DBL\obj\Debug\net8.0\DBL.dll
-D:\repos\monkey business\DBL\obj\Debug\net8.0\refint\DBL.dll
-D:\repos\monkey business\DBL\obj\Debug\net8.0\DBL.pdb
-D:\repos\monkey business\DBL\obj\Debug\net8.0\ref\DBL.dll
+D:\repos\FinalProj12\DBL\bin\Debug\net8.0\DBL.deps.json
+D:\repos\FinalProj12\DBL\bin\Debug\net8.0\DBL.dll
+D:\repos\FinalProj12\DBL\bin\Debug\net8.0\DBL.pdb
+D:\repos\FinalProj12\DBL\bin\Debug\net8.0\Models.dll
+D:\repos\FinalProj12\DBL\bin\Debug\net8.0\Models.pdb
 D:\repos\FinalProj12\DBL\obj\Debug\net8.0\DBL.csproj.AssemblyReference.cache
 D:\repos\FinalProj12\DBL\obj\Debug\net8.0\DBL.GeneratedMSBuildEditorConfig.editorconfig
 D:\repos\FinalProj12\DBL\obj\Debug\net8.0\DBL.AssemblyInfoInputs.cache
 D:\repos\FinalProj12\DBL\obj\Debug\net8.0\DBL.AssemblyInfo.cs
 D:\repos\FinalProj12\DBL\obj\Debug\net8.0\DBL.csproj.CoreCompileInputs.cache
 D:\repos\FinalProj12\DBL\obj\Debug\net8.0\DBL.sourcelink.json
+D:\repos\FinalProj12\DBL\obj\Debug\net8.0\DBL.csproj.Up2Date
 D:\repos\FinalProj12\DBL\obj\Debug\net8.0\DBL.dll
 D:\repos\FinalProj12\DBL\obj\Debug\net8.0\refint\DBL.dll
 D:\repos\FinalProj12\DBL\obj\Debug\net8.0\DBL.pdb
-D:\repos\FinalProj12\DBL\bin\Debug\net8.0\DBL.deps.json
-D:\repos\FinalProj12\DBL\bin\Debug\net8.0\DBL.dll
-D:\repos\FinalProj12\DBL\bin\Debug\net8.0\DBL.pdb
-D:\repos\FinalProj12\DBL\bin\Debug\net8.0\Models.dll
-D:\repos\FinalProj12\DBL\bin\Debug\net8.0\Models.pdb
-D:\repos\FinalProj12\DBL\obj\Debug\net8.0\DBL.csproj.Up2Date
 D:\repos\FinalProj12\DBL\obj\Debug\net8.0\ref\DBL.dll
-F:\repos\FinalProj12\DBL\bin\Debug\net8.0\DBL.deps.json
-F:\repos\FinalProj12\DBL\bin\Debug\net8.0\DBL.dll
-F:\repos\FinalProj12\DBL\bin\Debug\net8.0\DBL.pdb
-F:\repos\FinalProj12\DBL\bin\Debug\net8.0\Models.dll
-F:\repos\FinalProj12\DBL\bin\Debug\net8.0\Models.pdb
-F:\repos\FinalProj12\DBL\obj\Debug\net8.0\DBL.csproj.AssemblyReference.cache
-F:\repos\FinalProj12\DBL\obj\Debug\net8.0\DBL.GeneratedMSBuildEditorConfig.editorconfig
-F:\repos\FinalProj12\DBL\obj\Debug\net8.0\DBL.AssemblyInfoInputs.cache
-F:\repos\FinalProj12\DBL\obj\Debug\net8.0\DBL.AssemblyInfo.cs
-F:\repos\FinalProj12\DBL\obj\Debug\net8.0\DBL.csproj.CoreCompileInputs.cache
-F:\repos\FinalProj12\DBL\obj\Debug\net8.0\DBL.sourcelink.json
-F:\repos\FinalProj12\DBL\obj\Debug\net8.0\DBL.csproj.Up2Date
-F:\repos\FinalProj12\DBL\obj\Debug\net8.0\DBL.dll
-F:\repos\FinalProj12\DBL\obj\Debug\net8.0\refint\DBL.dll
-F:\repos\FinalProj12\DBL\obj\Debug\net8.0\DBL.pdb
-F:\repos\FinalProj12\DBL\obj\Debug\net8.0\ref\DBL.dll

@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "F:\\repos\\FinalProj12\\WebsiteApp\\WebsiteApp.csproj": {}
+    "D:\\repos\\FinalProj12\\WebsiteApp\\WebsiteApp.csproj": {}
   },
   "projects": {
-    "F:\\repos\\FinalProj12\\DBL\\DBL.csproj": {
+    "D:\\repos\\FinalProj12\\DBL\\DBL.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "F:\\repos\\FinalProj12\\DBL\\DBL.csproj",
+        "projectUniqueName": "D:\\repos\\FinalProj12\\DBL\\DBL.csproj",
         "projectName": "DBL",
-        "projectPath": "F:\\repos\\FinalProj12\\DBL\\DBL.csproj",
-        "packagesPath": "C:\\Users\\old\\.nuget\\packages\\",
-        "outputPath": "F:\\repos\\FinalProj12\\DBL\\obj\\",
+        "projectPath": "D:\\repos\\FinalProj12\\DBL\\DBL.csproj",
+        "packagesPath": "C:\\Users\\Twelve.DESKTOP-MG3L518\\.nuget\\packages\\",
+        "outputPath": "D:\\repos\\FinalProj12\\DBL\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\old\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Twelve.DESKTOP-MG3L518\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -33,8 +33,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "F:\\repos\\FinalProj12\\Models\\Models.csproj": {
-                "projectPath": "F:\\repos\\FinalProj12\\Models\\Models.csproj"
+              "D:\\repos\\FinalProj12\\Models\\Models.csproj": {
+                "projectPath": "D:\\repos\\FinalProj12\\Models\\Models.csproj"
               }
             }
           }
@@ -48,7 +48,8 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        }
+        },
+        "SdkAnalysisLevel": "9.0.300"
       },
       "frameworks": {
         "net8.0": {
@@ -75,24 +76,24 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.312/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "F:\\repos\\FinalProj12\\Models\\Models.csproj": {
+    "D:\\repos\\FinalProj12\\Models\\Models.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "F:\\repos\\FinalProj12\\Models\\Models.csproj",
+        "projectUniqueName": "D:\\repos\\FinalProj12\\Models\\Models.csproj",
         "projectName": "Models",
-        "projectPath": "F:\\repos\\FinalProj12\\Models\\Models.csproj",
-        "packagesPath": "C:\\Users\\old\\.nuget\\packages\\",
-        "outputPath": "F:\\repos\\FinalProj12\\Models\\obj\\",
+        "projectPath": "D:\\repos\\FinalProj12\\Models\\Models.csproj",
+        "packagesPath": "C:\\Users\\Twelve.DESKTOP-MG3L518\\.nuget\\packages\\",
+        "outputPath": "D:\\repos\\FinalProj12\\Models\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\old\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Twelve.DESKTOP-MG3L518\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -119,7 +120,8 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        }
+        },
+        "SdkAnalysisLevel": "9.0.300"
       },
       "frameworks": {
         "net8.0": {
@@ -140,24 +142,24 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.312/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "F:\\repos\\FinalProj12\\WebsiteApp\\WebsiteApp.csproj": {
+    "D:\\repos\\FinalProj12\\WebsiteApp\\WebsiteApp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "F:\\repos\\FinalProj12\\WebsiteApp\\WebsiteApp.csproj",
+        "projectUniqueName": "D:\\repos\\FinalProj12\\WebsiteApp\\WebsiteApp.csproj",
         "projectName": "WebsiteApp",
-        "projectPath": "F:\\repos\\FinalProj12\\WebsiteApp\\WebsiteApp.csproj",
-        "packagesPath": "C:\\Users\\old\\.nuget\\packages\\",
-        "outputPath": "F:\\repos\\FinalProj12\\WebsiteApp\\obj\\",
+        "projectPath": "D:\\repos\\FinalProj12\\WebsiteApp\\WebsiteApp.csproj",
+        "packagesPath": "C:\\Users\\Twelve.DESKTOP-MG3L518\\.nuget\\packages\\",
+        "outputPath": "D:\\repos\\FinalProj12\\WebsiteApp\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\old\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Twelve.DESKTOP-MG3L518\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -173,11 +175,11 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "F:\\repos\\FinalProj12\\DBL\\DBL.csproj": {
-                "projectPath": "F:\\repos\\FinalProj12\\DBL\\DBL.csproj"
+              "D:\\repos\\FinalProj12\\DBL\\DBL.csproj": {
+                "projectPath": "D:\\repos\\FinalProj12\\DBL\\DBL.csproj"
               },
-              "F:\\repos\\FinalProj12\\Models\\Models.csproj": {
-                "projectPath": "F:\\repos\\FinalProj12\\Models\\Models.csproj"
+              "D:\\repos\\FinalProj12\\Models\\Models.csproj": {
+                "projectPath": "D:\\repos\\FinalProj12\\Models\\Models.csproj"
               }
             }
           }
@@ -191,7 +193,8 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        }
+        },
+        "SdkAnalysisLevel": "9.0.300"
       },
       "frameworks": {
         "net8.0": {
@@ -215,7 +218,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.312/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

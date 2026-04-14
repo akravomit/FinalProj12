@@ -20,10 +20,10 @@ namespace WebsiteApp
         //    >.>
 
 
-        public static async Task<object> Login(string user,string password, bool UsesEmail)
+        public static async Task<object> Login(string user,string password, bool UsesEmail, string email)
         { 
-            if (UsesEmail) { return await UDB.Login_Async(user,password, null); }
-            return await UDB.Login_Async(user, password); 
+            if (UsesEmail) { return await UDB.Login_Async_Email(email,password); } //If it uses email it will use a similar func
+            return await UDB.Login_Async_Username(user, password); 
         }
         public static async Task<object> Register(User user, string password)
         { return await UDB.Register_Async(user, password); }
