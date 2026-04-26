@@ -15,18 +15,21 @@ namespace WebsiteApp
         private static MonsterDB MDB = new MonsterDB();
         private static PlayerDB PDB = new PlayerDB();
         private static UserDB UDB = new UserDB();
-
+        private static HttpClient client = new HttpClient();
 
         //    >.>
 
-
+        private record LoginData(string username, string password, bool usesemail, string email);
         public static async Task<object> Login(string user,string password, bool UsesEmail, string email)
-        { 
-            if (UsesEmail) { return await UDB.Login_Async_Email(email,password); } //If it uses email it will use a similar func
-            return await UDB.Login_Async_Username(user, password); 
+        {
+            client.BaseAddress = new Uri("https://localhost:7229/api/Userfunction/");
+            LoginData logindata = new LoginData(user, password, UsesEmail, email);
+            var response = await client.PostAsJsonAsync<object>("Login", logindata);
+            response.EnsureSuccessStatusCode();
+            return response;
         }
-        public static async Task<object> Register(User user, string password)
-        { return await UDB.Register_Async(user, password); }
+        public static async Task<object> Register(User user)
+        { return await UDB.Register_Async(user,""); }
         public static async Task<List<User>> GetAllUsers()
         { return await UDB.GetAllAsync();  } //Used exclusively by admins
         public static async Task<List<User>> GetAllUsers(bool GetInvis)

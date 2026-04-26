@@ -2,6 +2,8 @@
 using Models;
 using MySql.Data.MySqlClient;
 using System;
+using System.Net.Http.Json;
+using System.Security.Cryptography.X509Certificates;
 using System.Xml.Linq;
 
 namespace UniTesting
@@ -36,17 +38,39 @@ namespace UniTesting
             //    Console.WriteLine(item);
             //}
 
-            EntryMonstersOfPlayerDB EnMoPDB = new EntryMonstersOfPlayerDB();
-            List<Dictionary<string, object>> result = await EnMoPDB.GetEntriesOfPlayer(new Player(1, "Tinman player edition", 100, 20, 3219, false, 1));
-            foreach (Dictionary<string, object> item in result)
+            //EntryMonstersOfPlayerDB EnMoPDB = new EntryMonstersOfPlayerDB();
+            //List<Dictionary<string, object>> result = await EnMoPDB.GetEntriesOfPlayer(new Player(1, "Tinman player edition", 100, 20, 3219, false, 1));
+            //foreach (Dictionary<string, object> item in result)
+            //{
+            //    foreach (KeyValuePair<string,object> pair in item)
+            //    {
+            //        Console.Write($"| Key: {pair.Key} - Value: {pair.Value}  ");
+            //    }
+            //    Console.WriteLine();
+            //}
+
+            //http://localhost:7229
+            HttpClient client = new HttpClient();
+            client.BaseAddress = new Uri("https://localhost:7229/api/Userfunction/");
+            try
             {
-                foreach (KeyValuePair<string,object> pair in item)
-                {
-                    Console.Write($"| Key: {pair.Key} - Value: {pair.Value}  ");
-                }
-                Console.WriteLine();
+                string username = string.Empty; string email = string.Empty; string password = string.Empty; bool usesemail;
+                //Console.Write("Enter username:   "); username = Console.ReadLine();
+                //Console.Write("Enter email:      "); email = Console.ReadLine();
+                //Console.Write("Enter password:   "); password = Console.ReadLine();
+                Console.Write("Uses email (1/0): "); usesemail = Convert.ToBoolean(Convert.ToInt32(Console.ReadLine()));
+                username = "Tinman"; email = "TruthNukeTinman@gmail.com"; password = "Whenamechaindasama";
+                LoginData logindata = new LoginData(username, password, usesemail, email);
+                var response = await client.PostAsJsonAsync<object>("Login", logindata);
+                response.EnsureSuccessStatusCode();
+                Console.WriteLine(response.Content);
+            }
+            catch (HttpRequestException e)
+            {
+                Console.WriteLine(e.Message);
             }
         }
+        public record LoginData(string username, string password, bool usesemail, string email);
         public static async Task UserTesting()
         {
             UserDB UDB = new UserDB();
@@ -80,7 +104,7 @@ namespace UniTesting
             Console.WriteLine("---Log in---");
             Console.Write("Enter your username:     "); name = Console.ReadLine();
             Console.Write("Enter your password:     "); password = Console.ReadLine();
-            var Result = await UDB.Login_Async(name, password);
+            var Result = await UDB.Login_Async(new User(name,password,""));
             if (Result is string) { Console.WriteLine(Result); return; }
             else { Login = Result as User; }
 
@@ -113,7 +137,7 @@ Owner:{(await UDB.GetByUniqueK("username",name)).username}");
             Console.WriteLine("---Log in---");
             Console.Write("Enter your username:     "); username = Console.ReadLine();
             Console.Write("Enter your password:     "); password = Console.ReadLine();
-            var Result = await UDB.Login_Async(username, password);
+            var Result = await UDB.Login_Async(new User(username,password,""));
             if (Result is string) { Console.WriteLine(Result); return; }
             else { Login = Result as User; }
             Element element = new Element();

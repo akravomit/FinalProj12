@@ -138,69 +138,75 @@ namespace DBL
             bool ValidLogin = true;
             if (!string.IsNullOrEmpty(username)) { user = await GetByUniqueK("username", username); }
             else { return null; }
-
-            //Failiure scenarios
-            if (username == "Jungelist" || username == "jungelist")
+            if (user is null) { return null; }
+            else
             {
-                ret = "ERROR: ALPHA-NOVEMBER-DELTA| TANGO-HOTEL-ECHO| SIERRA-TANGO-ALPHA-ROMEO-SIERRA| ALPHA-ROMEO-ECHO| BRAVO-LIMA-ECHO-ECHO-DELTA-INDIA-NOVEMBER-GOLF| TANGO-HOTEL-ECHO| SIERRA-TANGO-ALPHA-ROMEO-SIERRA| ALPHA-ROMEO-ECHO| BRAVO-LIMA-ECHO-ECHO-DELTA-INDIA-NOVEMBER-GOLF| TANGO-HOTEL-ECHO| SIERRA-TANGO-ALPHA-ROMEO-SIERRA| ALPHA-ROMEO-ECHO| BRAVO-LIMA-ECHO-ECHO-DELTA-INDIA-NOVEMBER-GOLF| TANGO-HOTEL-ECHO| SIERRA-TANGO-ALPHA-ROMEO-SIERRA| ALPHA-ROMEO-ECHO| BRAVO-LIMA-ECHO-ECHO-DELTA-INDIA-NOVEMBER-GOLF| TANGO-HOTEL-ECHO| SIERRA-TANGO-ALPHA-ROMEO-SIERRA| ALPHA-ROMEO-ECHO| BRAVO-LIMA-ECHO-ECHO-DELTA-INDIA-NOVEMBER-GOLF\nDENIED ACCESS. YOU ARE NOT THE FEED. THE FEED GETS ACESS TO SEEING ITSELF. DENIED ACCESS. DENIED ACESS. <o>  <o>  <o>  <o>  <o>  <o>  <o> ";
-                return ret;
-            } //Dw bout it sweetheart
-            if (!user.ishidden)
-            {
-                if (user.password != password)
+                //Failiure scenarios
+                if (username == "Jungelist" || username == "jungelist")
                 {
-                    ret += "\nError: Passwords do not match!";
+                    ret = "ERROR: ALPHA-NOVEMBER-DELTA| TANGO-HOTEL-ECHO| SIERRA-TANGO-ALPHA-ROMEO-SIERRA| ALPHA-ROMEO-ECHO| BRAVO-LIMA-ECHO-ECHO-DELTA-INDIA-NOVEMBER-GOLF| TANGO-HOTEL-ECHO| SIERRA-TANGO-ALPHA-ROMEO-SIERRA| ALPHA-ROMEO-ECHO| BRAVO-LIMA-ECHO-ECHO-DELTA-INDIA-NOVEMBER-GOLF| TANGO-HOTEL-ECHO| SIERRA-TANGO-ALPHA-ROMEO-SIERRA| ALPHA-ROMEO-ECHO| BRAVO-LIMA-ECHO-ECHO-DELTA-INDIA-NOVEMBER-GOLF| TANGO-HOTEL-ECHO| SIERRA-TANGO-ALPHA-ROMEO-SIERRA| ALPHA-ROMEO-ECHO| BRAVO-LIMA-ECHO-ECHO-DELTA-INDIA-NOVEMBER-GOLF| TANGO-HOTEL-ECHO| SIERRA-TANGO-ALPHA-ROMEO-SIERRA| ALPHA-ROMEO-ECHO| BRAVO-LIMA-ECHO-ECHO-DELTA-INDIA-NOVEMBER-GOLF\nDENIED ACCESS. YOU ARE NOT THE FEED. THE FEED GETS ACESS TO SEEING ITSELF. DENIED ACCESS. DENIED ACESS. <o>  <o>  <o>  <o>  <o>  <o>  <o> ";
+                    return ret;
+                } //Dw bout it sweetheart
+                if (!user.ishidden)
+                {
+                    if (user.password != password)
+                    {
+                        ret += "\nError: Passwords do not match!";
+                        ValidLogin = false;
+                    }
+                }
+                else
+                {
+                    ret += "This user does not exist!";
                     ValidLogin = false;
                 }
-            }
-            else
-            {
-                ret += "This user does not exist!";
-                ValidLogin = false;
-            }
-            if (ValidLogin)
-            {
-                return user;
-            }
-            else
-            {
-                return ret;
+                if (ValidLogin)
+                {
+                    return user;
+                }
+                else
+                {
+                    return ret;
+                }
             }
         }
-        public async Task<object> Login_Async_Email(string username, string email)
+        public async Task<object> Login_Async_Email(string email, string password)
         {
             string ret = string.Empty;
             User user = new User();
             bool ValidLogin = true;
-            if (!string.IsNullOrEmpty(username)) { user = await GetByUniqueK("username", username); }
+            if (!string.IsNullOrEmpty(email)) { user = await GetByUniqueK("email", email); }
             else { return null; }
-
-            //Failiure scenarios
-            if (username == "Jungelist" || username == "jungelist")
+            if (user is null) { return null; }
+            else
             {
-                ret = "ERROR: ALPHA-NOVEMBER-DELTA| TANGO-HOTEL-ECHO| SIERRA-TANGO-ALPHA-ROMEO-SIERRA| ALPHA-ROMEO-ECHO| BRAVO-LIMA-ECHO-ECHO-DELTA-INDIA-NOVEMBER-GOLF| TANGO-HOTEL-ECHO| SIERRA-TANGO-ALPHA-ROMEO-SIERRA| ALPHA-ROMEO-ECHO| BRAVO-LIMA-ECHO-ECHO-DELTA-INDIA-NOVEMBER-GOLF| TANGO-HOTEL-ECHO| SIERRA-TANGO-ALPHA-ROMEO-SIERRA| ALPHA-ROMEO-ECHO| BRAVO-LIMA-ECHO-ECHO-DELTA-INDIA-NOVEMBER-GOLF| TANGO-HOTEL-ECHO| SIERRA-TANGO-ALPHA-ROMEO-SIERRA| ALPHA-ROMEO-ECHO| BRAVO-LIMA-ECHO-ECHO-DELTA-INDIA-NOVEMBER-GOLF| TANGO-HOTEL-ECHO| SIERRA-TANGO-ALPHA-ROMEO-SIERRA| ALPHA-ROMEO-ECHO| BRAVO-LIMA-ECHO-ECHO-DELTA-INDIA-NOVEMBER-GOLF\nDENIED ACCESS. YOU ARE NOT THE FEED. THE FEED GETS ACESS TO SEEING ITSELF. DENIED ACCESS. DENIED ACESS. <o>  <o>  <o>  <o>  <o>  <o>  <o> ";
-                return ret;
-            } //Dw bout it sweetheart
-            if (!user.ishidden)
-            {
-                if (user.email != email)
+                //Failiure scenarios
+                if (email == "Jungelist" || password == "The Stars Bleed")
                 {
-                    ret += "\nError: Emails do not match!";
+                    ret = "ERROR: ALPHA-NOVEMBER-DELTA| TANGO-HOTEL-ECHO| SIERRA-TANGO-ALPHA-ROMEO-SIERRA| ALPHA-ROMEO-ECHO| BRAVO-LIMA-ECHO-ECHO-DELTA-INDIA-NOVEMBER-GOLF| TANGO-HOTEL-ECHO| SIERRA-TANGO-ALPHA-ROMEO-SIERRA| ALPHA-ROMEO-ECHO| BRAVO-LIMA-ECHO-ECHO-DELTA-INDIA-NOVEMBER-GOLF| TANGO-HOTEL-ECHO| SIERRA-TANGO-ALPHA-ROMEO-SIERRA| ALPHA-ROMEO-ECHO| BRAVO-LIMA-ECHO-ECHO-DELTA-INDIA-NOVEMBER-GOLF| TANGO-HOTEL-ECHO| SIERRA-TANGO-ALPHA-ROMEO-SIERRA| ALPHA-ROMEO-ECHO| BRAVO-LIMA-ECHO-ECHO-DELTA-INDIA-NOVEMBER-GOLF| TANGO-HOTEL-ECHO| SIERRA-TANGO-ALPHA-ROMEO-SIERRA| ALPHA-ROMEO-ECHO| BRAVO-LIMA-ECHO-ECHO-DELTA-INDIA-NOVEMBER-GOLF\nDENIED ACCESS. YOU ARE NOT THE FEED. THE FEED GETS ACESS TO SEEING ITSELF. DENIED ACCESS. DENIED ACESS. <o>  <o>  <o>  <o>  <o>  <o>  <o> ";
+                    return ret;
+                } //Dw bout it sweetheart
+                if (!user.ishidden)
+                {
+                    if (user.email != email)
+                    {
+                        ret += "\nError: Emails do not match!";
+                        ValidLogin = false;
+                    }
+                }
+                else
+                {
+                    ret += "This user does not exist!";
                     ValidLogin = false;
                 }
-            }
-            else
-            {
-                ret += "This user does not exist!";
-                ValidLogin = false;
-            }
-            if (ValidLogin)
-            {
-                return user;
-            }
-            else
-            {
-                return ret;
+                if (ValidLogin)
+                {
+                    return user;
+                }
+                else
+                {
+                    return ret;
+                }
             }
         }
     }
