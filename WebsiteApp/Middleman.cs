@@ -51,8 +51,9 @@ namespace WebsiteApp
         public static async Task<Player> InsertGetPlayer(string username, int ownerid) 
         { return await PDB.InsertGetPlayer(new Player(username,ownerid)); }
         public static async Task<List<Monster>> GetMonsters(bool IncludeInvis) //IncludeInvis controls if to search for hidden monsters as well
-        {  if (IncludeInvis) { return await MDB.GetAllAsync(); }
-           return await MDB.GetByKeys(new Dictionary<string, object>() { {"IsHidden", false } }); 
+        {  
+            if (IncludeInvis) { return await MDB.GetAllAsync(); }
+            return await MDB.GetByKeys(new Dictionary<string, object>() { {"IsHidden", false } }); 
         }
         public static async Task RegisterEntry(Player owner, Monster monster, List<Dictionary<string,object>> Entries)
         {

@@ -4,6 +4,7 @@ using MySql.Data.MySqlClient;
 using System;
 using System.Net.Http.Json;
 using System.Security.Cryptography.X509Certificates;
+using System.Text.Json;
 using System.Xml.Linq;
 
 namespace UniTesting
@@ -59,7 +60,7 @@ namespace UniTesting
                 //Console.Write("Enter email:      "); email = Console.ReadLine();
                 //Console.Write("Enter password:   "); password = Console.ReadLine();
                 Console.Write("Uses email (1/0): "); usesemail = Convert.ToBoolean(Convert.ToInt32(Console.ReadLine()));
-                username = "Tinman"; email = "TruthNukeTinman@gmail.com"; password = "Whenamechaindasama";
+                username = "Tinman"; email = "TruthNukeTinman@gmail.com"; password = "Whenamechaindasama"; 
                 LoginData logindata = new LoginData(username, password, usesemail, email);
                 var response = await client.PostAsJsonAsync<object>("Login", logindata);
                 response.EnsureSuccessStatusCode();
@@ -69,6 +70,8 @@ namespace UniTesting
             {
                 Console.WriteLine(e.Message);
             }
+
+            
         }
         public record LoginData(string username, string password, bool usesemail, string email);
         public static async Task UserTesting()
