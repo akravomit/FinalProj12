@@ -43,7 +43,8 @@
 
 <style>
     body {
-        background-image: url('img\bg\library.png');
+        background-image: url('/img/bg/library.png');
+        background-size: cover;
     }
 </style>
 
@@ -55,7 +56,7 @@
     bool RenderUser;
     private async Task Register_Async()
     {
-        response = await Middleman.Register(new User(username,password,email),"");
+        response = await Middleman.Register(new User(username,password,email));
         RenderUser = true;
         if (response is User) { await Session.SetAsync("Logged user", response as User); }
         await InvokeAsync(StateHasChanged);

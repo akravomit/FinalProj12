@@ -1,6 +1,8 @@
 ﻿using Models;
 using DBL;
 using System.Net.NetworkInformation;
+using System.Text.Json;
+using System.Text;
 namespace WebsiteApp
 {
     public class Middleman
@@ -22,11 +24,12 @@ namespace WebsiteApp
         private record LoginData(string username, string password, bool usesemail, string email);
         public static async Task<object> Login(string user,string password, bool UsesEmail, string email)
         {
-            client.BaseAddress = new Uri("https://localhost:7229/api/Userfunction/");
-            LoginData logindata = new LoginData(user, password, UsesEmail, email);
-            var response = await client.PostAsJsonAsync<object>("Login", logindata);
-            response.EnsureSuccessStatusCode();
-            return response;
+            //client.BaseAddress = new Uri("https://localhost:7229/api/Userfunction/");
+            //LoginData logindata = new LoginData(user, password, UsesEmail, email);
+            //var response = await client.PostAsJsonAsync<object>("Login", logindata);
+            //response.EnsureSuccessStatusCode();
+            //return await response.Content.ReadFromJsonAsync<object>();
+            return await UDB.Login_Async_Username(user, password);
         }
         public static async Task<object> Register(User user)
         { return await UDB.Register_Async(user,""); }

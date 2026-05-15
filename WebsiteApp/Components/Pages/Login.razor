@@ -20,7 +20,7 @@
 
 <form @onsubmit="Login_Async">
     <div class="button-container">
-        <input class="generic-btn" type="text" placeholder="Enter username here" @bind-value="username" required style="font-size:20px; font-family:Forte;" />
+        <input class="generic-btn" type="text" placeholder="Enter username here" @bind-value="username" title="You cannot have a user without a username" required style="font-size:20px; font-family:Forte;" />
         @if (tries >= 5)
         {
             <input class="generic-btn" type="email" pattern="[a-z0-9._%+-]+@@[a-z0-9.-]+\.[a-z]{2,}$" placeholder="Enter your email here" @bind-value="email" required style="font-size:20px; font-family:Forte;" />
@@ -72,7 +72,9 @@
     bool RenderUser = false;
     int tries = 0;
     private async Task Login_Async()
-    { 
+    {
+        if (string.IsNullOrEmpty(email)) email = "";
+        if (string.IsNullOrEmpty(password)) password = "";
         if (!UseEmail) { response = await Middleman.Login(username, password, false, email); }
         else { response = await Middleman.Login(username, password, true , email); }
         RenderUser = true;

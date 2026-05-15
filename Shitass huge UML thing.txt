@@ -1,0 +1,203 @@
+@startuml
+skinparam class {
+    BackgroundColor #F8F1E9
+    BorderColor #2C3E50
+    ArrowColor #2980B9
+    FontSize 11
+}
+
+skinparam shadowing true
+class DB {
+    -List<string> passwords
+    -const string MySqlConnSTR
+    #DbConnection conn
+    #DbCommand cmd
+    #DbDataReader reader
+    --
+    +DB()
+}
+
+class BaseDB<T> {
+    -- **Abstract Methods** --
+    #abstract string GetTableName()
+    #abstract string GetPrimaryKeyName()
+    #abstract Task<T> CreateModelAsync(object[] row)
+    --
+    -- **CRUD Generic** --
+    #Task<List<T>> SelectAllAsync()
+    #Task<List<T>> SelectAllAsync(Dictionary where)
+    #Task<int> InsertAsync(Dictionary data)
+    #Task<object> InsertGetObjAsync(Dictionary data)
+    #Task<int> UpdateAsync(Dictionary newValues, Dictionary where)
+    #Task<int> DeleteAsync(Dictionary where)
+    --
+    -- **Helper Methods** --
+    -string PrepareInsertQueryWithParameters()
+    -string PrepareUpdateQueryWithParameters()
+    -string PrepareWhereQueryWithParameters()
+}
+class MonsterDB {
+    -Task<Monster> DictToMonster()
+    -Task<Dictionary> MonsterToDict()
+    --
+    #string GetTableName() → "game.monster"
+    #string GetPrimaryKeyName() → "id"
+    #Task<Monster> CreateModelAsync()
+    --
+    +Task<List<Monster>> GetAllAsync()
+    +Task<Monster> GetByUniqueK()
+    +Task<List<Monster>> GetByKey()
+    +Task<Monster> InsertGetMonster()
+    +Task<int> Update_Async()
+    +Task<int> Delete_Async()
+}
+
+class Monster_Attacks_DB {
+    -Task<Monster_Attacks> DictToMonster_Attacks()
+    -Task<Dictionary> Monster_AttacksToDict()
+    --
+    #GetTableName() → "game.monster_attacks"
+    --
+    +Task<List<Monster_Attacks>> GetAllAsync()
+    +Task<Monster_Attacks> InsertGetMonster_Attacks()
+    +Task<int> Delete_Async()  // Soft delete
+}
+
+class PlayerDB {
+    -Task<Player> DictToPlayer()
+    -Task<Dictionary> PlayerToDict()
+    --
+    #GetTableName() → "game.player"
+    --
+    +Task<List<Player>> GetAllAsync()
+    +Task<List<Player>> GetByOwner(int ownerId)
+    +Task<List<Player>> GetVisible()
+    +Task<Player> InsertGetPlayer()  // with uniqueness check
+    +Task<int> Delete_Async()  // Soft delete
+}
+
+class UserDB {
+    -Task<User> DictToUser()
+    -Task<Dictionary> UserToDict()
+    --
+    #GetTableName() → "users"
+    --
+    +Task<object> Register_Async()
+    +Task<object> Login_Async_Username()
+    +Task<object> Login_Async_Email()
+    +Task<int> Delete_Async()  // Soft delete
+}
+
+class ElementDB {
+    -Task<Element> DictToElement()
+    -Task<Dictionary> ElementToDict()
+    --
+    #GetTableName() → "game.element"
+    --
+    +Task<Element> InsertGetElement()  // updates relations
+    +Task<int> DeleteElement()  // complex logic
+}
+
+class AttackDB {
+    -Task<Attack> DictToAttack()
+    -Task<Dictionary> AttackToDict()
+    --
+    #GetTableName() → "game.attack"
+    --
+    +Task<Attack> InsertGetAttack()
+    +Task<int> Delete()
+}
+
+class ItemDB {
+    -Task<Item> DictToItem()
+    -Task<Dictionary> ItemToDict()
+    --
+    #GetTableName() → "game.item"
+    --
+    +Task<Item> InsertGetItem()
+    +Task<int> Delete_Async()  // Soft delete
+}
+
+class InventoryDB {
+    -Task<Inventory> DictToInventory()
+    -Task<Dictionary> InventoryToDict()
+    --
+    #GetTableName() → "game.inventory"
+    --
+    +Task<Inventory> Insert_Async()
+    +Task UseItem(Inventory item)  // decrement / delete
+}
+
+class Item_Attacks_DB {
+    -Task<Item_Attacks> DictToItem_Attacks()
+    -Task<Dictionary> Item_AttacksToDict()
+    --
+    #GetTableName() → "game.item_attacks"
+    --
+    +Task<List<Item_Attacks>> GetAttacksForItemAsync(int itemId)
+}
+
+class Item_Type_Name_DB {
+    -Task<Item_Type_Name> DictToItem_Type_Name()
+    -Task<Dictionary> Item_Type_NameToDict()
+    --
+    #GetTableName() → "game.itemtype_name"
+}
+
+class EntryDB {
+    -Task<Entry> DictToEntry()
+    -Task<Dictionary> EntryToDict()
+    --
+    #GetTableName() → "game.entry"
+    --
+    +Task<Entry> RegisterEntry(Player, Monster)
+    +Task<Entry> IncrementEntry(Entry)
+}
+
+' Joined / View classes
+class EntryMonstersOfPlayerDB {
+    +Task<List<Dictionary>> GetEntriesOfPlayer(Player p)
+}
+
+class InventoryItemsOfPlayerDB {
+    +Task<List<Dictionary>> GetInvOfPlayer(Player p)
+}
+
+class AttacksOfItemByItemID {
+    +Task<List<Dictionary>> GetAttacksOfItemByItemID(int itemId)
+}
+
+class AttacksOfMonsterByMonsterID {
+    +Task<List<Dictionary>> GetMonsterAttacks(int id)
+}
+BaseDB <|-- MonsterDB
+BaseDB <|-- Monster_Attacks_DB
+BaseDB <|-- PlayerDB
+BaseDB <|-- UserDB
+BaseDB <|-- ElementDB
+BaseDB <|-- AttackDB
+BaseDB <|-- ItemDB
+BaseDB <|-- InventoryDB
+BaseDB <|-- Item_Attacks_DB
+BaseDB <|-- Item_Type_Name_DB
+BaseDB <|-- EntryDB
+
+BaseDB <|-- EntryMonstersOfPlayerDB
+BaseDB <|-- InventoryItemsOfPlayerDB
+BaseDB <|-- AttacksOfItemByItemID
+BaseDB <|-- AttacksOfMonsterByMonsterID
+
+note right of BaseDB
+  Generic CRUD + 
+  Dictionary <-> Model conversion
+end note
+
+note bottom of UserDB
+  Contains Login & Register logic
+end note
+
+note bottom of ElementDB
+  Complex element relation logic
+  (Strong/Weak updates)
+end note
+@enduml

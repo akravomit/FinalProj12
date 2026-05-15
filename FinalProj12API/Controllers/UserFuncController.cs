@@ -8,7 +8,7 @@ using System.Security.Cryptography;
 namespace FinalProj12API.Controllers
 {
     //https://localhost:7229/api/Userfunction/ server Uri
-    [Route("api/[controller]")]
+    [Route("api/[controller]/")]
     [ApiController]
     public class UserfunctionController : ControllerBase
     {
@@ -124,24 +124,24 @@ namespace FinalProj12API.Controllers
             AttacksOfMonsterByMonsterID AtkOMBMID = new AttacksOfMonsterByMonsterID();
             return await AtkOMBMID.GetMonsterAttacks(m.id);
         }
-
-        public static async Task RegisterEntry(Player owner, Monster monster, List<Dictionary<string, object>> Entries)
+        [HttpPost("RegisterEntry")]
+        public static async Task<List<Dictionary<string,object>>> RegisterEntry([FromBody]IHateThisDataStruct_ForTheRegisterEntryFunction HateDisShit)
         {
             EntryDB EnDB = new EntryDB();
-            Entry e = await EnDB.RegisterEntry(owner, victim: monster);
+            Entry e = await EnDB.RegisterEntry(HateDisShit.owner, HateDisShit.monster);
             if (e is not null)
             {
                 if (e.times_killed == 1)
                 {
                     EntryMonstersOfPlayerDB EnMoOPDB = new EntryMonstersOfPlayerDB();
-                    Entries.Add(await EnMoOPDB.AddEntryToList(e, monster));
+                    HateDisShit.Entries.Add(await EnMoOPDB.AddEntryToList(e, HateDisShit.monster));
                 }
                 else
                 {
                     Dictionary<string, object> result = new Dictionary<string, object>();
-                    foreach (Dictionary<string, object> entry in Entries)
+                    foreach (Dictionary<string, object> entry in HateDisShit.Entries)
                     {
-                        if (entry["Name"] == monster.name || Convert.ToInt32(entry["MonsterID"].ToString()) == monster.id)
+                        if (entry["Name"] == HateDisShit.monster.name || Convert.ToInt32(entry["MonsterID"].ToString()) == HateDisShit.monster.id)
                         {
                             result = entry;
                             int tmp = Convert.ToInt32(result["TimesKilled"].ToString()); tmp++;
@@ -151,6 +151,7 @@ namespace FinalProj12API.Controllers
                     }
                 }
             }
+            return HateDisShit.Entries;
         }
         public record IHateThisDataStruct_ForTheRegisterEntryFunction(Player owner, Monster monster, List<Dictionary<string,object>> Entries);
         public record TwoUsers(User one, User two);
