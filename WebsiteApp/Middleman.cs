@@ -28,7 +28,16 @@ namespace WebsiteApp
             //LoginData logindata = new LoginData(user, password, UsesEmail, email);
             //var response = await client.PostAsJsonAsync<object>("Login", logindata);
             //response.EnsureSuccessStatusCode();
-            //return await response.Content.ReadFromJsonAsync<object>();
+            //try
+            //{
+            //    var responseContent = await response.Content.ReadFromJsonAsync<string>();
+            //    return responseContent as string;
+            //}
+            //catch (Exception ex)
+            //{
+            //    User result = await response.Content.ReadFromJsonAsync<User>() as User;
+            //    return result;
+            //}
             return await UDB.Login_Async_Username(user, password);
         }
         public static async Task<object> Register(User user)
