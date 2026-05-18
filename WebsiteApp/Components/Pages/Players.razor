@@ -95,15 +95,23 @@
     string playername;
     protected override async Task OnInitializedAsync()
     {
-        var tmp = await Session.GetAsync<User>("Logged user");
-        if (tmp.Success) 
-        { 
-            LoggedUser = tmp.Value;
-            UserDoesExist = true;
-            Playerlist = await Middleman.GetPlayers(LoggedUser.id);
+        try
+        {
+            var tmp = await Session.GetAsync<User>("Logged user");
+            if (tmp.Success)
+            {
+                LoggedUser = tmp.Value;
+                UserDoesExist = true;
+                Playerlist = await Middleman.GetPlayers(LoggedUser.id);
+            }
+            else { UserDoesExist = false; }
+            await InvokeAsync(StateHasChanged);
         }
-        else { UserDoesExist = false; }
-        await InvokeAsync(StateHasChanged);
+        catch (Exception ex)
+        {
+            await Task.Delay(150);
+            await Back();
+        }
     }
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {

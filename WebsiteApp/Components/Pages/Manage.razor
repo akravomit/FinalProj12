@@ -17,28 +17,140 @@
 </ul>
 <table>
     <td style="background-color: rgba(51, 51, 51, 0.25); max-width:50%; vertical-align:central">
+        <div class="generic-btn">
+            <div style="font-family:Verdana; font-size:20px;">
+                All users are shown here
+            </div>
+        </div>
         @if (AllUsers is not null)
         {
-            <div style="display:flex; flex-flow: column wrap; overflow:auto; max-height:730px; min-width:450px;">
+            <div style="display:flex; flex-flow: row wrap; overflow:auto; max-height: 80%; max-width:450px;">
                 @foreach (User user in AllUsers)
                 {
-                    <div class="dropdown" style="padding: 20px 0px 40px 20px;">
-                        <div class="perma_name dropbtn">
-                            @user.username
+                    
+                    @if (user.ishidden)
+                    {
+                        <div class="dropdown" style="padding: 20px 0px 80px 0px;">
+                            <div class="perma_name dropbtn" style="background-color:#ff6c00;">
+                                @user.username
+                            </div>
+                            <div class="dropdown-content" style="padding: 10px 40px 0px 0px;">
+                                @if (user.id != LoggedUser.id)
+                                {
+                                    <button @onclick="() => RestoreUser(user)">
+                                        Restore this user
+                                    </button>
+                                }
+                                <button @onclick="() => SelectUser(user)">
+                                    View user's players
+                                </button>
+                            </div>
                         </div>
-                        <div class="dropdown-content">
-                            @if (user.ishidden)
-                            {
-                                <button @onclick="() => RestoreUser(user)">
-                                    Restore this user
+                    }
+                    else
+                    {
+                        <div class="dropdown" style="padding: 20px 0px 80px 0px;">
+                            <div class="perma_name dropbtn">
+                                @user.username
+                            </div>
+                            <div class="dropdown-content" style="padding: 10px 40px 0px 0px;">
+                                @if (user.id != LoggedUser.id)
+                                {
+                                    <button @onclick="() => DeleteUser(user)">
+                                        Delete this user
+                                    </button>
+                                }
+                                <button @onclick="() => SelectUser(user)">
+                                    View user's players
                                 </button>
-                            }
-                            else
-                            {
-                                <button @onclick="() => DeleteUser(user)">
-                                    Delete this user
-                                </button>
-                            }
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        }
+    </td>
+    <td style="background-color:rgba(51, 51, 51, 0.25); max-width:300px;">
+        <div class="generic-btn">
+            <div style="font-family:Verdana; font-size:20px;">
+                User's players are here. Click to view more info
+            </div>
+        </div>
+        @if (UsersPlayers is not null)
+        {
+            <div style="display:flex; flex-flow: row wrap; overflow:auto; max-height: 80%; max-width:450px;">
+                @foreach (Player player in UsersPlayers)
+                {
+                    <button class="generic-btn" @onclick="() => SelectPlayer(player)">
+                        <div style="font-family:Forte; text-align:center; font-size:15px;">
+                            @player.name
+                        </div>
+                    </button>
+                    @if (player.is_hidden)
+                    {
+                        <div class="dropdown" style="padding: 20px 0px 80px 0px;">
+                            <div class="perma_name dropbtn" style="background-color:#ff6c00">
+                                @player.name
+                            </div>
+                            <div class="dropdown-content" style="padding: 10px 40px 0px 0px;">
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        }
+    </td>
+    <td style="background-color:rgba(51, 51, 51, 0.25); max-width:300px;">
+        <div class="generic-btn">
+            <div style="font-family:Verdana; font-size:20px;">
+                Player's inventory is here:
+            </div>
+        </div>
+        @if (PlayersInv is not null && PlayersInv.Count != 0)
+        {
+            <div style="display:flex; flex-flow:column wrap; overflow:auto; max-width:inherit; max-height:730px">
+                @foreach (Dictionary<string, object> Inv in PlayersInv)
+                {
+                    @if ((bool)(Inv["Itm_IsHidden"]))
+                    {
+                        <div class="dropdown" style="padding: 20px 0px 80px 0px;">
+                            <div class="perma_name dropbtn" style="background-color:#ff6c00;">
+                                @Inv["Name"] - @Inv["Amount"]/@Inv["MaxStack"] | Level @Inv["Item_Level"]
+                            </div>
+                            <div class="dropdown-content" style="padding: 10px 40px 0px 0px;">
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="dropdown" style="padding: 20px 0px 80px 0px;">
+                            <div class="perma_name dropbtn">
+                                @Inv["Name"] - @Inv["Amount"]/@Inv["MaxStack"] | Level @Inv["Item_Level"]
+                            </div>
+                            <div class="dropdown-content" style="padding: 10px 40px 0px 0px;">
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        }
+    </td>
+    <td style="background-color:rgba(51, 51, 51, 0.25); max-width:300px;">
+        <div class="generic-btn">
+            <div style="font-family:Verdana; font-size:20px;">
+                Player's entries are shown here
+            </div>
+        </div>
+        @if (PlayersEntries is not null && PlayersEntries.Count != 0)
+        {
+            <div style="display:flex; flex-flow:column wrap; overflow:auto; max-width:inherit; max-height:730px">
+                @foreach (Dictionary<string, object> Inv in PlayersEntries)
+                {
+                    <div class="dropdown" style="padding: 20px 0px 80px 0px;">
+                        <div class="perma_name dropbtn">
+                            @Inv["Name"] - @Inv["DateSlain"] & @Inv["TimesKilled"] times
+                        </div>
+                        <div class="dropdown-content" style="padding: 10px 40px 0px 0px;">
                         </div>
                     </div>
                 }
@@ -55,17 +167,25 @@
 </style>
 
 @code {
-    List<User> AllUsers;
-    User LoggedUser;
+    List<User> AllUsers; List<Player> UsersPlayers; List<Dictionary<string, object>> PlayersInv; List<Dictionary<string, object>> PlayersEntries;
+    User LoggedUser; User SelectedUser; Player SelectedPlayer;
     string username; string password; string email;
     const string Login = "Login"; [Inject] IJSRuntime JS { get; set; } = default!;
     protected override async Task OnInitializedAsync()
     {
-        var tmp = await Session.GetAsync<User>("Logged user");
-        if (tmp.Success)
+        try
         {
-            LoggedUser = tmp.Value;
-            if (!LoggedUser.isadmin){ await Back(); }
+            var tmp = await Session.GetAsync<User>("Logged user");
+            if (tmp.Success)
+            {
+                LoggedUser = tmp.Value;
+                if (!LoggedUser.isadmin) { await Back(); }
+            }
+        }
+        catch (Exception ex)
+        {
+            await Task.Delay(150);
+            await Back();
         }
     } //Gets the logged user and verifies logged user is an admin
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -98,6 +218,23 @@
     {
         await Session.DeleteAsync("Logged user");
         LoggedUser = null;
+        await InvokeAsync(StateHasChanged);
+    }
+    private async Task SelectUser(User u)
+    {
+        SelectedUser = new User(); UsersPlayers = new List<Player>(); PlayersEntries = new List<Dictionary<string, object>>(); PlayersInv = new List<Dictionary<string, object>>();
+        //Clears previous data
+        SelectedUser = new User(u);
+        UsersPlayers = await Middleman.GetPlayers(u.id);
+        await InvokeAsync(StateHasChanged);
+    }
+    private async Task SelectPlayer (Player p)
+    {
+        SelectedPlayer = new Player(); PlayersEntries = new List<Dictionary<string, object>>(); PlayersInv = new List<Dictionary<string, object>>();
+        //Clears previous data
+        SelectedPlayer = new Player(p);
+        PlayersEntries = await Middleman.NewGetEntriesOfPlayer(p);
+        PlayersInv = await Middleman.NewGetInvOfPlayer(p);
         await InvokeAsync(StateHasChanged);
     }
 }

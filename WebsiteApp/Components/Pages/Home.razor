@@ -4,6 +4,7 @@
 @inject NavigationManager NavMan
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @inject ProtectedSessionStorage Session
+@using System.Timers;
 
 <ul>
     @if (LoggedUser is null)
@@ -47,7 +48,6 @@
                 </button>
             </li>
         }
-        @* <li><button @onclick="() => Navigate('P')" class="generic-btn"><div class="perma_name">See your characters</div></button></li> *@
         <li>
             <button @onclick="() => Navigate('G')" class="generic-btn">
                 <div class="perma_name">
@@ -70,12 +70,42 @@
     }
 </ul>
 
-
+<table>
+    <td style="background-color:rgba(51, 51, 51, 0.25); max-width:300px; max-height:650px;">
+        @if (renderads)
+        {
+            <div class="generic-btn" style="padding:10px;">
+                <div style="font-family:Forte; text-align:center; font-size:30px;">
+                    And now, an ad from our sponsors:
+                    @if (ad is not null)
+                    {
+                        @ad.headline
+                    }
+                </div>
+                <div style="text-align:center; font-size:15px;">
+                    @if (ad is not null)
+                    {
+                        @ad.body
+                    }
+                    @if (AdRequestFailed)
+                    {
+                        <div>
+                            Hmm... we are having some issues on our end. Please check back later to see our ads later! They're vital for this website to run!
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </td>
+</table>
 
 
 
 @code {
     protected User LoggedUser;
+    bool renderads = false; bool AdRequestFailed = false;
+    HttpClient client = new HttpClient();
+    Advertisement ad = new Advertisement();
     async Task Navigate(char c)
     {
         string dest = "/";
@@ -103,8 +133,28 @@
         {
             var tmp = await Session.GetAsync<User>("Logged user");
             if (tmp.Success) { LoggedUser = tmp.Value; }
-
+            renderads = true;
             await InvokeAsync(StateHasChanged);
+
+            Timer timerPullAdd;
+            timerPullAdd = new System.Timers.Timer();
+            timerPullAdd.Interval = 10000;
+            timerPullAdd.Elapsed += async (sender, e) => await CycleAds();
+            timerPullAdd.AutoReset = true;
+            timerPullAdd.Enabled = true;
+        }
+    }
+    async Task CycleAds()
+    {
+        try
+        {
+            ad = await client.GetFromJsonAsync<Advertisement>("https://localhost:7094/api/Annoyingads/GetARandomAd");
+            if (ad.ToString() == "{}") AdRequestFailed = true;
+            await InvokeAsync(StateHasChanged);
+        }
+        catch (Exception ex)
+        {
+            AdRequestFailed = true;
         }
     }
 }

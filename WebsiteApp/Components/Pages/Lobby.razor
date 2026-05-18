@@ -41,7 +41,10 @@
                     <div class="dropdown-content" style="max-height:80px; overflow:auto;">
                         @foreach (Player plr in Playerlist)
                         {
-                            <button class="generic-btn" @onclick="() => Select_Player(plr)">@plr.name</button>
+                            @if (!plr.is_hidden)
+                            {
+                                <button class="generic-btn" @onclick="() => Select_Player(plr)">@plr.name</button>
+                            }
                         }
                     </div>
                 </div>
@@ -66,6 +69,11 @@
                         HP: @Selected.hp <br />
                         Coins: @Selected.coins <br />
                         Mana: @Selected.mana <br />
+                    </div>
+                </button>
+                <button class="generic-btn" style="padding:10px;" @onclick="GiftPlr">
+                    <div style="font-family:Forte; text-align:center; font-size:30px;">
+                        Gift random item
                     </div>
                 </button>
             }
@@ -145,13 +153,20 @@
     Random Jerry = new Random();
     protected override async Task OnInitializedAsync()
     {
-        var tmp = await Session.GetAsync<User>("Logged user");
-        if (tmp.Success)
+        try
         {
-            LoggedUser = tmp.Value;
-            Playerlist = await Middleman.GetPlayers(LoggedUser.id);
+            var tmp = await Session.GetAsync<User>("Logged user");
+            if (tmp.Success)
+            {
+                LoggedUser = tmp.Value;
+                Playerlist = await Middleman.GetPlayers(LoggedUser.id);
+            }
+            await InvokeAsync(StateHasChanged);
         }
-        await InvokeAsync(StateHasChanged);
+        catch (Exception ex)
+        {
+            await Back();
+        }
     }
     private async Task Back() { NavMan.NavigateTo("/"); }
     private async Task Select_Player(Player plr)
@@ -163,16 +178,23 @@
         PlayerFullEntr = await Middleman.NewGetEntriesOfPlayer(Selected);
         StateHasChanged();
     }
+    private async Task GiftPlr()
+    {
+        List<int> ItemsToGift = new List<int>() { 1, 5, 19 };
+        await Middleman.GiveItem(ItemsToGift[Jerry.Next(0, ItemsToGift.Count)], Selected);
+    }
     private async Task CreatePlr()
     {
         Player tmp = new Player(playername,LoggedUser.id);
-        await Middleman.InsertGetPlayer(playername, LoggedUser.id);
+        tmp = await Middleman.InsertGetPlayer(playername, LoggedUser.id);
         if (Playerlist is null)
         {
             Playerlist = new List<Player>();
         }
         Playerlist.Add(tmp);
+        await InvokeAsync(StateHasChanged);
         List<int> ItemsToGift = new List<int>() { 1, 5, 19 };
+        playername = "";
         await Middleman.GiftItem(ItemsToGift[Jerry.Next(0, ItemsToGift.Count)], tmp);
     }
     private string GetImageIcon(String s) { return $"/img/{s}"; }

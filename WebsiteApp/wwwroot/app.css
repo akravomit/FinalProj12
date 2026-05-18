@@ -151,6 +151,14 @@ ul li generic-btn:hover {
     border: none;
     cursor: pointer;
 }
+.deadbtn {
+    background-color: #ff6c00;
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+}
 .dropdown-content {
     display: none;
     position: absolute;
@@ -158,6 +166,7 @@ ul li generic-btn:hover {
     min-width: 200px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     overflow: auto;
+    z-index: 100;
 }
 .dropdown-content button {
     color: black;
@@ -173,4 +182,7 @@ ul li generic-btn:hover {
 }
 .dropdown:hover .dropbtn {
     background-color: #3e8e41;
+}
+.dropdown:hover .deadbtn {
+    background-color: #ff6c00;
 }

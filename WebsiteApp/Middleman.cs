@@ -3,6 +3,7 @@ using DBL;
 using System.Net.NetworkInformation;
 using System.Text.Json;
 using System.Text;
+using Mysqlx.Crud;
 namespace WebsiteApp
 {
     public class Middleman
@@ -115,6 +116,14 @@ namespace WebsiteApp
             EntryMonstersOfPlayerDB EtrMOPDB = new EntryMonstersOfPlayerDB();
             return await EtrMOPDB.GetEntriesOfPlayer(p);
         }
+        public static async Task<List<Inventory>> GetInvOfPlayer(Player player)
+        {
+            return await InvDB.GetByKey("PlayerID", player.id);
+        }
+        public static async Task<List<Entry>> GetEntriesOfPlayer(Player player)
+        {
+            return await EnDB.GetByKeys(new Dictionary<string, object> { { "PlayerID",player.id } });
+        }
         public static async Task<List<Element>> GetAllElements()
         {
             return await ElDB.GetAll();
@@ -142,6 +151,34 @@ namespace WebsiteApp
             Item gift = await ItmDB.GetByUniqueK("id", ItemID);
             Inventory Gift = new Inventory(owner.id, ItemID, 1, false, 1);
             await InvDB.Insert_Async(Gift);
+        }
+        public static async Task GiveItem(int ItemID, Player Owner)
+        {
+            Item gift = await ItmDB.GetByUniqueK("id", ItemID);
+            Inventory Gift = new Inventory(Owner.id, ItemID, 1, false, 1);
+            Inventory OldInv = await InvDB.GetByUniqueK("ItemID", ItemID);
+            if (OldInv != null)
+            {
+                Inventory NewInv = new Inventory(OldInv);
+                if (OldInv.Amount >= gift.MaxStack)
+                {
+                    NewInv.Item_level++;
+                    NewInv.Amount = 1;
+                }
+                else
+                {
+                    NewInv.Amount++;
+                }
+                await UpdateInv(OldInv, NewInv);
+            }
+            else
+            {
+                await InvDB.Insert_Async(Gift);
+            }
+        }
+        public static async Task UpdateInv(Inventory OldInv, Inventory NewInv)
+        {
+            await InvDB.Update_Async(OldInv, NewInv);
         }
     }
 }

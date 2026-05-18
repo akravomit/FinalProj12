@@ -150,18 +150,26 @@
     Dictionary<string, object> SelectedAttack = new Dictionary<string, object>();
     protected override async Task OnInitializedAsync()
     {
-        Monsters = await Middleman.GetMonsters(false);
-        var GetPlayer = await Session.GetAsync<Player>("Selected player");
-        if (GetPlayer.Success) { Selected = new Player(GetPlayer.Value); }
-        var GetUser = await Session.GetAsync<User>("Logged user");
-        if (GetUser.Success) { LoggedUser = new User(GetUser.Value); }
-        var GetInventory = await Session.GetAsync<List<Dictionary<string,object>>>("Player's inventory");
-        if (GetInventory.Success) { PlayerInventory = GetInventory.Value; }
-        var GetEntries = await Session.GetAsync<List<Dictionary<string, object>>>("Player's entries");
-        if (GetEntries.Success) { PlayerEntries = GetEntries.Value; }
-        Elements = await Middleman.GetAllElements();
-        Item_Type_Names = await Middleman.GetAllItem_Type_Names();
-        await InvokeAsync(StateHasChanged);
+        try
+        {
+            Monsters = await Middleman.GetMonsters(false);
+            var GetPlayer = await Session.GetAsync<Player>("Selected player");
+            if (GetPlayer.Success) { Selected = new Player(GetPlayer.Value); }
+            var GetUser = await Session.GetAsync<User>("Logged user");
+            if (GetUser.Success) { LoggedUser = new User(GetUser.Value); }
+            var GetInventory = await Session.GetAsync<List<Dictionary<string, object>>>("Player's inventory");
+            if (GetInventory.Success) { PlayerInventory = GetInventory.Value; }
+            var GetEntries = await Session.GetAsync<List<Dictionary<string, object>>>("Player's entries");
+            if (GetEntries.Success) { PlayerEntries = GetEntries.Value; }
+            Elements = await Middleman.GetAllElements();
+            Item_Type_Names = await Middleman.GetAllItem_Type_Names();
+            await InvokeAsync(StateHasChanged);
+        }
+        catch (Exception ex)
+        {
+            await Task.Delay(150);
+            await Back();
+        }
     }
     private async Task SelectMonster()
     { 
