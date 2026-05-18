@@ -87,6 +87,10 @@ namespace DBL
         {
             return await DeleteAsync(await InventoryToDict(pre));
         }
+        public async Task<int> Hard_Delete_Async(Dictionary<string, object> where)
+        {
+            return await DeleteAsync(where);
+        }
 
         public async Task UseItem(Inventory item)
         {

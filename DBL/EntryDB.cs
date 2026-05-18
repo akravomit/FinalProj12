@@ -88,5 +88,9 @@ namespace DBL
             if (result is null) { return await InsertGetEntry(new Entry(victim.id, owner.id)); }
             else { return await IncrementEntry(result[0]); }
         }
+        public async Task<int> Hard_Delete_Async(Dictionary<string, object> where)
+        {
+            return await DeleteAsync(where);
+        }
     }
 }

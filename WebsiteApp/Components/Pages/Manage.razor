@@ -47,6 +47,25 @@
                             </div>
                         </div>
                     }
+                    else if (SelectedUser is not null && SelectedUser.id == user.id)
+                    {
+                        <div class="dropdown" style="padding: 20px 0px 80px 0px;">
+                            <div class="perma_name dropbtn" style="background-color:#1dd3e2;">
+                                @user.username
+                            </div>
+                            <div class="dropdown-content" style="padding: 10px 40px 0px 0px;">
+                                @if (user.id != LoggedUser.id)
+                                {
+                                    <button @onclick="() => RestoreUser(user)">
+                                        Restore this user
+                                    </button>
+                                }
+                                <button @onclick="() => SelectUser(user)">
+                                    View user's players
+                                </button>
+                            </div>
+                        </div>
+                    }
                     else
                     {
                         <div class="dropdown" style="padding: 20px 0px 80px 0px;">
@@ -81,11 +100,6 @@
             <div style="display:flex; flex-flow: row wrap; overflow:auto; max-height: 80%; max-width:450px;">
                 @foreach (Player player in UsersPlayers)
                 {
-                    <button class="generic-btn" @onclick="() => SelectPlayer(player)">
-                        <div style="font-family:Forte; text-align:center; font-size:15px;">
-                            @player.name
-                        </div>
-                    </button>
                     @if (player.is_hidden)
                     {
                         <div class="dropdown" style="padding: 20px 0px 80px 0px;">
@@ -93,6 +107,35 @@
                                 @player.name
                             </div>
                             <div class="dropdown-content" style="padding: 10px 40px 0px 0px;">
+                                <button @onclick="() => SelectPlayer(player)">
+                                    Select this player
+                                </button>
+                            </div>
+                        </div>
+                    }
+                    else if (SelectedPlayer is not null && SelectedPlayer.id == player.id)
+                    {
+                        <div class="dropdown" style="padding: 20px 0px 80px 0px;">
+                            <div class="perma_name dropbtn" style="background-color:#1dd3e2">
+                                @player.name
+                            </div>
+                            <div class="dropdown-content" style="padding: 10px 40px 0px 0px;">
+                                <button @onclick="() => SelectPlayer(player)">
+                                    Select this player
+                                </button>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="dropdown" style="padding: 20px 0px 80px 0px;">
+                            <div class="perma_name dropbtn">
+                                @player.name
+                            </div>
+                            <div class="dropdown-content" style="padding: 10px 40px 0px 0px;">
+                                <button @onclick="() => SelectPlayer(player)">
+                                    Select this player
+                                </button>
                             </div>
                         </div>
                     }
@@ -111,26 +154,53 @@
             <div style="display:flex; flex-flow:column wrap; overflow:auto; max-width:inherit; max-height:730px">
                 @foreach (Dictionary<string, object> Inv in PlayersInv)
                 {
-                    @if ((bool)(Inv["Itm_IsHidden"]))
-                    {
-                        <div class="dropdown" style="padding: 20px 0px 80px 0px;">
+                    <div class="dropdown" style="padding: 20px 0px 80px 0px;">
+                        @if ((bool)(Inv["Inv_IsHidden"]))
+                        {
                             <div class="perma_name dropbtn" style="background-color:#ff6c00;">
                                 @Inv["Name"] - @Inv["Amount"]/@Inv["MaxStack"] | Level @Inv["Item_Level"]
                             </div>
-                            <div class="dropdown-content" style="padding: 10px 40px 0px 0px;">
+                        }
+                        else if (SelectedItem is not null && (int)Inv["ItemID"] == SelectedItem.ItemID)
+                        {
+                            <div class="perma_name dropbtn" style="background-color:#1dd3e2;">
+                                @Inv["Name"] - @Inv["Amount"]/@Inv["MaxStack"] | Level @Inv["Item_Level"]
                             </div>
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="dropdown" style="padding: 20px 0px 80px 0px;">
+                        }
+                        else
+                        {
                             <div class="perma_name dropbtn">
                                 @Inv["Name"] - @Inv["Amount"]/@Inv["MaxStack"] | Level @Inv["Item_Level"]
                             </div>
-                            <div class="dropdown-content" style="padding: 10px 40px 0px 0px;">
-                            </div>
+                        }
+                        @*                                 *@
+                        <div class="dropdown-content" style="padding: 10px 40px 0px 0px;">
+                            @if ((bool)(Inv["Inv_IsHidden"]))
+                            {
+                                <button @onclick="() => RestoreItem(Inv)">
+                                    Restore the item
+                                </button>
+                            }
+                            else
+                            {
+                                <button @onclick="() => DeleteItem(Inv)">
+                                    Delete the item (soft del.)
+                                </button>
+                            }
+                            @if (SelectedItem is not null && (int)Inv["ItemID"] == SelectedItem.ItemID)
+                            {
+                                <button @onclick="() => DeselectItem(Inv)">
+                                    Deselect the item
+                                </button>
+                            }
+                            else
+                            {
+                                <button @onclick="() => SelectItem(Inv)">
+                                    Select the item
+                                </button>
+                            }
                         </div>
-                    }
+                    </div>
                 }
             </div>
         }
@@ -151,11 +221,20 @@
                             @Inv["Name"] - @Inv["DateSlain"] & @Inv["TimesKilled"] times
                         </div>
                         <div class="dropdown-content" style="padding: 10px 40px 0px 0px;">
+
                         </div>
                     </div>
                 }
             </div>
         }
+    </td>
+    <td style="background-color:rgba(51, 51, 51, 0.25); max-width:300px;">
+        <div class="generic-btn">
+            <div style="font-family:Verdana; font-size:20px;">
+                Miscellaneous actions are here
+            </div>
+        </div>
+        
     </td>
 </table>
 
@@ -167,7 +246,7 @@
 </style>
 
 @code {
-    List<User> AllUsers; List<Player> UsersPlayers; List<Dictionary<string, object>> PlayersInv; List<Dictionary<string, object>> PlayersEntries;
+    List<User> AllUsers; List<Player> UsersPlayers; List<Dictionary<string, object>> PlayersInv; List<Dictionary<string, object>> PlayersEntries; Inventory SelectedItem;
     User LoggedUser; User SelectedUser; Player SelectedPlayer;
     string username; string password; string email;
     const string Login = "Login"; [Inject] IJSRuntime JS { get; set; } = default!;
@@ -235,6 +314,45 @@
         SelectedPlayer = new Player(p);
         PlayersEntries = await Middleman.NewGetEntriesOfPlayer(p);
         PlayersInv = await Middleman.NewGetInvOfPlayer(p);
+        await InvokeAsync(StateHasChanged);
+    }
+    private async Task SelectItem(Dictionary<string, object> dict)
+    {
+        SelectedItem = new Inventory(await ItemDictToInv(dict));
+        await InvokeAsync(StateHasChanged);
+    }
+    private async Task DeselectItem(Dictionary<string,object> dict)
+    {
+        SelectedItem = null;
+        await InvokeAsync(StateHasChanged);
+    }
+    private async Task<Inventory> ItemDictToInv(Dictionary<string, object> dict)
+    {
+        Inventory inventory = new Inventory(
+            Convert.ToInt32(dict["InventoryID"]), 
+            Convert.ToInt32(dict["PlayerID"]), 
+            Convert.ToInt32(dict["ItemID"]), 
+            Convert.ToInt32(dict["Item_Level"]), 
+            Convert.ToBoolean(dict["Inv_IsHidden"]), 
+            Convert.ToInt32(dict["Amount"])
+        );
+        return inventory;
+    }
+    private async Task DeleteItem(Dictionary<string,object> dict)
+    {
+        Inventory inv = new Inventory(await ItemDictToInv(dict));
+        Inventory inv2 = new Inventory(inv); 
+        inv2.IsHidden = true;
+        await Middleman.UpdateInv(inv, inv2);
+        PlayersInv = await Middleman.NewGetInvOfPlayer(SelectedPlayer);
+        await InvokeAsync(StateHasChanged);
+    }
+    private async Task RestoreItem(Dictionary<string,object> dict)
+    {
+        Inventory inv = new Inventory(await ItemDictToInv(dict));
+        Inventory inv2 = new Inventory(inv); inv2.IsHidden = false;
+        await Middleman.UpdateInv(inv, inv2);
+        PlayersInv = await Middleman.NewGetInvOfPlayer(SelectedPlayer);
         await InvokeAsync(StateHasChanged);
     }
 }

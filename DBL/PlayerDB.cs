@@ -98,6 +98,10 @@ namespace DBL
             post.is_hidden = true;
             return await Update_Async(pre, post);
         }
+        public async Task<int> Hard_Delete_Async(Dictionary<string, object> where)
+        {
+            return await DeleteAsync(where);
+        }
 
         //Derivatives
         public async Task<List<Player>> GetByOwner(int ownerId)
