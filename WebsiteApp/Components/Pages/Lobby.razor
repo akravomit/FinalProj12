@@ -36,7 +36,7 @@
         <td style="background-color:rgba(51, 51, 51, 0.25); max-width:15%">
             @if (Playerlist is not null)
             {
-                <div class="dropdown" style="padding: 20px 0px 40px 20px;">
+                <div class="dropdown" style="padding: 20px 0px 10px 20px;">
                     <button class="dropbtn">Select a character to view</button>
                     <div class="dropdown-content" style="max-height:80px; overflow:auto;">
                         @foreach (Player plr in Playerlist)
@@ -69,11 +69,6 @@
                         HP: @Selected.hp <br />
                         Coins: @Selected.coins <br />
                         Mana: @Selected.mana <br />
-                    </div>
-                </button>
-                <button class="generic-btn" style="padding:10px;" @onclick="GiftPlr">
-                    <div style="font-family:Forte; text-align:center; font-size:30px;">
-                        Gift random item
                     </div>
                 </button>
             }
@@ -139,6 +134,11 @@
                         Go to the dungeon with your selected character
                     </div>
                 </button>
+                <button class="generic-btn" @onclick="() => Goto('S')">
+                    <div class="perma_name" style="font-size:25px;">
+                        Go to the shop
+                    </div>
+                </button>
             }
         </td>
     </table>
@@ -197,7 +197,7 @@
         playername = "";
         await Middleman.GiftItem(ItemsToGift[Jerry.Next(0, ItemsToGift.Count)], tmp);
     }
-    private string GetImageIcon(String s) { return $"/img/{s}"; }
+    private string GetImageIcon(string s) { return $"/img/{s}"; }
     private async Task Goto(char dest)
     {
         await Session.SetAsync("Selected player", Selected);
