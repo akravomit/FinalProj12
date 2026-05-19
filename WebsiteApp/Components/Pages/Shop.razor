@@ -1,0 +1,68 @@
+﻿@page "/Shop"
+@using DBL
+@using Models
+@inject NavigationManager NavMan
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedSessionStorage Session
+
+<ul>
+    @if (LoggedUser is not null)
+    {
+        <li>
+            <button @onclick="Back" class="perma_name generic-btn">
+                Go back to the lobby
+            </button>
+        </li>
+
+        @if (Selected is not null)
+        {
+            <navname>
+                <div class="perma_name generic-btn">
+                    Shopping as @Selected.name
+                </div>
+            </navname>
+        }
+        <navname>
+            <div class="perma_name generic-btn">
+                The Shop
+            </div>
+        </navname>
+    }
+</ul>
+
+@code {
+    User LoggedUser; List<Player> Playerlist; Player Selected;
+    List<Dictionary<string, object>> PlayerFullInv
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var tmp = await Session.GetAsync<User>("Logged user");
+            if (tmp.Success)
+            {
+                LoggedUser = tmp.Value;
+                Playerlist = await Middleman.GetPlayers(LoggedUser.id);
+            }
+            await InvokeAsync(StateHasChanged);
+        }
+        catch (Exception ex)
+        {
+            await Back();
+        }
+    }
+    private async Task Back() { NavMan.NavigateTo("/"); }
+    private async Task Select_Player(Player plr)
+    {
+        Selected = new Player(plr);
+        PlayerFullInv = new List<Dictionary<string, object>>();
+        PlayerFullInv = await Middleman.NewGetInvOfPlayer(Selected);
+        StateHasChanged();
+    }
+    private async Task Goto(char dest)
+    {
+        switch (dest)
+        {
+
+        }
+    }
+}

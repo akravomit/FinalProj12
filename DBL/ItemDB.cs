@@ -99,5 +99,9 @@ namespace DBL
             post.is_hidden = true;
             return await Update_Async(pre, post);
         }
+        public async Task<List<Item>> GetByRoughName(string name)
+        {
+            return await SelectAllAsync($"SELECT * FROM {GetTableName()} WHERE name LIKE '%{name}%'");
+        }
     }
 }

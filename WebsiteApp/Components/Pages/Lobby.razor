@@ -147,7 +147,7 @@
 
 @code {
     User LoggedUser; List<Player> Playerlist; Player Selected;
-    string playername; string Dungeon = "Dungeon";
+    string playername;
     List<Dictionary<string, object>> PlayerFullInv;
     List<Dictionary<string, object>> PlayerFullEntr;
     Random Jerry = new Random();
@@ -205,8 +205,8 @@
         await Session.SetAsync("Player's entries", PlayerFullEntr);
         switch (dest)
         {
-            case 'D': NavMan.NavigateTo(Dungeon); break;
-
+            case 'D': NavMan.NavigateTo("Dungeon"); break;
+            case 'S': NavMan.NavigateTo("Shop"); break;
             default: break;
         }
     }

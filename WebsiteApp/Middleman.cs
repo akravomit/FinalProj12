@@ -45,8 +45,6 @@ namespace WebsiteApp
         { return await UDB.Register_Async(user,""); }
         public static async Task<List<User>> GetAllUsers()
         { return await UDB.GetAllAsync();  } //Used exclusively by admins
-        public static async Task<List<User>> GetAllUsers(bool GetInvis)
-        { return await UDB.GetByKey("ishidden", GetInvis); }
         public static async Task<int> DeleteUser(User target)
         { return await UDB.Delete_Async(target, ""); }
         public static async Task<int> UnDeleteUser(User target) 
@@ -61,6 +59,10 @@ namespace WebsiteApp
         { if (await UDB.GetByKey(key, value) == null) { return false; } return true; }
         public static async Task<List<Player>> GetPlayers(int userID) 
         { return await PDB.GetByKeys(new Dictionary<string, object>() { { "OwnerID", userID }, { "IsHidden", false } }); }
+        public static async Task<List<Player>> GetPlayers(User u)
+        {
+            return await PDB.GetByOwner(u.id);
+        }
         public static async Task<Player> InsertGetPlayer(string username, int ownerid) 
         { return await PDB.InsertGetPlayer(new Player(username,ownerid)); }
         public static async Task<List<Monster>> GetMonsters(bool IncludeInvis) //IncludeInvis controls if to search for hidden monsters as well
@@ -179,6 +181,16 @@ namespace WebsiteApp
         public static async Task UpdateInv(Inventory OldInv, Inventory NewInv)
         {
             await InvDB.Update_Async(OldInv, NewInv);
+        }
+        public static async Task DeletePlayerAndReferences(Player p)
+        {
+            await InvDB.Hard_Delete_Async(new Dictionary<string, object> { {"PlayerID",p.id } });
+            await EnDB.Hard_Delete_Async(new Dictionary<string, object> { { "PlayerID", p.id } });
+            await PDB.Hard_Delete_Async(new Dictionary<string, object> { { "id", p.id } });
+        }
+        public static async Task<List<Item>> GetItemsBySimilar(string search)
+        {
+            return await ItmDB.GetByRoughName(search);
         }
     }
 }

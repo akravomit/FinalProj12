@@ -135,6 +135,7 @@
             if (tmp.Success) { LoggedUser = tmp.Value; }
             renderads = true;
             await InvokeAsync(StateHasChanged);
+            await CycleAds();
 
             Timer timerPullAdd;
             timerPullAdd = new System.Timers.Timer();

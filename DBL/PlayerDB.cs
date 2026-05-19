@@ -109,7 +109,6 @@ namespace DBL
             Dictionary<string, object> where = new Dictionary<string, object>()
             {
                 { "OwnerID", ownerId },
-                { "IsHidden", false }
             };
             return await GetByKeys(where);
         }

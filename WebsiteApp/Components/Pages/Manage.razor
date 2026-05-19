@@ -92,7 +92,7 @@
     <td style="background-color:rgba(51, 51, 51, 0.25); max-width:300px;">
         <div class="generic-btn">
             <div style="font-family:Verdana; font-size:20px;">
-                User's players are here. Click to view more info
+                User's players are here. Hover over each one to view more info
             </div>
         </div>
         @if (UsersPlayers is not null)
@@ -100,45 +100,52 @@
             <div style="display:flex; flex-flow: row wrap; overflow:auto; max-height: 80%; max-width:450px;">
                 @foreach (Player player in UsersPlayers)
                 {
-                    @if (player.is_hidden)
-                    {
-                        <div class="dropdown" style="padding: 20px 0px 80px 0px;">
-                            <div class="perma_name dropbtn" style="background-color:#ff6c00">
-                                @player.name
-                            </div>
-                            <div class="dropdown-content" style="padding: 10px 40px 0px 0px;">
-                                <button @onclick="() => SelectPlayer(player)">
-                                    Select this player
-                                </button>
-                            </div>
-                        </div>
-                    }
-                    else if (SelectedPlayer is not null && SelectedPlayer.id == player.id)
-                    {
-                        <div class="dropdown" style="padding: 20px 0px 80px 0px;">
+                    <div class="dropdown" style="padding: 20px 0px 80px 0px;">
+                        @if (SelectedPlayer is not null && SelectedPlayer.id == player.id)
+                        {
                             <div class="perma_name dropbtn" style="background-color:#1dd3e2">
                                 @player.name
                             </div>
-                            <div class="dropdown-content" style="padding: 10px 40px 0px 0px;">
-                                <button @onclick="() => SelectPlayer(player)">
-                                    Select this player
-                                </button>
+                        }
+                        else if (player.is_hidden)
+                        {
+                            <div class="perma_name dropbtn" style="background-color:#ff6c00">
+                                @player.name
                             </div>
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="dropdown" style="padding: 20px 0px 80px 0px;">
+                        }
+                        else
+                        {
                             <div class="perma_name dropbtn">
                                 @player.name
                             </div>
-                            <div class="dropdown-content" style="padding: 10px 40px 0px 0px;">
+                        }
+                        <div class="dropdown-content" style="padding: 10px 40px 0px 0px;">
+                            @if (SelectedPlayer is not null && SelectedPlayer.id == player.id)
+                            {
+                                <button @onclick="() => DeselectPlayer(player)">
+                                    Unselect this player
+                                </button>
+                            }
+                            else
+                            {
                                 <button @onclick="() => SelectPlayer(player)">
                                     Select this player
                                 </button>
-                            </div>
+                            }
+                            @if (player.is_hidden)
+                            {
+                                <button @onclick="() => UnhidePlayer(player)">
+                                    Unhide this player
+                                </button>
+                            }
+                            else
+                            {
+                                <button @onclick="() => HidePlayer(player)">
+                                    Hide this player
+                                </button>
+                            }
                         </div>
-                    }
+                    </div>
                 }
             </div>
         }
@@ -151,7 +158,7 @@
         </div>
         @if (PlayersInv is not null && PlayersInv.Count != 0)
         {
-            <div style="display:flex; flex-flow:column wrap; overflow:auto; max-width:inherit; max-height:730px">
+            <div style="display:flex; flex-flow:column wrap; overflow:auto; max-width:inherit; max-height:80%;">
                 @foreach (Dictionary<string, object> Inv in PlayersInv)
                 {
                     <div class="dropdown" style="padding: 20px 0px 80px 0px;">
@@ -190,7 +197,7 @@
                             @if (SelectedItem is not null && (int)Inv["ItemID"] == SelectedItem.ItemID)
                             {
                                 <button @onclick="() => DeselectItem(Inv)">
-                                    Deselect the item
+                                    Unselect the item
                                 </button>
                             }
                             else
@@ -228,13 +235,56 @@
             </div>
         }
     </td>
-    <td style="background-color:rgba(51, 51, 51, 0.25); max-width:300px;">
+    <td style="background-color:rgba(51, 51, 51, 0.25); max-width:500px; max-height:800px">
         <div class="generic-btn">
             <div style="font-family:Verdana; font-size:20px;">
                 Miscellaneous actions are here
             </div>
         </div>
-        
+        @if (SelectedPlayer is not null && SelectedUser is not null)
+        {
+            <button class="generic-btn" @onclick="() => DeletePlayer(SelectedPlayer)">
+                Delete the selected player
+            </button>
+            <form @onsubmit="GetItemsBySimilar">
+                <label for="itmLookup" class="generic-btn">Look up items, the more letters the more specific</label>
+                <input type="search" @bind-value="searchterm" id="itmLookup" />
+                <input type="submit" value="Search for items" />
+            </form>
+            @if (ItemsFound is not null)
+            {
+                <div style="display:flex; flex-flow: row wrap; overflow:auto; max-height:60%;">
+                    @foreach (Item itm in ItemsFound)
+                    {
+                        <div class="dropdown" style="padding: 20px 0px 80px 0px;">
+                            @if (itm.is_hidden)
+                            {
+                                <div class="perma_name dropbtn" style="background-color:#ff6c00;">
+                                    @itm.name
+                                </div>
+                            }
+                            else if (SelectedResult is not null && SelectedResult.id == itm.id)
+                            {
+                                <div class="perma_name dropbtn" style="background-color:#1dd3e2;">
+                                    @itm.name
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="perma_name dropbtn">
+                                    @itm.name
+                                </div>
+                            }
+                            <div class="dropdown-content" style="padding: 10px 40px 0px 0px;">
+                                <button @onclick="() => SelectGift(itm)">
+                                    Gift this item to the player
+                                </button>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        }
     </td>
 </table>
 
@@ -248,8 +298,8 @@
 @code {
     List<User> AllUsers; List<Player> UsersPlayers; List<Dictionary<string, object>> PlayersInv; List<Dictionary<string, object>> PlayersEntries; Inventory SelectedItem;
     User LoggedUser; User SelectedUser; Player SelectedPlayer;
-    string username; string password; string email;
-    const string Login = "Login"; [Inject] IJSRuntime JS { get; set; } = default!;
+    string searchterm; List<Item> ItemsFound; Item SelectedResult;
+    [Inject] IJSRuntime JS { get; set; } = default!;
     protected override async Task OnInitializedAsync()
     {
         try
@@ -304,7 +354,7 @@
         SelectedUser = new User(); UsersPlayers = new List<Player>(); PlayersEntries = new List<Dictionary<string, object>>(); PlayersInv = new List<Dictionary<string, object>>();
         //Clears previous data
         SelectedUser = new User(u);
-        UsersPlayers = await Middleman.GetPlayers(u.id);
+        UsersPlayers = await Middleman.GetPlayers(u);
         await InvokeAsync(StateHasChanged);
     }
     private async Task SelectPlayer (Player p)
@@ -314,6 +364,11 @@
         SelectedPlayer = new Player(p);
         PlayersEntries = await Middleman.NewGetEntriesOfPlayer(p);
         PlayersInv = await Middleman.NewGetInvOfPlayer(p);
+        await InvokeAsync(StateHasChanged);
+    }
+    private async Task DeselectPlayer (Player p)
+    {
+        SelectedPlayer = null; SelectedItem = null; PlayersEntries = null; PlayersInv = null;
         await InvokeAsync(StateHasChanged);
     }
     private async Task SelectItem(Dictionary<string, object> dict)
@@ -354,5 +409,46 @@
         await Middleman.UpdateInv(inv, inv2);
         PlayersInv = await Middleman.NewGetInvOfPlayer(SelectedPlayer);
         await InvokeAsync(StateHasChanged);
+    }
+    private async Task DeletePlayer(Player p)
+    {
+        bool confirmed = await JS.InvokeAsync<bool>("confirm", "Are you sure you want to delete this player? This action cannot be undone!");
+        if (confirmed) 
+        { 
+            await Middleman.DeletePlayerAndReferences(p); 
+            SelectedPlayer = null;
+        }
+        UsersPlayers = await Middleman.GetPlayers(SelectedUser.id);
+        await InvokeAsync(StateHasChanged);
+    }
+    private async Task HidePlayer(Player p)
+    {
+        Player p2 = new Player(p);
+        p2.is_hidden = true;
+        await Middleman.UpdatePlayer(p, p2);
+        await InvokeAsync(StateHasChanged);
+    }
+    private async Task UnhidePlayer(Player p)
+    {
+        Player p2 = new Player(p);
+        p2.is_hidden = false;
+        await Middleman.UpdatePlayer(p, p2);
+        await InvokeAsync(StateHasChanged);
+    }
+    private async Task GetItemsBySimilar()
+    {
+        ItemsFound = await Middleman.GetItemsBySimilar(searchterm);
+        await InvokeAsync(StateHasChanged);
+    }
+    private async Task SelectGift(Item itm)
+    {
+        SelectedResult = itm;
+        bool confirmed = await JS.InvokeAsync<bool>("confirm", $"Are you sure you want to give the player {SelectedPlayer.name} a {itm.name}?");
+        if (confirmed)
+        {
+            await Middleman.GiveItem(itm.id, SelectedPlayer);
+            PlayersInv = await Middleman.NewGetInvOfPlayer(SelectedPlayer);
+            await InvokeAsync(StateHasChanged);
+        }
     }
 }
