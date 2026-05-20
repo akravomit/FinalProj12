@@ -201,9 +201,9 @@ namespace WebsiteApp
         {
             return await MDB.Update_Async(OldMonster, NewMonster);
         }
-        public static async Task<Monster> GetRandomMonster()
+        public static async Task<Monster> GetRandomMonster(int LastMonster = 0)
         {
-            return await MDB.GetRandomMonster();
+            return await MDB.GetRandomMonster(LastMonster);
         }
         public static async Task<Monster> InsertGetMonster(Monster m)
         {
