@@ -197,5 +197,29 @@ namespace WebsiteApp
         {
             return await PDB.GetByUniqueK("id", PlayerID);
         }
+        public static async Task<int> UpdateMonster(Monster OldMonster, Monster NewMonster)
+        {
+            return await MDB.Update_Async(OldMonster, NewMonster);
+        }
+        public static async Task<Monster> GetRandomMonster()
+        {
+            return await MDB.GetRandomMonster();
+        }
+        public static async Task<Monster> InsertGetMonster(Monster m)
+        {
+            return await MDB.InsertGetMonster(m);
+        }
+        public static async Task<int> UpdateItem(Item pre, Item post)
+        {
+            return await ItmDB.Update_Async(pre, post);
+        }
+        public static async Task<Item> InsertGetItem(Item itm)
+        {
+            return await ItmDB.InsertGetItem(itm);
+        }
+        public static async Task<List<Item>> GetAllItems()
+        {
+            return await ItmDB.GetAllAsync();
+        }
     }
 }

@@ -108,5 +108,9 @@ namespace DBL
         {
             return await DeleteAsync(await MonsterToDict(pre));
         }
+        public async Task<Monster> GetRandomMonster()
+        {
+            return (await SelectAllAsync("SELECT * FROM game.monster WHERE IsHidden = 0 ORDER BY RAND() LIMIT 0,1;"))[0];
+        }
     }
 }

@@ -10,6 +10,7 @@
     <li><button class="generic-btn" @onclick="() => SetDisplayMode(2)"><div class="perma_name">Manage items</div></button></li>
     <navname><button @onclick="Back" class="generic-btn"><div class="perma_name">Go back to the main page</div></button></navname>
 </ul>
+
 <table>
     @if (smode == ScreenMode.Users)
     {
@@ -288,7 +289,7 @@
     }
     @if (smode == ScreenMode.Monsters)
     {
-        <td style="background-color: rgba(51, 51, 51, 0.25); max-width:50%; vertical-align:central">
+        <td style="background-color: rgba(51, 51, 51, 0.25); max-width:450px; vertical-align:central">
             <div class="generic-btn">
                 <div style="font-family:Verdana; font-size:20px;">
                     All monsters are shown here
@@ -299,7 +300,7 @@
                 <div style="display:flex; flex-flow: row wrap; overflow:auto; max-height: 80%; max-width:450px;">
                     @foreach (Monster monster in AllMonsters)
                     {
-                        <div class="dropdown" style="padding: 20px 10px 20px 10px;" @onclick="() => SelectMonster(monster)">
+                        <div class="dropdown" style="padding: 10px;" @onclick="() => SelectMonster(monster)">
                             @if (monster.ishidden)
                             {
                                 <div class="perma_name dropbtn" style="background-color:#ff6c00;">
@@ -323,10 +324,173 @@
                 </div>
             }
         </td>
+        <td style="background-color: rgba(51, 51, 51, 0.25); max-width:450px; vertical-align:central">
+            @if (SelectedMonster is not null)
+            {
+                <div class="generic-btn">
+                    <div style="font-family:Verdana; font-size:20px;">
+                        Selected monster:
+                    </div>
+                </div>
+                <form @onsubmit="() => UpdateMonster(SelectedMonster)" class="generic-btn">
+                    <label for="MonsterName">Name:</label>              <input @bind="SelectedMonster.name" type="text" id="MonsterName" /> <br />
+                    <label for="MonsterFilepath">File path:</label>     <input @bind="SelectedMonster.filepath" type="text" id="MonsterFilepath" /> <br />
+                    <label for="MonsterHP">HP:</label>                  <InputNumber @bind-Value="SelectedMonster.hp" min="1" id="MonsterHP" /> <br />
+                    <label for="MonsterDefense">Defense:</label>        <InputNumber @bind-Value="SelectedMonster.defense" min="1" id="MonsterDefense" />    <br />
+                    <label for="MonsterDescription">Description:</label><InputTextArea @bind-Value="SelectedMonster.description" id="MonsterDescription" rows="10" cols="30" /> <br />
+                    <label for="MonsterSize">Size (double):</label>     <InputNumber @bind-Value="SelectedMonster.size" min="0.05" id="MonsterSize" />   <br />
+                    <label for="MonsterRarity">Rarity:</label>          <InputNumber @bind-Value="SelectedMonster.rarity" min="1" id="MonsterRarity" /> <br />
+                    <label for="MonsterElementSelect">Element of the monster: </label>
+                    <select id="MonsterElementSelect" @bind="SelectedMonster.monsterElement">
+                        @foreach (Element e in Elements)
+                        {
+                            <option value="@e.id">@e.name</option>
+                        }
+                        </select>
+                    <label for="IsBossRadio">Is the monster a boss?</label><InputRadioGroup @bind-Value="SelectedMonster.isboss" id="IsBossRadio"> <br />
+                        <label for="MonsterIsBoss">Boss</label>                 <InputRadio Value="2" id="MonsterIsBoss" /> <br />
+                        <label for="MonsterIsMiniBoss">Miniboss</label>         <InputRadio Value="1" id="MonsterIsMiniBoss" /> <br />
+                        <label for="MonsterIsNoBoss">Normal enemy</label>       <InputRadio Value="0" id="MonsterIsNoBoss" /> <br />
+                                                                            </InputRadioGroup> <br />
+                    <label for="MonsterIsHidden">Is hidden?</label>     <input @bind="SelectedMonster.ishidden" type="checkbox" id="MonsterIsHidden" /> <br />
+                    <input type="submit" class="generic-btn" value="Update the monster"/>
+                </form>
+            }
+        </td>
+        <td style="background-color: rgba(51, 51, 51, 0.25); max-width:450px; vertical-align:central">
+            <div class="generic-btn">
+                <div style="font-family:Verdana; font-size:20px;">
+                    Create a new monster:
+                </div>
+            </div>
+            <form @onsubmit="() => AddMonster(MonsterDummy)" class="generic-btn">
+                <label for="MonsterName">Name:</label>              <input @bind="MonsterDummy.name" type="text" id="MonsterName" /> <br />
+                <label for="MonsterFilepath">File path:</label>     <input @bind="MonsterDummy.filepath" type="text" id="MonsterFilepath" /> <br />
+                <label for="MonsterHP">HP:</label>                  <InputNumber @bind-Value="MonsterDummy.hp" min="1" id="MonsterHP" /> <br />
+                <label for="MonsterDefense">Defense:</label>        <InputNumber @bind-Value="MonsterDummy.defense" min="1" id="MonsterDefense" />    <br />
+                <label for="MonsterDescription">Description:</label><InputTextArea @bind-Value="MonsterDummy.description" id="MonsterDescription" rows="10" cols="30" /> <br />
+                <label for="MonsterSize">Size (double):</label>     <InputNumber @bind-Value="MonsterDummy.size" min="0.05" id="MonsterSize" />   <br />
+                <label for="MonsterRarity">Rarity:</label>          <InputNumber @bind-Value="MonsterDummy.rarity" min="1" id="MonsterRarity" /> <br />
+                <label for="MonsterElementSelect">Element of the monster:</label>
+                <select id="MonsterElementSelect" @bind="MonsterDummy.monsterElement">
+                    @foreach (Element e in Elements)
+                    {
+                        <option value="@e.id">@e.name</option>
+                    }
+                </select>
+                <label for="IsBossRadio">Is the monster a boss?</label><InputRadioGroup @bind-Value="MonsterDummy.isboss" id="IsBossRadio">
+                    <br />
+                    <label for="MonsterIsBoss">Boss</label>                 <InputRadio Value="2" id="MonsterIsBoss" /> <br />
+                    <label for="MonsterIsMiniBoss">Miniboss</label>         <InputRadio Value="1" id="MonsterIsMiniBoss" /> <br />
+                    <label for="MonsterIsNoBoss">Normal enemy</label>       <InputRadio Value="0" id="MonsterIsNoBoss" /> <br />
+                </InputRadioGroup> <br />
+                <label for="MonsterIsHidden">Is hidden?</label>     <input @bind="MonsterDummy.ishidden" type="checkbox" id="MonsterIsHidden" /> <br />
+                <input type="submit" class="generic-btn" value="Update the monster" />
+            </form>
+        </td>
     }
     @if (smode == ScreenMode.Items)
     {
-        
+        <td style="background-color: rgba(51, 51, 51, 0.25); max-width:450px; vertical-align:central">
+            <div class="generic-btn">
+                <div style="font-family:Verdana; font-size:20px;">
+                    All items are shown here
+                </div>
+            </div>
+            @if (AllItems is not null)
+            {
+                <div style="display:flex; flex-flow: row wrap; overflow:auto; max-height: 80%; max-width:450px;">
+                    @foreach (Item itm in AllItems)
+                    {
+                        <div class="dropdown" style="padding: 10px;" @onclick="() => SelectItemItem(itm)">
+                            @if (itm.is_hidden)
+                            {
+                                <div class="perma_name dropbtn" style="background-color:#ff6c00;">
+                                    @itm.name
+                                </div>
+                            }
+                            else if (PickedItem is not null && PickedItem.id == itm.id)
+                            {
+                                <div class="perma_name dropbtn" style="background-color:#1dd3e2;">
+                                    @itm.name
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="perma_name dropbtn">
+                                    @itm.name
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            }
+        </td>
+        <td style="background-color: rgba(51, 51, 51, 0.25); max-width:450px; vertical-align:central">
+            @if (PickedItem is not null)
+            {
+                <div class="generic-btn">
+                    <div style="font-family:Verdana; font-size:20px;">
+                        Selected item:
+                    </div>
+                </div>
+                <form @onsubmit="() => UpdateItem(PickedItem)" class="generic-btn">
+                    <label for="ItemName">Name:</label>                 <InputTextArea @bind-Value="PickedItem.name" id="ItemName" /> <br />
+                    <label for="ItemFilepath">File path:</label>     <InputTextArea @bind-Value="PickedItem.filepath" id="ItemFilepath" /> <br />
+                    <label for="ItemDescription">Description:</label><InputTextArea @bind-Value="PickedItem.description" id="ItemDescription" rows="10" cols="30" /> <br />
+                    <label for="ItemRarity">Rarity:</label>          <InputNumber @bind-Value="PickedItem.rarity" min="1" id="ItemRarity" /> <br />
+                    <label for="ItemValue">Value:</label>          <InputNumber @bind-Value="PickedItem.value" min="1" id="ItemValue" /> <br />
+                    <label for="ItemIncrement">Level increment:</label>          <InputNumber @bind-Value="PickedItem.item_increment" min="1" id="ItemIncrement" /> <br />
+                    <label for="ItemElementSelect">Element of the monster: </label>
+                    <select id="ItemElementSelect" @bind="PickedItem.element_id">
+                        @foreach(Element e in Elements)
+                        {
+                            <option value="@e.id">@e.name</option>
+                        }
+                    </select>
+                    <select id="ItemType" @bind="PickedItem.item_type">
+                        @foreach(Item_Type_Name ITN in ItemTypeNames)
+                        {
+                            <option value="@ITN.id">@ITN.name</option>
+                        }
+                    </select> <br />
+                    <label for="ItemIsHidden">Is hidden?</label>     <input @bind="PickedItem.is_hidden" type="checkbox" id="ItemIsHidden" /> <br />
+                    <label for="ItemMaxStack">Max stack:</label>          <InputNumber @bind-Value="PickedItem.MaxStack" min="1" id="ItemMaxStack" /> <br />
+                    <input type="submit" class="generic-btn" value="Update the Item" />
+                </form>
+            }
+        </td>
+        <td style="background-color: rgba(51, 51, 51, 0.25); max-width:450px; vertical-align:central">
+            <div class="generic-btn">
+                <div style="font-family:Verdana; font-size:20px;">
+                    Create a new item:
+                </div>
+            </div>
+            <form @onsubmit="() => CreateItem(ItemDummy)" class="generic-btn">
+                <label for="ItemName">Name:</label>                 <InputTextArea @bind-Value="ItemDummy.name" id="ItemName" /> <br />
+                <label for="ItemFilepath">File path:</label>     <InputTextArea @bind-Value="ItemDummy.filepath" id="ItemFilepath" /> <br />
+                <label for="ItemDescription">Description:</label><InputTextArea @bind-Value="ItemDummy.description" id="ItemDescription" rows="10" cols="30" /> <br />
+                <label for="ItemRarity">Rarity:</label>          <InputNumber @bind-Value="ItemDummy.rarity" min="1" id="ItemRarity" /> <br />
+                <label for="ItemValue">Value:</label>          <InputNumber @bind-Value="ItemDummy.value" id="ItemValue" /> <br />
+                <label for="ItemIncrement">Level increment:</label>          <InputNumber @bind-Value="ItemDummy.item_increment" id="ItemIncrement" /> <br />
+                <label for="ItemElementSelect">Element of the monster: </label>
+                <select id="ItemElementSelect" @bind="ItemDummy.element_id">
+                    @foreach (Element e in Elements)
+                    {
+                        <option value="@e.id">@e.name</option>
+                    }
+                </select>
+                <select id="ItemType" @bind="ItemDummy.item_type">
+                    @foreach (Item_Type_Name ITN in ItemTypeNames)
+                    {
+                        <option value="@ITN.id">@ITN.name</option>
+                    }
+                </select> <br />
+                <label for="ItemIsHidden">Is hidden?</label>     <input @bind="ItemDummy.is_hidden" type="checkbox" id="ItemIsHidden" /> <br />
+                <label for="ItemMaxStack">Max stack:</label>          <InputNumber @bind-Value="ItemDummy.MaxStack" min="1" id="ItemMaxStack" /> <br />
+                <input type="submit" class="generic-btn" value="Create the Item" />
+            </form>
+        </td>
     }
 </table>
 
@@ -343,7 +507,9 @@
     List<User> AllUsers; List<Player> UsersPlayers; List<Dictionary<string, object>> PlayersInv; List<Dictionary<string, object>> PlayersEntries; Inventory SelectedItem;
     User LoggedUser; User SelectedUser; Player SelectedPlayer;
     string searchterm; List<Item> ItemsFound; Item SelectedResult;
-    List<Monster> AllMonsters; Monster SelectedMonster;
+    List<Monster> AllMonsters; Monster SelectedMonster; Monster Shadow; Monster MonsterDummy = new Monster();
+    List<Item> AllItems; Item PickedItem; Item ShadowItem; Item ItemDummy = new Item();
+    List<Element> Elements; List<Item_Type_Name> ItemTypeNames;
     [Inject] IJSRuntime JS { get; set; } = default!;
     protected override async Task OnInitializedAsync()
     {
@@ -368,6 +534,9 @@
         {
             AllUsers = await Middleman.GetAllUsers();
             AllMonsters = await Middleman.GetMonsters(true);
+            AllItems = await Middleman.GetAllItems();
+            Elements = await Middleman.GetAllElements();
+            ItemTypeNames = await Middleman.GetAllItem_Type_Names();
             StateHasChanged();
         }
     } //Gets all users to manage
@@ -507,11 +676,51 @@
         if (SelectedMonster is null || SelectedMonster.id != m.id)
         {
             SelectedMonster = new Monster(m);
+            Shadow = new Monster(m);
         }
         else
         {
             SelectedItem = null;
+            Shadow = null;
         }
+        await InvokeAsync(StateHasChanged);
+    }
+    private async Task UpdateMonster(Monster M)
+    {
+        await Middleman.UpdateMonster(Shadow, SelectedMonster);
+        AllMonsters = await Middleman.GetMonsters(true);
+        await InvokeAsync(StateHasChanged);
+    }
+    private async Task AddMonster(Monster M)
+    {
+        await Middleman.InsertGetMonster(M);
+        AllMonsters = await Middleman.GetMonsters(true);
+        await InvokeAsync(StateHasChanged);
+    }
+    private async Task SelectItemItem(Item itm)
+    {
+        if (PickedItem is null || PickedItem.id != itm.id)
+        {
+            PickedItem = new Item(itm);
+            ShadowItem = new Item(itm);
+        }
+        else
+        {
+            PickedItem = null;
+            ShadowItem = null;
+        }
+        await InvokeAsync(StateHasChanged);
+    }
+    private async Task UpdateItem(Item itm)
+    {
+        await Middleman.UpdateItem(ShadowItem, itm);
+        AllItems = await Middleman.GetAllItems();
+        await InvokeAsync(StateHasChanged);
+    }
+    private async Task CreateItem(Item itm)
+    {
+        await Middleman.InsertGetItem(itm);
+        AllItems = await Middleman.GetAllItems();
         await InvokeAsync(StateHasChanged);
     }
 }
