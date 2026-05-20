@@ -137,14 +137,11 @@ ul li generic-btn {
 ul li generic-btn:hover {
     background-color: #111111;
 }
-
-
-
 .dropdown {
     position: relative;
 }
 .dropbtn {
-    background-color: #4CAF50;
+    background-color: #a6d8a8;
     color: white;
     padding: 16px;
     font-size: 16px;
@@ -185,4 +182,7 @@ ul li generic-btn:hover {
 }
 .dropdown:hover .deadbtn {
     background-color: #ff6c00;
+}
+.hidden-td {
+    display: none !important;
 }

@@ -4,6 +4,7 @@ using System.Net.NetworkInformation;
 using System.Text.Json;
 using System.Text;
 using Mysqlx.Crud;
+using Org.BouncyCastle.Bcpg.OpenPgp;
 namespace WebsiteApp
 {
     public class Middleman
@@ -154,28 +155,28 @@ namespace WebsiteApp
             Inventory Gift = new Inventory(owner.id, ItemID, 1, false, 1);
             await InvDB.Insert_Async(Gift);
         }
-        public static async Task GiveItem(int ItemID, Player Owner)
+        public static async Task GiveItem(int ItemID, Player Owner, int Repetitions = 1)
         {
             Item gift = await ItmDB.GetByUniqueK("id", ItemID);
-            Inventory Gift = new Inventory(Owner.id, ItemID, 1, false, 1);
             Inventory OldInv = await InvDB.GetByUniqueK("ItemID", ItemID);
-            if (OldInv != null)
+            int sumOfItems = (OldInv == null) ? Repetitions : OldInv.Item_level * gift.MaxStack + Repetitions + OldInv.Amount;
+            int level = sumOfItems / gift.MaxStack; 
+            int amount = sumOfItems % gift.MaxStack;
+            if (amount == 0) { amount = 1; }
+            if (gift is not null)
             {
-                Inventory NewInv = new Inventory(OldInv);
-                if (OldInv.Amount >= gift.MaxStack)
+                if (OldInv is not null)
                 {
-                    NewInv.Item_level++;
-                    NewInv.Amount = 1;
+                    Inventory NewInv = new Inventory(OldInv);
+                    NewInv.Item_level = level;
+                    NewInv.Amount = amount;
+                    await UpdateInv(OldInv, NewInv);
                 }
                 else
                 {
-                    NewInv.Amount++;
+                    Inventory Gift = new Inventory(Owner.id, ItemID, level, false, amount);
+                    await InvDB.Insert_Async(Gift);
                 }
-                await UpdateInv(OldInv, NewInv);
-            }
-            else
-            {
-                await InvDB.Insert_Async(Gift);
             }
         }
         public static async Task UpdateInv(Inventory OldInv, Inventory NewInv)
@@ -191,6 +192,10 @@ namespace WebsiteApp
         public static async Task<List<Item>> GetItemsBySimilar(string search)
         {
             return await ItmDB.GetByRoughName(search);
+        }
+        public static async Task<Player> GetPlayerByItsID(int PlayerID)
+        {
+            return await PDB.GetByUniqueK("id", PlayerID);
         }
     }
 }

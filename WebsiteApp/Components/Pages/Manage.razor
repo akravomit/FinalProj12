@@ -4,288 +4,330 @@
 @inject NavigationManager NavMan
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @inject ProtectedSessionStorage Session
-
-
-
 <ul>
-    <li><div class="perma_name generic-btn">Manage other users</div></li>
-    @if (LoggedUser is not null)
-    {
-        <li><div class="perma_name generic-btn">Hello, @LoggedUser.username!</div></li>
-    }
+    <li><button class="generic-btn" @onclick="() => SetDisplayMode(0)"><div class="perma_name">Manage all users</div></button></li>
+    <li><button class="generic-btn" @onclick="() => SetDisplayMode(1)"><div class="perma_name">Manage monsters</div></button></li>
+    <li><button class="generic-btn" @onclick="() => SetDisplayMode(2)"><div class="perma_name">Manage items</div></button></li>
     <navname><button @onclick="Back" class="generic-btn"><div class="perma_name">Go back to the main page</div></button></navname>
 </ul>
 <table>
-    <td style="background-color: rgba(51, 51, 51, 0.25); max-width:50%; vertical-align:central">
-        <div class="generic-btn">
-            <div style="font-family:Verdana; font-size:20px;">
-                All users are shown here
+    @if (smode == ScreenMode.Users)
+    {
+        <td style="background-color: rgba(51, 51, 51, 0.25); max-width:50%; vertical-align:central">
+            <div class="generic-btn">
+                <div style="font-family:Verdana; font-size:20px;">
+                    All users are shown here
+                </div>
             </div>
-        </div>
-        @if (AllUsers is not null)
-        {
-            <div style="display:flex; flex-flow: row wrap; overflow:auto; max-height: 80%; max-width:450px;">
-                @foreach (User user in AllUsers)
-                {
-                    
-                    @if (user.ishidden)
+            @if (AllUsers is not null)
+            {
+                <div style="display:flex; flex-flow: row wrap; overflow:auto; max-height: 80%; max-width:450px;">
+                    @foreach (User user in AllUsers)
                     {
-                        <div class="dropdown" style="padding: 20px 0px 80px 0px;">
-                            <div class="perma_name dropbtn" style="background-color:#ff6c00;">
-                                @user.username
-                            </div>
-                            <div class="dropdown-content" style="padding: 10px 40px 0px 0px;">
-                                @if (user.id != LoggedUser.id)
-                                {
-                                    <button @onclick="() => RestoreUser(user)">
-                                        Restore this user
-                                    </button>
-                                }
-                                <button @onclick="() => SelectUser(user)">
-                                    View user's players
-                                </button>
-                            </div>
-                        </div>
-                    }
-                    else if (SelectedUser is not null && SelectedUser.id == user.id)
-                    {
-                        <div class="dropdown" style="padding: 20px 0px 80px 0px;">
-                            <div class="perma_name dropbtn" style="background-color:#1dd3e2;">
-                                @user.username
-                            </div>
-                            <div class="dropdown-content" style="padding: 10px 40px 0px 0px;">
-                                @if (user.id != LoggedUser.id)
-                                {
-                                    <button @onclick="() => RestoreUser(user)">
-                                        Restore this user
-                                    </button>
-                                }
-                                <button @onclick="() => SelectUser(user)">
-                                    View user's players
-                                </button>
-                            </div>
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="dropdown" style="padding: 20px 0px 80px 0px;">
-                            <div class="perma_name dropbtn">
-                                @user.username
-                            </div>
-                            <div class="dropdown-content" style="padding: 10px 40px 0px 0px;">
-                                @if (user.id != LoggedUser.id)
-                                {
-                                    <button @onclick="() => DeleteUser(user)">
-                                        Delete this user
-                                    </button>
-                                }
-                                <button @onclick="() => SelectUser(user)">
-                                    View user's players
-                                </button>
-                            </div>
-                        </div>
-                    }
-                }
-            </div>
-        }
-    </td>
-    <td style="background-color:rgba(51, 51, 51, 0.25); max-width:300px;">
-        <div class="generic-btn">
-            <div style="font-family:Verdana; font-size:20px;">
-                User's players are here. Hover over each one to view more info
-            </div>
-        </div>
-        @if (UsersPlayers is not null)
-        {
-            <div style="display:flex; flex-flow: row wrap; overflow:auto; max-height: 80%; max-width:450px;">
-                @foreach (Player player in UsersPlayers)
-                {
-                    <div class="dropdown" style="padding: 20px 0px 80px 0px;">
-                        @if (SelectedPlayer is not null && SelectedPlayer.id == player.id)
+
+                        @if (user.ishidden)
                         {
-                            <div class="perma_name dropbtn" style="background-color:#1dd3e2">
-                                @player.name
+                            <div class="dropdown" style="padding: 20px 0px 80px 0px;">
+                                <div class="perma_name dropbtn" style="background-color:#ff6c00;">
+                                    @user.username
+                                </div>
+                                <div class="dropdown-content" style="padding: 10px 40px 0px 0px;">
+                                    @if (user.id != LoggedUser.id)
+                                    {
+                                        <button @onclick="() => RestoreUser(user)">
+                                            Restore this user
+                                        </button>
+                                    }
+                                    <button @onclick="() => SelectUser(user)">
+                                        View user's players
+                                    </button>
+                                </div>
                             </div>
                         }
-                        else if (player.is_hidden)
+                        else if (SelectedUser is not null && SelectedUser.id == user.id)
                         {
-                            <div class="perma_name dropbtn" style="background-color:#ff6c00">
-                                @player.name
+                            <div class="dropdown" style="padding: 20px 0px 80px 0px;">
+                                <div class="perma_name dropbtn" style="background-color:#1dd3e2;">
+                                    @user.username
+                                </div>
+                                <div class="dropdown-content" style="padding: 10px 40px 0px 0px;">
+                                    @if (user.id != LoggedUser.id)
+                                    {
+                                        <button @onclick="() => RestoreUser(user)">
+                                            Restore this user
+                                        </button>
+                                    }
+                                    <button @onclick="() => SelectUser(user)">
+                                        View user's players
+                                    </button>
+                                </div>
                             </div>
                         }
                         else
                         {
-                            <div class="perma_name dropbtn">
-                                @player.name
+                            <div class="dropdown" style="padding: 20px 0px 80px 0px;">
+                                <div class="perma_name dropbtn">
+                                    @user.username
+                                </div>
+                                <div class="dropdown-content" style="padding: 10px 40px 0px 0px;">
+                                    @if (user.id != LoggedUser.id)
+                                    {
+                                        <button @onclick="() => DeleteUser(user)">
+                                            Delete this user
+                                        </button>
+                                    }
+                                    <button @onclick="() => SelectUser(user)">
+                                        View user's players
+                                    </button>
+                                </div>
                             </div>
                         }
-                        <div class="dropdown-content" style="padding: 10px 40px 0px 0px;">
+                    }
+                </div>
+            }
+        </td>
+        <td style="background-color:rgba(51, 51, 51, 0.25); max-width:300px;">
+            <div class="generic-btn">
+                <div style="font-family:Verdana; font-size:20px;">
+                    User's players are here. Hover over each one to view more info
+                </div>
+            </div>
+            @if (UsersPlayers is not null)
+            {
+                <div style="display:flex; flex-flow: row wrap; overflow:auto; max-height: 80%; max-width:450px;">
+                    @foreach (Player player in UsersPlayers)
+                    {
+                        <div class="dropdown" style="padding: 20px 0px 80px 0px;">
                             @if (SelectedPlayer is not null && SelectedPlayer.id == player.id)
                             {
-                                <button @onclick="() => DeselectPlayer(player)">
-                                    Unselect this player
-                                </button>
-                            }
-                            else
-                            {
-                                <button @onclick="() => SelectPlayer(player)">
-                                    Select this player
-                                </button>
-                            }
-                            @if (player.is_hidden)
-                            {
-                                <button @onclick="() => UnhidePlayer(player)">
-                                    Unhide this player
-                                </button>
-                            }
-                            else
-                            {
-                                <button @onclick="() => HidePlayer(player)">
-                                    Hide this player
-                                </button>
-                            }
-                        </div>
-                    </div>
-                }
-            </div>
-        }
-    </td>
-    <td style="background-color:rgba(51, 51, 51, 0.25); max-width:300px;">
-        <div class="generic-btn">
-            <div style="font-family:Verdana; font-size:20px;">
-                Player's inventory is here:
-            </div>
-        </div>
-        @if (PlayersInv is not null && PlayersInv.Count != 0)
-        {
-            <div style="display:flex; flex-flow:column wrap; overflow:auto; max-width:inherit; max-height:80%;">
-                @foreach (Dictionary<string, object> Inv in PlayersInv)
-                {
-                    <div class="dropdown" style="padding: 20px 0px 80px 0px;">
-                        @if ((bool)(Inv["Inv_IsHidden"]))
-                        {
-                            <div class="perma_name dropbtn" style="background-color:#ff6c00;">
-                                @Inv["Name"] - @Inv["Amount"]/@Inv["MaxStack"] | Level @Inv["Item_Level"]
-                            </div>
-                        }
-                        else if (SelectedItem is not null && (int)Inv["ItemID"] == SelectedItem.ItemID)
-                        {
-                            <div class="perma_name dropbtn" style="background-color:#1dd3e2;">
-                                @Inv["Name"] - @Inv["Amount"]/@Inv["MaxStack"] | Level @Inv["Item_Level"]
-                            </div>
-                        }
-                        else
-                        {
-                            <div class="perma_name dropbtn">
-                                @Inv["Name"] - @Inv["Amount"]/@Inv["MaxStack"] | Level @Inv["Item_Level"]
-                            </div>
-                        }
-                        @*                                 *@
-                        <div class="dropdown-content" style="padding: 10px 40px 0px 0px;">
-                            @if ((bool)(Inv["Inv_IsHidden"]))
-                            {
-                                <button @onclick="() => RestoreItem(Inv)">
-                                    Restore the item
-                                </button>
-                            }
-                            else
-                            {
-                                <button @onclick="() => DeleteItem(Inv)">
-                                    Delete the item (soft del.)
-                                </button>
-                            }
-                            @if (SelectedItem is not null && (int)Inv["ItemID"] == SelectedItem.ItemID)
-                            {
-                                <button @onclick="() => DeselectItem(Inv)">
-                                    Unselect the item
-                                </button>
-                            }
-                            else
-                            {
-                                <button @onclick="() => SelectItem(Inv)">
-                                    Select the item
-                                </button>
-                            }
-                        </div>
-                    </div>
-                }
-            </div>
-        }
-    </td>
-    <td style="background-color:rgba(51, 51, 51, 0.25); max-width:300px;">
-        <div class="generic-btn">
-            <div style="font-family:Verdana; font-size:20px;">
-                Player's entries are shown here
-            </div>
-        </div>
-        @if (PlayersEntries is not null && PlayersEntries.Count != 0)
-        {
-            <div style="display:flex; flex-flow:column wrap; overflow:auto; max-width:inherit; max-height:730px">
-                @foreach (Dictionary<string, object> Inv in PlayersEntries)
-                {
-                    <div class="dropdown" style="padding: 20px 0px 80px 0px;">
-                        <div class="perma_name dropbtn">
-                            @Inv["Name"] - @Inv["DateSlain"] & @Inv["TimesKilled"] times
-                        </div>
-                        <div class="dropdown-content" style="padding: 10px 40px 0px 0px;">
-
-                        </div>
-                    </div>
-                }
-            </div>
-        }
-    </td>
-    <td style="background-color:rgba(51, 51, 51, 0.25); max-width:500px; max-height:800px">
-        <div class="generic-btn">
-            <div style="font-family:Verdana; font-size:20px;">
-                Miscellaneous actions are here
-            </div>
-        </div>
-        @if (SelectedPlayer is not null && SelectedUser is not null)
-        {
-            <button class="generic-btn" @onclick="() => DeletePlayer(SelectedPlayer)">
-                Delete the selected player
-            </button>
-            <form @onsubmit="GetItemsBySimilar">
-                <label for="itmLookup" class="generic-btn">Look up items, the more letters the more specific</label>
-                <input type="search" @bind-value="searchterm" id="itmLookup" />
-                <input type="submit" value="Search for items" />
-            </form>
-            @if (ItemsFound is not null)
-            {
-                <div style="display:flex; flex-flow: row wrap; overflow:auto; max-height:60%;">
-                    @foreach (Item itm in ItemsFound)
-                    {
-                        <div class="dropdown" style="padding: 20px 0px 80px 0px;">
-                            @if (itm.is_hidden)
-                            {
-                                <div class="perma_name dropbtn" style="background-color:#ff6c00;">
-                                    @itm.name
+                                <div class="perma_name dropbtn" style="background-color:#1dd3e2">
+                                    @player.name
                                 </div>
                             }
-                            else if (SelectedResult is not null && SelectedResult.id == itm.id)
+                            else if (player.is_hidden)
                             {
-                                <div class="perma_name dropbtn" style="background-color:#1dd3e2;">
-                                    @itm.name
+                                <div class="perma_name dropbtn" style="background-color:#ff6c00">
+                                    @player.name
                                 </div>
                             }
                             else
                             {
                                 <div class="perma_name dropbtn">
-                                    @itm.name
+                                    @player.name
                                 </div>
                             }
                             <div class="dropdown-content" style="padding: 10px 40px 0px 0px;">
-                                <button @onclick="() => SelectGift(itm)">
-                                    Gift this item to the player
-                                </button>
+                                @if (SelectedPlayer is not null && SelectedPlayer.id == player.id)
+                                {
+                                    <button @onclick="() => DeselectPlayer(player)">
+                                        Unselect this player
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button @onclick="() => SelectPlayer(player)">
+                                        Select this player
+                                    </button>
+                                }
+                                @if (player.is_hidden)
+                                {
+                                    <button @onclick="() => UnhidePlayer(player)">
+                                        Unhide this player
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button @onclick="() => HidePlayer(player)">
+                                        Hide this player
+                                    </button>
+                                }
                             </div>
                         </div>
                     }
                 </div>
             }
-        }
-    </td>
+        </td>
+        <td style="background-color:rgba(51, 51, 51, 0.25); max-width:300px;">
+            <div class="generic-btn">
+                <div style="font-family:Verdana; font-size:20px;">
+                    Player's inventory is here:
+                </div>
+            </div>
+            @if (PlayersInv is not null && PlayersInv.Count != 0)
+            {
+                <div style="display:flex; flex-flow:column wrap; overflow:auto; max-width:inherit; max-height:80%;">
+                    @foreach (Dictionary<string, object> Inv in PlayersInv)
+                    {
+                        <div class="dropdown" style="padding: 20px 10px 80px 10px;">
+                            @if ((bool)(Inv["Inv_IsHidden"]))
+                            {
+                                <div class="perma_name dropbtn" style="background-color:#ff6c00;">
+                                    @Inv["Name"] - @Inv["Amount"]/@Inv["MaxStack"] | Level @Inv["Item_Level"]
+                                </div>
+                            }
+                            else if (SelectedItem is not null && (int)Inv["ItemID"] == SelectedItem.ItemID)
+                            {
+                                <div class="perma_name dropbtn" style="background-color:#1dd3e2;">
+                                    @Inv["Name"] - @Inv["Amount"]/@Inv["MaxStack"] | Level @Inv["Item_Level"]
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="perma_name dropbtn">
+                                    @Inv["Name"] - @Inv["Amount"]/@Inv["MaxStack"] | Level @Inv["Item_Level"]
+                                </div>
+                            }
+                            @*                                 *@
+                            <div class="dropdown-content" style="padding: 10px 40px 0px 0px;">
+                                @if ((bool)(Inv["Inv_IsHidden"]))
+                                {
+                                    <button @onclick="() => RestoreItem(Inv)">
+                                        Restore the item
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button @onclick="() => DeleteItem(Inv)">
+                                        Delete the item (soft del.)
+                                    </button>
+                                }
+                                @if (SelectedItem is not null && (int)Inv["ItemID"] == SelectedItem.ItemID)
+                                {
+                                    <button @onclick="() => DeselectItem(Inv)">
+                                        Unselect the item
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button @onclick="() => SelectItem(Inv)">
+                                        Select the item
+                                    </button>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </td>
+        <td style="background-color:rgba(51, 51, 51, 0.25); max-width:300px;">
+            <div class="generic-btn">
+                <div style="font-family:Verdana; font-size:20px;">
+                    Player's entries are shown here
+                </div>
+            </div>
+            @if (PlayersEntries is not null && PlayersEntries.Count != 0)
+            {
+                <div style="display:flex; flex-flow:column wrap; overflow:auto; max-width:inherit; max-height:730px">
+                    @foreach (Dictionary<string, object> Inv in PlayersEntries)
+                    {
+                        <div class="dropdown" style="padding: 20px 10px 80px 10px;">
+                            <div class="perma_name dropbtn">
+                                @Inv["Name"] - @Inv["DateSlain"] & @Inv["TimesKilled"] times
+                            </div>
+                            <div class="dropdown-content" style="padding: 10px 40px 0px 0px;">
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </td>
+        <td style="background-color:rgba(51, 51, 51, 0.25); max-width:500px; max-height:800px;">
+            <div class="generic-btn">
+                <div style="font-family:Verdana; font-size:20px;">
+                    Miscellaneous actions are here
+                </div>
+            </div>
+            @if (SelectedPlayer is not null && SelectedUser is not null)
+            {
+                <button class="generic-btn" @onclick="() => DeletePlayer(SelectedPlayer)">
+                    <div class="perma_name">
+                        Delete the selected player
+                    </div>
+                </button>
+                <form @onsubmit="GetItemsBySimilar">
+                    <label for="itmLookup" class="generic-btn">Look up items, the more letters the more specific</label>
+                    <input type="search" @bind-value="searchterm" id="itmLookup" />
+                    <input type="submit" value="Search for items" />
+                </form>
+                @if (ItemsFound is not null)
+                {
+                    <div style="display:flex; flex-flow: row wrap; overflow:auto; max-height:60%;">
+                        @foreach (Item itm in ItemsFound)
+                        {
+                            <div class="dropdown" style="padding: 20px 0px 80px 0px;">
+                                @if (itm.is_hidden)
+                                {
+                                    <div class="perma_name dropbtn" style="background-color:#ff6c00;">
+                                        @itm.name
+                                    </div>
+                                }
+                                else if (SelectedResult is not null && SelectedResult.id == itm.id)
+                                {
+                                    <div class="perma_name dropbtn" style="background-color:#1dd3e2;">
+                                        @itm.name
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="perma_name dropbtn">
+                                        @itm.name
+                                    </div>
+                                }
+                                <div class="dropdown-content" style="padding: 10px 40px 0px 0px;">
+                                    <button @onclick="() => SelectGift(itm)">
+                                        Gift this item to the player
+                                    </button>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            }
+        </td>
+
+    }
+    @if (smode == ScreenMode.Monsters)
+    {
+        <td style="background-color: rgba(51, 51, 51, 0.25); max-width:50%; vertical-align:central">
+            <div class="generic-btn">
+                <div style="font-family:Verdana; font-size:20px;">
+                    All monsters are shown here
+                </div>
+            </div>
+            @if (AllMonsters is not null)
+            {
+                <div style="display:flex; flex-flow: row wrap; overflow:auto; max-height: 80%; max-width:450px;">
+                    @foreach (Monster monster in AllMonsters)
+                    {
+                        <div class="dropdown" style="padding: 20px 10px 20px 10px;" @onclick="() => SelectMonster(monster)">
+                            @if (monster.ishidden)
+                            {
+                                <div class="perma_name dropbtn" style="background-color:#ff6c00;">
+                                    @monster.name
+                                </div>
+                            }
+                            else if (SelectedMonster is not null && SelectedMonster.id == monster.id)
+                            {
+                                <div class="perma_name dropbtn" style="background-color:#1dd3e2;">
+                                    @monster.name
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="perma_name dropbtn">
+                                    @monster.name
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            }
+        </td>
+    }
+    @if (smode == ScreenMode.Items)
+    {
+        
+    }
 </table>
 
 
@@ -296,9 +338,12 @@
 </style>
 
 @code {
+    enum ScreenMode { Users, Monsters, Items}
+    ScreenMode smode = ScreenMode.Users;
     List<User> AllUsers; List<Player> UsersPlayers; List<Dictionary<string, object>> PlayersInv; List<Dictionary<string, object>> PlayersEntries; Inventory SelectedItem;
     User LoggedUser; User SelectedUser; Player SelectedPlayer;
     string searchterm; List<Item> ItemsFound; Item SelectedResult;
+    List<Monster> AllMonsters; Monster SelectedMonster;
     [Inject] IJSRuntime JS { get; set; } = default!;
     protected override async Task OnInitializedAsync()
     {
@@ -322,6 +367,7 @@
         if (firstRender)
         {
             AllUsers = await Middleman.GetAllUsers();
+            AllMonsters = await Middleman.GetMonsters(true);
             StateHasChanged();
         }
     } //Gets all users to manage
@@ -450,5 +496,22 @@
             PlayersInv = await Middleman.NewGetInvOfPlayer(SelectedPlayer);
             await InvokeAsync(StateHasChanged);
         }
+    }
+    private async Task SetDisplayMode(int mode)
+    {
+        smode = (ScreenMode)mode;
+        await InvokeAsync(StateHasChanged);
+    }
+    private async Task SelectMonster(Monster m)
+    {
+        if (SelectedMonster is null || SelectedMonster.id != m.id)
+        {
+            SelectedMonster = new Monster(m);
+        }
+        else
+        {
+            SelectedItem = null;
+        }
+        await InvokeAsync(StateHasChanged);
     }
 }

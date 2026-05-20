@@ -43,7 +43,7 @@
                 User tmp = new User(response as User);
                 <div class="generic-btn">
                     <div class="perma_name">
-                        @tmp.username is now logged in! You can go back to the main page
+                        @tmp.username is now logged in! You will be returned to the home page
                     </div>
                 </div>
             }
@@ -81,6 +81,9 @@
         if (response is User) 
         { 
             await Session.SetAsync("Logged user", response as User);
+            await InvokeAsync(StateHasChanged);
+            await Task.Delay(1500);
+            await Back();
         }
         else { tries++; }
         await InvokeAsync(StateHasChanged);

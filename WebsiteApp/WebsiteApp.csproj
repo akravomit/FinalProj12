@@ -5,11 +5,6 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Content Remove="Components\Pages\Shop.razor" />
-  </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\DBL\DBL.csproj" />
     <ProjectReference Include="..\Models\Models.csproj" />
@@ -19,17 +14,4 @@
     <Folder Include="wwwroot\img\" />
     <Folder Include="wwwroot\misc\" />
   </ItemGroup>
-
-  <ItemGroup>
-    <UpToDateCheckInput Remove="Components\Pages\Shop.razor" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="Components\Pages\Shop.razor" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Components\Pages\Shop.razor" />
-  </ItemGroup>
-
 </Project>

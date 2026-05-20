@@ -201,6 +201,7 @@
     private async Task Goto(char dest)
     {
         await Session.SetAsync("Selected player", Selected);
+        await Session.SetAsync("User's playerlist",Playerlist);
         await Session.SetAsync("Player's inventory", PlayerFullInv);
         await Session.SetAsync("Player's entries", PlayerFullEntr);
         switch (dest)
