@@ -48,7 +48,8 @@ namespace DBL
             itemAttacks.id = Convert.ToInt32(row[0]);
             itemAttacks.ItemID = Convert.ToInt32(row[1]);
             itemAttacks.AttackID = Convert.ToInt32(row[2]);
-            itemAttacks.IsHidden = Convert.ToBoolean(row[3]);
+            itemAttacks.Attack_Increment = Convert.ToDouble(row[3]);
+            itemAttacks.IsHidden = Convert.ToBoolean(row[4]);
             return itemAttacks;
         }
 
@@ -89,8 +90,7 @@ namespace DBL
         {
             Dictionary<string, object> where = new Dictionary<string, object>()
             {
-                { "ItemID", itemId },
-                { "IsHidden", false }
+                { "ItemID", itemId }
             };
             return await SelectAllAsync(where);
         }

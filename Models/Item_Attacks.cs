@@ -18,6 +18,7 @@ namespace Models
         {
             this.ItemID = itemID;
             this.AttackID = attackID;
+            this.Attack_Increment = attackIncrement;
             this.IsHidden = IsHidden;
         }
         public Item_Attacks (int Id, int itemID, int attackID, double attackIncrement, bool IsHidden) : this (itemID, attackID, attackIncrement, IsHidden) { id = Id; }

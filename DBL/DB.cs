@@ -6,7 +6,7 @@ namespace DBL
 {
     public abstract class DB
     {
-        private List<string> passwords = [ "12345", "josh17rog" ];
+        private List<string> passwords = [ "12345", "josh17rog" ]; //I hate myself so much for this oversight from *three years ago*
         private const string MySqlConnSTR = $"server=localhost; user id=root; password=josh17rog;persistsecurityinfo=True;database=game";
 
         protected DbConnection conn;

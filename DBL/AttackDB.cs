@@ -50,7 +50,7 @@ namespace DBL
             attack.name = Convert.ToString(row[2]);
             attack.damage = Convert.ToInt32(row[3]);
             attack.decay = Convert.ToInt32(row[4]);
-            attack.decay_factor = Convert.ToInt32(row[5]);
+            attack.decay_factor = Convert.ToDouble(row[5]);
             attack.duration = Convert.ToInt32(row[6]);
             attack.ElementID = Convert.ToInt32(row[7]);
             attack.IsHidden = Convert.ToBoolean(row[8]);
@@ -87,16 +87,16 @@ namespace DBL
             return (await InsertGetObjAsync(await AttackToDict(attack))) as Attack;
         }
         //Inserts an attack to the DB, returns the object if successful
-        public async Task<int> UpdateAttack(Attack post, Attack pre)
+        public async Task<int> UpdateAttack(Attack pre, Attack post)
         {
-            return await UpdateAsync(await AttackToDict(pre), await AttackToDict(post));
+            return await UpdateAsync(await AttackToDict(post), await AttackToDict(pre));
         }
         //Updates the attack in the DB
         public async Task<int> Delete(Attack attack)
         {
             Attack post = new Attack(attack);
             post.IsHidden = true;
-            return await UpdateAttack(post, attack);
+            return await UpdateAttack(attack, post);
         }
         //"Deletes" an attack from the DB by setting it to be hidden
     }

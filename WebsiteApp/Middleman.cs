@@ -15,10 +15,11 @@ namespace WebsiteApp
         private static InventoryDB InvDB = new InventoryDB();
         private static Item_Type_Name_DB I_T_NDB = new Item_Type_Name_DB();
         private static ItemDB ItmDB = new ItemDB();
-        private static Monster_Attacks_DB M_ADB = new Monster_Attacks_DB();
+        private static Monster_Attacks_DB MADB = new Monster_Attacks_DB();
         private static MonsterDB MDB = new MonsterDB();
         private static PlayerDB PDB = new PlayerDB();
         private static UserDB UDB = new UserDB();
+        private static Item_Attacks_DB IADB = new Item_Attacks_DB();
         private static HttpClient client = new HttpClient();
 
         //    >.>
@@ -220,6 +221,42 @@ namespace WebsiteApp
         public static async Task<List<Item>> GetAllItems()
         {
             return await ItmDB.GetAllAsync();
+        }
+        public static async Task<List<Item_Attacks>> GetItemAttacksByItem(int ItemID)
+        {
+            return await IADB.GetAttacksForItemAsync(ItemID);
+        }
+        public static async Task<Item_Attacks> InsertGetItemAttack(Item_Attacks ITMA)
+        {
+            return await IADB.InsertGetAttack(ITMA);
+        }
+        public static async Task<int> UpdateItemAttack(Item_Attacks pre, Item_Attacks post)
+        {
+            return await IADB.Update_Async(pre,post);
+        }
+        public static async Task<List<Monster_Attacks>> GetAllAttacksOfMonster(int monsterid)
+        {
+            return await MADB.GetByKey("MonsterID", monsterid);
+        }
+        public static async Task<Monster_Attacks> InsertGetMonsterAttack(Monster_Attacks MonAtk)
+        {
+            return await MADB.InsertGetMonster_Attacks(MonAtk);
+        }
+        public static async Task<int> UpdateMonsterAttack(Monster_Attacks pre, Monster_Attacks post)
+        {
+            return await MADB.Update_Async(pre,post);
+        }
+        public static async Task<List<Attack>> GetAllAttacks()
+        {
+            return await ADB.GetAll();
+        }
+        public static async Task<Attack> InsertGetAttack(Attack atk)
+        {
+            return await ADB.InsertGetAttack(atk);
+        }
+        public static async Task<int> UpdateAttack(Attack pre, Attack post)
+        {
+            return await ADB.UpdateAttack(pre,post);
         }
     }
 }

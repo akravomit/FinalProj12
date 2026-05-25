@@ -8,6 +8,7 @@
     <li><button class="generic-btn" @onclick="() => SetDisplayMode(0)"><div class="perma_name">Manage all users</div></button></li>
     <li><button class="generic-btn" @onclick="() => SetDisplayMode(1)"><div class="perma_name">Manage monsters</div></button></li>
     <li><button class="generic-btn" @onclick="() => SetDisplayMode(2)"><div class="perma_name">Manage items</div></button></li>
+    <li><button class="generic-btn" @onclick="() => SetDisplayMode(3)"><div class="perma_name">Manage misc</div></button></li>
     <navname><button @onclick="Back" class="generic-btn"><div class="perma_name">Go back to the main page</div></button></navname>
 </ul>
 
@@ -25,64 +26,46 @@
                 <div style="display:flex; flex-flow: row wrap; overflow:auto; max-height: 80%; max-width:450px;">
                     @foreach (User user in AllUsers)
                     {
-
-                        @if (user.ishidden)
-                        {
-                            <div class="dropdown" style="padding: 20px 0px 80px 0px;">
-                                <div class="perma_name dropbtn" style="background-color:#ff6c00;">
-                                    @user.username
-                                </div>
-                                <div class="dropdown-content" style="padding: 10px 40px 0px 0px;">
-                                    @if (user.id != LoggedUser.id)
-                                    {
-                                        <button @onclick="() => RestoreUser(user)">
-                                            Restore this user
-                                        </button>
-                                    }
-                                    <button @onclick="() => SelectUser(user)">
-                                        View user's players
-                                    </button>
-                                </div>
-                            </div>
-                        }
-                        else if (SelectedUser is not null && SelectedUser.id == user.id)
-                        {
-                            <div class="dropdown" style="padding: 20px 0px 80px 0px;">
+                        <div class="dropdown" style="padding: 20px 0px 80px 0px;">
+                            @if (SelectedUser is not null && SelectedUser.id == user.id)
+                            {
                                 <div class="perma_name dropbtn" style="background-color:#1dd3e2;">
                                     @user.username
                                 </div>
-                                <div class="dropdown-content" style="padding: 10px 40px 0px 0px;">
-                                    @if (user.id != LoggedUser.id)
+                            }
+                            else if (user.ishidden)
+                            {
+                                <div class="perma_name dropbtn" style="background-color:#ff6c00;">
+                                    @user.username
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="perma_name dropbtn">
+                                    @user.username
+                                </div>
+                            }
+                            <div class="dropdown-content" style="padding: 10px 40px 0px 0px;">
+                                @if (LoggedUser.id != user.id)
+                                {
+                                    @if (user.ishidden)
                                     {
                                         <button @onclick="() => RestoreUser(user)">
                                             Restore this user
                                         </button>
                                     }
-                                    <button @onclick="() => SelectUser(user)">
-                                        View user's players
-                                    </button>
-                                </div>
-                            </div>
-                        }
-                        else
-                        {
-                            <div class="dropdown" style="padding: 20px 0px 80px 0px;">
-                                <div class="perma_name dropbtn">
-                                    @user.username
-                                </div>
-                                <div class="dropdown-content" style="padding: 10px 40px 0px 0px;">
-                                    @if (user.id != LoggedUser.id)
+                                    else
                                     {
                                         <button @onclick="() => DeleteUser(user)">
                                             Delete this user
                                         </button>
                                     }
-                                    <button @onclick="() => SelectUser(user)">
-                                        View user's players
-                                    </button>
-                                </div>
+                                }
+                                <button @onclick="() => SelectUser(user)">
+                                    View user's players
+                                </button>
                             </div>
-                        }
+                        </div>
                     }
                 </div>
             }
@@ -238,50 +221,58 @@
                     Miscellaneous actions are here
                 </div>
             </div>
-            @if (SelectedPlayer is not null && SelectedUser is not null)
+            @if (SelectedUser is not null)
             {
-                <button class="generic-btn" @onclick="() => DeletePlayer(SelectedPlayer)">
-                    <div class="perma_name">
-                        Delete the selected player
+                <button class="generic-btn" @onclick="() => MakeThisUserAnAdmin(SelectedUser)">
+                    <div style="font-family:Verdana; font-size:20px;">
+                        Make this user an admin
                     </div>
                 </button>
-                <form @onsubmit="GetItemsBySimilar">
-                    <label for="itmLookup" class="generic-btn">Look up items, the more letters the more specific</label>
-                    <input type="search" @bind-value="searchterm" id="itmLookup" />
-                    <input type="submit" value="Search for items" />
-                </form>
-                @if (ItemsFound is not null)
+                @if (SelectedPlayer is not null)
                 {
-                    <div style="display:flex; flex-flow: row wrap; overflow:auto; max-height:60%;">
-                        @foreach (Item itm in ItemsFound)
-                        {
-                            <div class="dropdown" style="padding: 20px 0px 80px 0px;">
-                                @if (itm.is_hidden)
-                                {
-                                    <div class="perma_name dropbtn" style="background-color:#ff6c00;">
-                                        @itm.name
+                    <button class="generic-btn" @onclick="() => DeletePlayer(SelectedPlayer)">
+                        <div style="font-family:Verdana; font-size:20px;">
+                            Delete the selected player
+                        </div>
+                    </button>
+                    <form @onsubmit="GetItemsBySimilar">
+                        <label for="itmLookup" class="generic-btn">Look up items, the more letters the more specific</label>
+                        <input type="search" @bind-value="searchterm" id="itmLookup" />
+                        <input type="submit" value="Search for items" />
+                    </form>
+                    @if (ItemsFound is not null)
+                    {
+                        <div style="display:flex; flex-flow: row wrap; overflow:auto; max-height:60%;">
+                            @foreach (Item itm in ItemsFound)
+                            {
+                                <div class="dropdown" style="padding: 20px 0px 80px 0px;">
+                                    @if (itm.is_hidden)
+                                    {
+                                        <div class="perma_name dropbtn" style="background-color:#ff6c00;">
+                                            @itm.name
+                                        </div>
+                                    }
+                                    else if (SelectedResult is not null && SelectedResult.id == itm.id)
+                                    {
+                                        <div class="perma_name dropbtn" style="background-color:#1dd3e2;">
+                                            @itm.name
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="perma_name dropbtn">
+                                            @itm.name
+                                        </div>
+                                    }
+                                    <div class="dropdown-content" style="padding: 10px 40px 0px 0px;">
+                                        <button @onclick="() => SelectGift(itm)">
+                                            Gift this item to the player
+                                        </button>
                                     </div>
-                                }
-                                else if (SelectedResult is not null && SelectedResult.id == itm.id)
-                                {
-                                    <div class="perma_name dropbtn" style="background-color:#1dd3e2;">
-                                        @itm.name
-                                    </div>
-                                }
-                                else
-                                {
-                                    <div class="perma_name dropbtn">
-                                        @itm.name
-                                    </div>
-                                }
-                                <div class="dropdown-content" style="padding: 10px 40px 0px 0px;">
-                                    <button @onclick="() => SelectGift(itm)">
-                                        Gift this item to the player
-                                    </button>
                                 </div>
-                            </div>
-                        }
-                    </div>
+                            }
+                        </div>
+                    }
                 }
             }
         </td>
@@ -388,6 +379,81 @@
                 <input type="submit" class="generic-btn" value="Update the monster" />
             </form>
         </td>
+        <td style="background-color: rgba(51, 51, 51, 0.25); max-width:450px; vertical-align:central">
+            <div class="generic-btn">
+                <div style="font-family:Verdana; font-size:20px;">
+                    Selected monster's attacks are here:
+                </div>
+            </div>
+            @if (MonsterAttacks is not null && SelectedMonster is not null)
+            {
+                <div style="display:flex; flex-flow: row wrap; overflow:auto; max-height: 80%; max-width:450px;">
+                    @foreach (Monster_Attacks matk in MonsterAttacks)
+                    {
+                        <div class="dropdown" style="padding: 10px;" @onclick="() => SelectMonsterAttack(matk)">
+                            @if (matk.isHidden)
+                            {
+                                <div class="perma_name dropbtn" style="background-color:#ff6c00; font-family:Verdana;">
+                                    @SelectedMonster.name: @AllAttacks[(matk.attackId) - 1].name
+                                </div>
+                            }
+                            else if (SelectedMonsterAttack is not null && SelectedMonsterAttack.id == matk.id)
+                            {
+                                <div class="perma_name dropbtn" style="background-color:#1dd3e2;font-family:Verdana;">
+                                    @SelectedMonster.name: @AllAttacks[(matk.attackId) - 1].name
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="perma_name dropbtn" style="font-family:Verdana;">
+                                    @SelectedMonster.name: @AllAttacks[(matk.attackId) - 1].name
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            }
+            @if (SelectedMonsterAttack is not null)
+            {
+                <div class="generic-btn">
+                    <div style="font-family:Verdana; font-size:20px;">
+                        Selected attack:
+                    </div>
+                </div>
+                <div class="generic-btn">
+                    <div style="font-family:Verdana; font-size:15px;">
+                        @AllAttacks[(SelectedMonsterAttack.attackId) - 1].name | Increment: @(ShadowMonsterAttack.attack_Increment)
+                    </div>
+                </div>
+                <form @onsubmit="() => UpdateMonsterAttack(SelectedMonsterAttack)" class="generic-btn">
+                    <label for="ItemAttackIncrement">Level increment:</label>          <InputNumber @bind-Value="SelectedMonsterAttack.attack_Increment" id="ItemAttackIncrement" /> <br />
+                    <select id="ItemAttackAttack" @bind="SelectedMonsterAttack.attackId">
+                        @foreach (Attack atk in AllAttacks)
+                        {
+                            <option value="@atk.id">@atk.name</option>
+                        }
+                    </select>
+                    <label for="ItemIsHidden">Is hidden?</label>     <input @bind="SelectedMonsterAttack.isHidden" type="checkbox" id="ItemIsHidden" /> <br />
+                    <input type="submit" class="generic-btn" value="Update the attack" />
+                </form>
+            }
+            <div class="generic-btn">
+                <div style="font-family:Verdana; font-size:20px;">
+                    Add an attack to the monster:
+                </div>
+            </div>
+            <form @onsubmit="() => CreateMonsterAttack(MonsterAttackDummy)" class="generic-btn">
+                <label for="ItemAttackIncrement">Level increment:</label>          <InputNumber @bind-Value="MonsterAttackDummy.attack_Increment" id="ItemAttackIncrement" min="0" /> <br />
+                <select id="ItemAttackAttack" @bind="MonsterAttackDummy.attackId">
+                    @foreach (Attack atk in AllAttacks)
+                    {
+                        <option value="@atk.id">@atk.name - @atk.damage damage</option>
+                    }
+                </select>
+                <label for="ItemIsHidden">Is hidden?</label>     <input @bind="MonsterAttackDummy.isHidden" type="checkbox" id="ItemIsHidden" /> <br />
+                <input type="submit" class="generic-btn" value="Add the attack" />
+            </form>
+        </td>
     }
     @if (smode == ScreenMode.Items)
     {
@@ -491,6 +557,169 @@
                 <input type="submit" class="generic-btn" value="Create the Item" />
             </form>
         </td>
+        <td style="background-color: rgba(51, 51, 51, 0.25); max-width:450px; vertical-align:central">
+            <div class="generic-btn">
+                <div style="font-family:Verdana; font-size:20px;">
+                    Selected item's attacks are here:
+                </div>
+            </div>
+            @if (PickedItem is not null && ItemAttacks is not null)
+            {
+                <div style="display:flex; flex-flow: row wrap; overflow:auto; max-height: 80%; max-width:450px;">
+                    @foreach (Item_Attacks itmAtk in ItemAttacks)
+                    {
+                        <div class="dropdown" style="padding: 10px;" @onclick="() => SelectItemAttack(itmAtk)">
+                            @if (itmAtk.IsHidden)
+                            {
+                                <div class="perma_name dropbtn" style="background-color:#ff6c00; font-family:Verdana;">
+                                    @PickedItem.name: @AllAttacks[(itmAtk.AttackID)-1].name
+                                </div>
+                            }
+                            else if (SelectedItemAttack is not null && SelectedItemAttack.id == itmAtk.id)
+                            {
+                                <div class="perma_name dropbtn" style="background-color:#1dd3e2;font-family:Verdana;">
+                                    @PickedItem.name: @AllAttacks[(itmAtk.AttackID) - 1].name
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="perma_name dropbtn" style="font-family:Verdana;">
+                                    @PickedItem.name: @AllAttacks[(itmAtk.AttackID) - 1].name
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            }
+            @if (SelectedItemAttack is not null)
+            {
+                <div class="generic-btn">
+                    <div style="font-family:Verdana; font-size:20px;">
+                        Selected attack:
+                    </div>
+                </div>
+                <div class="generic-btn">
+                    <div style="font-family:Verdana; font-size:15px;">
+                        @AllAttacks[(SelectedItemAttack.AttackID) - 1].name | Increment: @(ShadowItemAttack.Attack_Increment)
+                    </div>
+                </div>
+                <form @onsubmit="() => UpdateItemAttack(SelectedItemAttack)" class="generic-btn">
+                    <label for="ItemAttackIncrement">Level increment:</label>          <InputNumber @bind-Value="SelectedItemAttack.Attack_Increment" id="ItemAttackIncrement" /> <br />
+                    <select id="ItemAttackAttack" @bind="SelectedItemAttack.AttackID">
+                        @foreach (Attack atk in AllAttacks)
+                        {
+                            <option value="@atk.id">@atk.name</option>
+                        }
+                    </select>
+                    <label for="ItemIsHidden">Is hidden?</label>     <input @bind="SelectedItemAttack.IsHidden" type="checkbox" id="ItemIsHidden" /> <br />
+                    <input type="submit" class="generic-btn" value="Update the attack" />
+                </form>
+            }
+            <div class="generic-btn">
+                <div style="font-family:Verdana; font-size:20px;">
+                    Add an attack to the item:
+                </div>
+            </div>
+            <form @onsubmit="() => CreateItemAttack(ItemAttackDummy)" class="generic-btn">
+                <label for="ItemAttackIncrement">Level increment:</label>          <InputNumber @bind-Value="ItemAttackDummy.Attack_Increment" id="ItemAttackIncrement" min="0" /> <br />
+                <select id="ItemAttackAttack" @bind="ItemAttackDummy.AttackID">
+                    @foreach (Attack atk in AllAttacks)
+                    {
+                        <option value="@atk.id">@atk.name - @atk.damage damage</option>
+                    }
+                </select>
+                <label for="ItemIsHidden">Is hidden?</label>     <input @bind="ItemDummy.is_hidden" type="checkbox" id="ItemIsHidden" /> <br />
+                <input type="submit" class="generic-btn" value="Add the attack" />
+            </form>
+        </td>
+    }
+    @if (smode == ScreenMode.Misc)
+    {
+        <td style="background-color: rgba(51, 51, 51, 0.25); max-width:750px; vertical-align:central">
+            <div class="generic-btn">
+                <div style="font-family:Verdana; font-size:20px;">
+                    All attacks are here:
+                </div>
+            </div>
+            @if (AllAttacks is not null)
+            {
+                <div style="display:flex; flex-flow: row wrap; overflow:auto; max-height: 750px; max-width:450px;">
+                    @foreach (Attack atk in AllAttacks)
+                    {
+                        <div class="dropdown" style="padding: 10px;" @onclick="() => SelectAttack(atk)">
+                            @if (atk.IsHidden)
+                            {
+                                <div class="perma_name dropbtn" style="background-color:#ff6c00;">
+                                    @atk.name - @atk.damage damage
+                                </div>
+                            }
+                            else if (SelectedAttack is not null && SelectedAttack.id == atk.id)
+                            {
+                                <div class="perma_name dropbtn" style="background-color:#1dd3e2;">
+                                    @atk.name - @atk.damage damage
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="perma_name dropbtn">
+                                    @atk.name - @atk.damage damage
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            }
+        </td>
+        <td style="background-color: rgba(51, 51, 51, 0.25); max-width:450px; vertical-align:central">
+            <div class="generic-btn">
+                <div style="font-family:Verdana; font-size:20px;">
+                    Create a new Attack:
+                </div>
+            </div>
+            <form @onsubmit="() => CreateAttack(AttackDummy)" class="generic-btn">
+                <label for="DummyAttackName">Name:</label>                 <InputTextArea @bind-Value="AttackDummy.name" id="DummyAttackName" /> <br />
+                <label for="DummyAttackFilepath">File path:</label>     <InputTextArea @bind-Value="AttackDummy.filepath" id="DummyAttackFilepath" /> <br />
+                <label for="DummyAttackDamage">Damage:</label>          <InputNumber @bind-Value="AttackDummy.damage" min="1" id="DummyAttackDamage" /> <br />
+                <label for="DummyAttackDecay">Decay:</label>          <InputNumber @bind-Value="AttackDummy.decay" min="0" id="DummyAttackDecay" /> <br />
+                <label for="DummyAttackDecayFactor">Decay factor:</label>          <InputNumber @bind-Value:format="F2" @bind-Value="AttackDummy.decay_factor" min="0.01" id="DummyAttackDecayFactor" /> <br />
+                <label for="DummyAttackDuration">Attack duration (in turns):</label>          <InputNumber @bind-Value="AttackDummy.duration" id="DummyAttackDuration" /> <br />
+                <label for="DummyAttackElementSelect">Element of the attack: </label>
+                <select id="DummyAttackElementSelect" @bind="AttackDummy.ElementID">
+                    @foreach (Element e in Elements)
+                    {
+                        <option value="@e.id">@e.name</option>
+                    }
+                </select>
+                <label for="DummyAttackIsHidden">Is hidden?</label>     <input @bind="AttackDummy.IsHidden" type="checkbox" id="DummyAttackIsHidden" /> <br />
+                <input type="submit" class="generic-btn" value="Create the attack" />
+            </form>
+            }
+            @if (SelectedAttack is not null)
+            {
+                <div class="generic-btn">
+                    <div style="font-family:Verdana; font-size:20px;">
+                        Selected Attack:
+                    </div>
+                </div>
+                <form @onsubmit="() => UpdateAttack(SelectedAttack)" class="generic-btn">
+                    <label for="AttackName">Name:</label>                 <InputTextArea @bind-Value="SelectedAttack.name" id="AttackName" /> <br />
+                    <label for="AttackFilepath">File path:</label>     <InputTextArea @bind-Value="SelectedAttack.filepath" id="AttackFilepath" /> <br />
+                    <label for="AttackDamage">Damage:</label>          <InputNumber @bind-Value="SelectedAttack.damage" min="1" id="AttackDamage" /> <br />
+                    <label for="AttackDecay">Decay:</label>          <InputNumber @bind-Value="SelectedAttack.decay" min="0" id="AttackDecay" /> <br />
+                    <label for="AttackDecayFactor">Decay factor:</label>          <InputNumber @bind-Value:format="F2" @bind-Value="SelectedAttack.decay_factor" min="0.01" id="AttackDecayFactor" /> <br />
+                    <label for="AttackDuration">Attack duration (in turns):</label>          <InputNumber @bind-Value="SelectedAttack.duration" id="AttackDuration" /> <br />
+                    <label for="AttackElementSelect">Element of the attack: </label>
+                    <select id="AttackElementSelect" @bind="SelectedAttack.ElementID">
+                        @foreach (Element e in Elements)
+                        {
+                            <option value="@e.id">@e.name</option>
+                        }
+                    </select>
+                    <label for="AttackIsHidden">Is hidden?</label>     <input @bind="SelectedAttack.IsHidden" type="checkbox" id="AttackIsHidden" /> <br />
+                    <input type="submit" class="generic-btn" value="Update the attack" />
+                </form>
+            }
+        </td>
     }
 </table>
 
@@ -502,13 +731,16 @@
 </style>
 
 @code {
-    enum ScreenMode { Users, Monsters, Items}
+    enum ScreenMode { Users, Monsters, Items, Misc }
     ScreenMode smode = ScreenMode.Users;
     List<User> AllUsers; List<Player> UsersPlayers; List<Dictionary<string, object>> PlayersInv; List<Dictionary<string, object>> PlayersEntries; Inventory SelectedItem;
     User LoggedUser; User SelectedUser; Player SelectedPlayer;
     string searchterm; List<Item> ItemsFound; Item SelectedResult;
     List<Monster> AllMonsters; Monster SelectedMonster; Monster Shadow; Monster MonsterDummy = new Monster();
     List<Item> AllItems; Item PickedItem; Item ShadowItem; Item ItemDummy = new Item();
+    List<Item_Attacks> ItemAttacks; Item_Attacks SelectedItemAttack; Item_Attacks ShadowItemAttack; Item_Attacks ItemAttackDummy = new Item_Attacks();
+    List<Monster_Attacks> MonsterAttacks; Monster_Attacks SelectedMonsterAttack; Monster_Attacks ShadowMonsterAttack; Monster_Attacks MonsterAttackDummy = new Monster_Attacks();
+    List<Attack> AllAttacks; Attack SelectedAttack; Attack ShadowAttack; Attack AttackDummy = new Attack();
     List<Element> Elements; List<Item_Type_Name> ItemTypeNames;
     [Inject] IJSRuntime JS { get; set; } = default!;
     protected override async Task OnInitializedAsync()
@@ -537,6 +769,7 @@
             AllItems = await Middleman.GetAllItems();
             Elements = await Middleman.GetAllElements();
             ItemTypeNames = await Middleman.GetAllItem_Type_Names();
+            AllAttacks = await Middleman.GetAllAttacks();
             StateHasChanged();
         }
     } //Gets all users to manage
@@ -567,7 +800,6 @@
     private async Task SelectUser(User u)
     {
         SelectedUser = new User(); UsersPlayers = new List<Player>(); PlayersEntries = new List<Dictionary<string, object>>(); PlayersInv = new List<Dictionary<string, object>>();
-        //Clears previous data
         SelectedUser = new User(u);
         UsersPlayers = await Middleman.GetPlayers(u);
         await InvokeAsync(StateHasChanged);
@@ -666,6 +898,25 @@
             await InvokeAsync(StateHasChanged);
         }
     }
+    private async Task MakeThisUserAnAdmin(User user)
+    {
+        bool confirmed; User temp;
+        if (user.isadmin)
+        {
+            confirmed = await JS.InvokeAsync<bool>("confirm", $"Are you sure you want to remove {user.username}'s admin powers?");
+            temp = new User(user);
+            user.isadmin = false;
+            await Middleman.UpdateUser(temp,user);
+        }
+        else
+        {
+            confirmed = await JS.InvokeAsync<bool>("confirm", $"Are you sure you want to make {user.username} an admin?");
+            temp = new User(user);
+            user.isadmin = true;
+            await Middleman.UpdateUser(temp, user);
+        }
+        await InvokeAsync(StateHasChanged);
+    }
     private async Task SetDisplayMode(int mode)
     {
         smode = (ScreenMode)mode;
@@ -677,11 +928,13 @@
         {
             SelectedMonster = new Monster(m);
             Shadow = new Monster(m);
+            MonsterAttacks = await Middleman.GetAllAttacksOfMonster(m.id);
         }
         else
         {
             SelectedItem = null;
             Shadow = null;
+            MonsterAttacks = null;
         }
         await InvokeAsync(StateHasChanged);
     }
@@ -703,11 +956,13 @@
         {
             PickedItem = new Item(itm);
             ShadowItem = new Item(itm);
+            ItemAttacks = await Middleman.GetItemAttacksByItem(PickedItem.id);
         }
         else
         {
             PickedItem = null;
             ShadowItem = null;
+            ItemAttackDummy = null;
         }
         await InvokeAsync(StateHasChanged);
     }
@@ -721,6 +976,98 @@
     {
         await Middleman.InsertGetItem(itm);
         AllItems = await Middleman.GetAllItems();
+        await InvokeAsync(StateHasChanged);
+    }
+    private async Task SelectItemAttack(Item_Attacks itmatk)
+    {
+        if (SelectedItemAttack is null || SelectedItemAttack.id != itmatk.id)
+        {
+            SelectedItemAttack = new Item_Attacks(itmatk);
+            ShadowItemAttack = new Item_Attacks(itmatk);
+            ItemAttackDummy.ItemID = itmatk.id;
+        }
+        else
+        {
+            SelectedItemAttack = null;
+            ShadowItemAttack = null;
+            ItemAttackDummy = new Item_Attacks();
+        }
+        await InvokeAsync(StateHasChanged);
+    }
+    private async Task CreateItemAttack(Item_Attacks itmatk)
+    {
+        await Middleman.InsertGetItemAttack(itmatk);
+        if (ItemAttacks is null)
+        {
+            ItemAttacks = new List<Item_Attacks>();
+        }
+        ItemAttacks.Add(new Item_Attacks(itmatk));
+        await InvokeAsync(StateHasChanged);
+    }
+    private async Task UpdateItemAttack(Item_Attacks itmatk)
+    {
+        await Middleman.UpdateItemAttack(ShadowItemAttack, itmatk);
+        ItemAttacks = await Middleman.GetItemAttacksByItem(SelectedItem.Id);
+        await InvokeAsync(StateHasChanged);
+    }
+    private async Task SelectMonsterAttack(Monster_Attacks matk)
+    {
+        if (SelectedMonsterAttack is null || SelectedMonsterAttack.id != matk.id)
+        {
+            SelectedMonsterAttack = new Monster_Attacks(matk);
+            ShadowMonsterAttack = new Monster_Attacks(matk);
+        }
+        else
+        {
+            SelectedMonsterAttack = null;
+            ShadowMonsterAttack = null;
+        }
+        await InvokeAsync(StateHasChanged);
+    }
+    private async Task CreateMonsterAttack(Monster_Attacks matk)
+    {
+        await Middleman.InsertGetMonsterAttack(matk);
+        if (MonsterAttacks is null)
+        {
+            MonsterAttacks = new List<Monster_Attacks>();
+        }
+        MonsterAttacks.Add(new Monster_Attacks(matk));
+        await InvokeAsync(StateHasChanged);
+    }
+    private async Task UpdateMonsterAttack(Monster_Attacks matk)
+    {
+        await Middleman.UpdateMonsterAttack(ShadowMonsterAttack, matk);
+        MonsterAttacks = await Middleman.GetAllAttacksOfMonster(matk.monsterId);
+        await InvokeAsync(StateHasChanged);
+    }
+    private async Task SelectAttack(Attack atk)
+    {
+        if (SelectedAttack is null || SelectedAttack.id != atk.id)
+        {
+            SelectedAttack = new Attack(atk);
+            ShadowAttack = new Attack(atk);
+        }
+        else
+        {
+            SelectedAttack = null;
+            ShadowAttack = null;
+        }
+        await InvokeAsync(StateHasChanged);
+    }
+    private async Task CreateAttack(Attack atk)
+    {
+        await Middleman.InsertGetAttack(atk);
+        if (AllAttacks is null)
+        {
+            AllAttacks = new List<Attack>();
+        }
+        AllAttacks.Add(new Attack(atk));
+        await InvokeAsync(StateHasChanged);
+    }
+    private async Task UpdateAttack(Attack atk)
+    {
+        await Middleman.UpdateAttack(ShadowAttack, atk);
+        AllAttacks = await Middleman.GetAllAttacks();
         await InvokeAsync(StateHasChanged);
     }
 }
