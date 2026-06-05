@@ -5,6 +5,13 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="wwwroot\misc\**" />
+    <Content Remove="wwwroot\misc\**" />
+    <EmbeddedResource Remove="wwwroot\misc\**" />
+    <None Remove="wwwroot\misc\**" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DBL\DBL.csproj" />
     <ProjectReference Include="..\Models\Models.csproj" />
@@ -12,6 +19,5 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\img\" />
-    <Folder Include="wwwroot\misc\" />
   </ItemGroup>
 </Project>

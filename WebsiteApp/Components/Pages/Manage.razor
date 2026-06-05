@@ -4,6 +4,8 @@
 @inject NavigationManager NavMan
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @inject ProtectedSessionStorage Session
+@inject IWebHostEnvironment Environment
+
 <ul>
     <li><button class="generic-btn" @onclick="() => SetDisplayMode(0)"><div class="perma_name">Manage all users</div></button></li>
     <li><button class="generic-btn" @onclick="() => SetDisplayMode(1)"><div class="perma_name">Manage monsters</div></button></li>
@@ -720,6 +722,32 @@
                 </form>
             }
         </td>
+        <td style="background-color: rgba(51, 51, 51, 0.25); max-width:450px; vertical-align:central">
+            <div class="generic-btn">
+                <InputFile OnChange="HandleFileSelected" accept="image/webp" />
+                <div style="margin-top: 15px;">
+                    <label class="perma_name">Folder Name (inside wwwroot/img, default will be misc):</label>
+                    <input type="text" @bind="FolderName" />
+                    <br />
+                    <label for="FileName" class="perma_name">Enter a name for the file</label>
+                    <input id="FileName" type="text" @bind="FileName" />
+                    <small> (letters, numbers, dashes and underscores recommended)</small>
+                </div>
+                <button @onclick="UploadFile" style="margin-top: 20px;" disabled="@isUploading">
+                    @(isUploading ? "Uploading..." : "Upload Image")
+                </button>
+            </div>
+            <div class="generic-btn">
+                @if (!string.IsNullOrEmpty(Message))
+                {
+                    <p class="perma_name" style="color: green;">@Message</p>
+                }
+                @if (!string.IsNullOrEmpty(Error))
+                {
+                    <p class="perma_name" style="color: red;">@Error</p>
+                }
+            </div>
+        </td>
     }
 </table>
 
@@ -743,6 +771,12 @@
     List<Attack> AllAttacks; Attack SelectedAttack; Attack ShadowAttack; Attack AttackDummy = new Attack();
     List<Element> Elements; List<Item_Type_Name> ItemTypeNames;
     [Inject] IJSRuntime JS { get; set; } = default!;
+    private IBrowserFile? selectedFile;
+    private string FolderName { get; set; } = "";
+    private string FileName = "";
+    private string Message { get; set; } = "";
+    private string Error { get; set; } = "";
+    private bool isUploading = false;
     protected override async Task OnInitializedAsync()
     {
         try
@@ -1069,5 +1103,62 @@
         await Middleman.UpdateAttack(ShadowAttack, atk);
         AllAttacks = await Middleman.GetAllAttacks();
         await InvokeAsync(StateHasChanged);
+    }
+    private void HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        selectedFile = e.File;
+        Message = "";
+        Error = "";
+    }
+    private async Task UploadFile()
+    {
+        if (selectedFile == null)
+        {
+            Error = "Please select a file.";
+            await InvokeAsync(StateHasChanged);
+            return;
+        }
+
+        if (!selectedFile.ContentType.Equals("image/webp", StringComparison.OrdinalIgnoreCase))
+        {
+            Error = "Only .webp images are allowed.";
+            await InvokeAsync(StateHasChanged);
+            return;
+        }
+        isUploading = true;
+        Message = "";
+        Error = "";
+        try
+        {
+            // Sanitize folder name
+            var safeFolder = string.IsNullOrWhiteSpace(FolderName) ? "misc" : FolderName.Trim();
+            safeFolder = Path.GetInvalidFileNameChars()
+                             .Aggregate(safeFolder, (current, c) => current.Replace(c, '_'));
+
+            var uploadPath = Path.Combine(Environment.WebRootPath, "img", safeFolder);
+
+            if (!Directory.Exists(uploadPath))
+            {
+                Directory.CreateDirectory(uploadPath);
+            }
+
+            //var fileName = selectedFile.Name;
+            var fileName = string.IsNullOrEmpty(FileName) ? selectedFile.Name : FileName + ".webp";
+            var fullPath = Path.Combine(uploadPath, fileName);
+
+            await using var stream = new FileStream(fullPath, FileMode.Create);
+            await selectedFile.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024).CopyToAsync(stream);
+
+            Message = $"Image uploaded successfully to: img/{safeFolder}/{fileName}";
+        }
+        catch (Exception ex)
+        {
+            Error = $"Upload failed: {ex.Message}";
+        }
+        finally
+        {
+            isUploading = false;
+            await InvokeAsync(StateHasChanged);
+        }
     }
 }

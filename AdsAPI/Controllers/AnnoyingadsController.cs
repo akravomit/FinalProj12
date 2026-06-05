@@ -43,6 +43,16 @@ namespace AdsAPI.Controllers
     }
     public class AdvertismentDB : BaseDB<Advertisement>
     {
+        private static async Task<Dictionary<string, object>> AdToDict(Advertisement ad)
+        {
+            Dictionary<string,object> dict = new Dictionary<string, object>()
+            {
+                { "id", ad.id },
+                { "headline", ad.headline },
+                { "body", ad.body }
+            };
+            return dict;
+        }
         protected override async Task<Advertisement> CreateModelAsync(object[] row)
         {
             Advertisement advertisement = new Advertisement();
@@ -62,6 +72,10 @@ namespace AdsAPI.Controllers
         public async Task<Advertisement> GetRandomAdvertisement()
         {
             return (await SelectAllAsync("SELECT * FROM advertisements ORDER BY RAND();"))[0];
+        }
+        public async Task InsertAdvertisement(Advertisement advertisement)
+        {
+            await InsertGetObjAsync(await AdToDict(advertisement));
         }
     }
     public abstract class DB

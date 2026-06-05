@@ -139,7 +139,7 @@
 
             Timer timerPullAdd;
             timerPullAdd = new System.Timers.Timer();
-            timerPullAdd.Interval = 15000;
+            timerPullAdd.Interval = 30000;
             timerPullAdd.Elapsed += async (sender, e) => await CycleAds();
             timerPullAdd.AutoReset = true;
             timerPullAdd.Enabled = true;
