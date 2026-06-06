@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 using Google.Protobuf.WellKnownTypes;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
 
 namespace AdsAPI.Controllers
 {
@@ -14,11 +15,31 @@ namespace AdsAPI.Controllers
     [ApiController]
     public class AnnoyingadsController : ControllerBase
     {
+        private static AdvertisementDB AdDB = new AdvertisementDB();
         [HttpGet("GetARandomAd")]
         public async Task<Advertisement> GetRandomAd()
         {
-            AdvertismentDB AdDB = new AdvertismentDB();
             return await AdDB.GetRandomAdvertisement();
+        }
+        [HttpPost("InsertNewAd")]
+        public async Task InsertNewAdvertisement([FromBody] Advertisement Ad)
+        {
+            await AdDB.InsertAdvertisement(Ad);
+        }
+        [HttpPost("UpadteAnAd")]
+        public async Task UpdateAd([FromBody] Advertisement Ad)
+        {
+            await AdDB.UpdateAdvertisement(Ad);
+        }
+        [HttpPost("DeleteAnAd")]
+        public async Task DeleteAd([FromBody] int AdID)
+        {
+            await AdDB.DeleteAdvertisement(AdID);
+        }
+        [HttpGet("GetAllAds")]
+        public async Task<List<Advertisement>> GetAllAds()
+        {
+            return await AdDB.GetAllAdvertisements();
         }
     }
     public class Advertisement
@@ -41,7 +62,7 @@ namespace AdsAPI.Controllers
             return headline + $"\r\n{body}";
         }
     }
-    public class AdvertismentDB : BaseDB<Advertisement>
+    public class AdvertisementDB : BaseDB<Advertisement>
     {
         private static async Task<Dictionary<string, object>> AdToDict(Advertisement ad)
         {
@@ -76,6 +97,18 @@ namespace AdsAPI.Controllers
         public async Task InsertAdvertisement(Advertisement advertisement)
         {
             await InsertGetObjAsync(await AdToDict(advertisement));
+        }
+        public async Task UpdateAdvertisement(Advertisement post)
+        {
+            await UpdateAsync(await AdToDict(post), new Dictionary<string, object> { { "id", post.id } });
+        }
+        public async Task DeleteAdvertisement(int AdID)
+        {
+            await DeleteAsync(new Dictionary<string, object> { { "id", AdID } });
+        }
+        public async Task<List<Advertisement>> GetAllAdvertisements()
+        {
+            return await SelectAllAsync();
         }
     }
     public abstract class DB

@@ -21,6 +21,10 @@ namespace Models
         {
             this.headline = headline;
         }
+        public Advertisement(Advertisement advertisement) : this(advertisement.headline,advertisement.body)
+        {
+            this.id = advertisement.id;
+        }
         public override string ToString()
         {
             return headline + $"\r\n{body}";
