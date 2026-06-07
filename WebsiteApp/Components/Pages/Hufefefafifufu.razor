@@ -77,9 +77,9 @@
                 }
             </tr>
             <tr>
-                @if (PlayerInventory is not null)
-                {
-                    <div style="display:flex; flex-flow: row wrap; overflow:auto; max-height:350px;">
+                <div style="display:flex; flex-flow: row wrap; overflow:auto; max-height:350px;">
+                    @if(PlayerInventory is not null)
+                    {
                         @foreach (Dictionary<string, object> item in PlayerInventory)
                         {
                             bool isHiddenInv = ((JsonElement)item["Inv_IsHidden"]).GetBoolean();
@@ -93,8 +93,13 @@
                                 </button>
                             }
                         }
-                    </div>
-                }
+                        <button class="dropdown" style="padding: 5px 5px 5px 5px; border:2px; border-color:black;" @onclick="Escape">
+                            <div class="perma_name dropbtn" style="font-family:Verdana">
+                                Escape?
+                            </div>
+                        </button>
+                    }
+                </div>
             </tr>
         </td>
         <td style="background-color: rgba(51, 51, 51, 0.25); max-width:50%; vertical-align:central"> 
@@ -133,6 +138,7 @@
     List<Dictionary<string, object>> ItemAttacks = new List<Dictionary<string, object>>();
     List<Dictionary<string, object>> MonsterAttacks = new List<Dictionary<string, object>>();
     Dictionary<string, object> SelectedAttack = new Dictionary<string, object>();
+    [Inject] IJSRuntime JS { get; set; } = default!;
     protected override async Task OnInitializedAsync()
     {
         try
@@ -173,7 +179,7 @@
         { 
             if (Jerry.Next(0, 1001) == 0)
             {
-                string filepath = "F:\\repos\\FinalProj12\\WebsiteApp\\wwwroot\\misc\\TheFunnyAudio.wav";
+                string filepath = Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "wwwroot", "misc", "TheFunnyAudio.wav");
                 SoundPlayer player = new SoundPlayer(filepath);
                 try { player.Play(); }
                 catch (Exception e){}
@@ -241,6 +247,7 @@
         int basedamage = Convert.ToInt32(AttackToDo["Damage"].ToString());
         if (basedamage < 0) { basedamage = 1; }
         Selected.hp -= basedamage;
+        if (Selected.hp <= 0) await OnPlayerDeath();
     }
     private async Task Back() 
     {
@@ -253,7 +260,26 @@
     }
     private async Task Escape()
     {
-        int chance = Jerry.Next( 0, Math.Abs(Selected.hp - current.hp) ); 
+        bool confirmed = await JS.InvokeAsync<bool>("confirm", "Are you sure you want to try to escape?");
+        if (confirmed)
+        {
+            int chance = Jerry.Next(0, 7);
+            if (chance == 0)
+            {
+                await JS.InvokeVoidAsync("alert", "You succeeded in escaping! You'll return to the lobby.");
+                await Back();
+            }
+            else
+            {
+                await JS.InvokeVoidAsync("alert", "You failed your escape! It's now the monster's turn.");
+                await MonsterTurn();
+            }
+        }
+        else
+        {
+            await JS.InvokeVoidAsync("alert", "You chose to not escape, the game will continue on the monster's turn.");
+            await MonsterTurn();
+        }
     }
     private string GetImageIcon(String s) { return $"/img/{s}"; }
     private string GetRarityString(int Rarity)
@@ -289,5 +315,21 @@
             ItemAttacks = await Middleman.GetAttacksOfItem(itemid);
         }
         await InvokeAsync(StateHasChanged);
+    }
+    private async Task OnPlayerDeath()
+    {
+        Random Jerry = new Random();
+        double DiffMultiplier = ((double)((Ghost.rarity * 100 + Ghost.defense * 10) / 10)) / 100 + 1;
+        int BossMultiplier = 10 * Ghost.isboss;
+        int RawCoin = Jerry.Next(1 + BossMultiplier, (int)(Math.Pow(10 + BossMultiplier, 2)) + 1);
+        double TotalCoin = RawCoin * DiffMultiplier;
+        await JS.InvokeVoidAsync("confirm", $"You have died! You lost {(int)TotalCoin} coins and you will return to the lobby now.");
+        Selected.coins -= (int)TotalCoin;
+        var GetPlayer = await Session.GetAsync<Player>("Selected player");
+        if (GetPlayer.Success)
+        {
+            await Middleman.UpdatePlayer(GetPlayer.Value, Selected);
+        }
+        NavMan.NavigateTo("/Lobby");
     }
 }

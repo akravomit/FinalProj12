@@ -4,6 +4,7 @@
 @inject NavigationManager NavMan
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @inject ProtectedSessionStorage Session
+@using System.Timers;
 
 <ul>
     @if(LoggedUser is not null)
@@ -139,7 +140,7 @@
                 </div>
             }
         </td>
-        <td style="background-color:rgba(51, 51, 51, 0.25); max-width:20%;">
+        <td style="background-color:rgba(51, 51, 51, 0.25); max-width:450px;">
             @if (Selected is not null)
             {
                 <button class="generic-btn" @onclick="() => Goto('D')">
@@ -153,6 +154,36 @@
                     </div>
                 </button>
             }
+            <br /><br /><br /><br /><br />
+            <div class="generic-btn" style="padding:10px;">
+                <div style="font-family:Forte; text-align:center; font-size:30px;">
+                    And now, an ad from our sponsors:
+                    @if (ad is not null)
+                    {
+                        <span style="font-family:Verdana; font-size:25px;">
+                            @ad.headline
+                        </span>
+                    }
+                </div>
+                <div style="text-align:center; font-size:15px;">
+                    @if (ad is not null)
+                    {
+                        @ad.body
+                    }
+                    @if (AdRequestFailed)
+                    {
+                        <div>
+                            Hmm... we are having some issues on our end. Please check back later to see our ads later! They're vital for this website to run!
+                        </div>
+                    }
+                </div>
+            </div>
+            @if (ad is not null)
+            {
+                <button @onclick="CycleAds" class="generic-btn">
+                    Skip this ad (please don't I'm a broke dev)
+                </button>
+            }
         </td>
     </table>
 }
@@ -163,7 +194,11 @@
     string playername;
     List<Dictionary<string, object>> PlayerFullInv;
     List<Dictionary<string, object>> PlayerFullEntr;
+    HttpClient client = new HttpClient();
+    Advertisement ad = new Advertisement();
+    bool AdRequestFailed = false;
     Random Jerry = new Random();
+    Timer timerPullAdd = new System.Timers.Timer();
     protected override async Task OnInitializedAsync()
     {
         try
@@ -181,15 +216,35 @@
             await Back();
         }
     }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await CycleAds();
+            timerPullAdd.Interval = 30000;
+            timerPullAdd.Elapsed += async (sender, e) => await CycleAds();
+            timerPullAdd.AutoReset = true;
+            timerPullAdd.Enabled = true;
+        }
+    }
     private async Task Back() { NavMan.NavigateTo("/"); }
     private async Task Select_Player(Player plr)
     {
-        Selected = new Player(plr);
-        PlayerFullEntr = new List<Dictionary<string, object>>();
-        PlayerFullInv = new List<Dictionary<string, object>>();
-        PlayerFullInv = await Middleman.NewGetInvOfPlayer(Selected);
-        PlayerFullEntr = await Middleman.NewGetEntriesOfPlayer(Selected);
-        StateHasChanged();
+        if (Selected is null || Selected.id != plr.id)
+        {
+            Selected = new Player(plr);
+            PlayerFullEntr = new List<Dictionary<string, object>>();
+            PlayerFullInv = new List<Dictionary<string, object>>();
+            PlayerFullInv = await Middleman.NewGetInvOfPlayer(Selected);
+            PlayerFullEntr = await Middleman.NewGetEntriesOfPlayer(Selected);
+        }
+        else
+        {
+            Selected = null;
+            PlayerFullEntr = null;
+            PlayerFullInv = null;
+        }
+        await InvokeAsync(StateHasChanged);
     }
     private async Task CreatePlr()
     {
@@ -227,5 +282,25 @@
             ret += "⭐";
         }
         return ret;
+    }
+    private async Task CycleAds()
+    {
+        try
+        {
+            if (ad is not null)
+            {
+                ad = await client.GetFromJsonAsync<Advertisement>($"https://localhost:7094/api/Annoyingads/GetADifferentAd?IDToSkip={ad.id}");
+            }
+            else
+            {
+                ad = await client.GetFromJsonAsync<Advertisement>("https://localhost:7094/api/Annoyingads/GetADifferentAd?IDToSkip=0");
+            }
+            if (ad.ToString() == "{}") AdRequestFailed = true; ad = null;
+            await InvokeAsync(StateHasChanged);
+        }
+        catch (Exception ex)
+        {
+            AdRequestFailed = true;
+        }
     }
 }

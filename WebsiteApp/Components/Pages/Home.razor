@@ -79,7 +79,9 @@
                     And now, an ad from our sponsors:
                     @if (ad is not null)
                     {
-                        @ad.headline
+                        <span style="font-family:Verdana; font-size:25px;">
+                            @ad.headline
+                        </span>
                     }
                 </div>
                 <div style="text-align:center; font-size:15px;">
@@ -95,6 +97,12 @@
                     }
                 </div>
             </div>
+            @if (ad is not null)
+            {
+                <button @onclick="CycleAds" class="generic-btn">
+                    Skip this ad (please don't I'm a broke dev)
+                </button>
+            }
         }
     </td>
 </table>
@@ -106,6 +114,7 @@
     bool renderads = false; bool AdRequestFailed = false;
     HttpClient client = new HttpClient();
     Advertisement ad = new Advertisement();
+    Timer timerPullAdd = new System.Timers.Timer();
     async Task Navigate(char c)
     {
         string dest = "/";
@@ -137,8 +146,7 @@
             await InvokeAsync(StateHasChanged);
             await CycleAds();
 
-            Timer timerPullAdd;
-            timerPullAdd = new System.Timers.Timer();
+
             timerPullAdd.Interval = 30000;
             timerPullAdd.Elapsed += async (sender, e) => await CycleAds();
             timerPullAdd.AutoReset = true;
@@ -149,8 +157,15 @@
     {
         try
         {
-            ad = await client.GetFromJsonAsync<Advertisement>("https://localhost:7094/api/Annoyingads/GetARandomAd");
-            if (ad.ToString() == "{}") AdRequestFailed = true;
+            if (ad is not null)
+            {
+                ad = await client.GetFromJsonAsync<Advertisement>($"https://localhost:7094/api/Annoyingads/GetADifferentAd?IDToSkip={ad.id}");
+            }
+            else
+            {
+                ad = await client.GetFromJsonAsync<Advertisement>("https://localhost:7094/api/Annoyingads/GetADifferentAd?IDToSkip=0");
+            }
+            if (ad.ToString() == "{}") AdRequestFailed = true; 
             await InvokeAsync(StateHasChanged);
         }
         catch (Exception ex)

@@ -21,6 +21,11 @@ namespace AdsAPI.Controllers
         {
             return await AdDB.GetRandomAdvertisement();
         }
+        [HttpGet("GetADifferentAd")]
+        public async Task<Advertisement> GetDifferentAd([FromRoute] int IDToSkip)
+        {
+            return await AdDB.GetRandomAdvertisement(IDToSkip);
+        }
         [HttpPost("InsertNewAd")]
         public async Task InsertNewAdvertisement([FromBody] Advertisement Ad)
         {
@@ -92,7 +97,11 @@ namespace AdsAPI.Controllers
         }
         public async Task<Advertisement> GetRandomAdvertisement()
         {
-            return (await SelectAllAsync("SELECT * FROM advertisements ORDER BY RAND();"))[0];
+            return (await SelectAllAsync("SELECT * FROM advertisements ORDER BY RAND() ORDER BY RAND() LIMIT 0,1;;"))[0];
+        }
+        public async Task<Advertisement> GetRandomAdvertisement(int id)
+        {
+            return (await SelectAllAsync($"SELECT * FROM advertisements WHERE id != {id} ORDER BY RAND() LIMIT 0,1;"))[0];
         }
         public async Task InsertAdvertisement(Advertisement advertisement)
         {
